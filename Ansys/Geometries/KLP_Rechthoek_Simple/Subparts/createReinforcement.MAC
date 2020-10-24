@@ -1,0 +1,105 @@
+!------------------------------------------------------------------------
+!-----------Create reinforcement with an octagonal cross section --------
+!------------------------------------------------------------------------
+
+!Needed is a Dwarsligger_A component with the main part of the cross section
+CS_WapeningLocal = ARG1
+Divisions = ARG2
+!ARG3 = symmetrie
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+!--------------------------------------------------------------------------------------------------------------------------------------------
+!------------------------------------- WAPENING ---------------------------------------------------------------------------------------------
+!--------------------------------------------------------------------------------------------------------------------------------------------
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+CSYS, CS_WapeningLocal
+WPCSYS, , CS_WapeningLocal
+
+ASEL, NONE
+
+Block_1_height = OB_size_height !Buitenkant (OB = outer block) 
+Block_1_width = OB_size_width
+!----------------------------------------------------------------------
+!---------------------Create quarter: ---------------------------------
+!----------------------------------------------------------------------
+Center = KP_0 + 1 
+K, Center , 0, 0, 0
+!KP_0 = KP_0 + 1
+
+W_Straal_corrected = W_Straal*1.055 !Correct for difference in area. The value 1.055 is for an octagon
+RPR4, 8, 0, 0, W_Straal_corrected, 0, 0 			!Area 1 !Wapening
+!Redefine W_Straal
+
+AATT, Materiaal_W
+CM, Wapening_A, AREA
+
+BLC5, 0, 0, Block_1_width, Block_1_height, 0	!Area 2 !Outer Block
+AOVLAP, AREA_0 + 2, AREA_0 + 1  !Area 3
+
+
+AGLUE, ALL
+
+LSEL, NONE
+L,  KP_0 + 10,  KP_0 + 7
+L,  KP_0 + 11,  KP_0 + 9
+L,  KP_0 + 12,  KP_0 + 3
+L,  KP_0 + 13,  KP_0 + 5
+
+ASBL, AREA_0 + 3, All, , DELETE, KEEP !Divide area by lines
+*GET, MaxArea, AREA, 0 , NUM, MAXD
+*GET, MaxLine, LINE, 0 , NUM, MAXD
+
+ASEL, S, AREA, , AREA_0 + 1, MaxArea
+CM, Wapening_with_block_A, AREA
+
+CMSEL, U, Wapening_A
+AATT, Materiaal_S
+
+
+!---------
+!Not all lines should have Divisions
+LSEL, S, LOC, X, Block_1_width/2
+CM, LINE_1, LINE
+LSEL, S, LOC, Y, Block_1_height/2
+CM, LINE_2, LINE
+LSEL, S, LOC, X, -Block_1_width/2
+CM, LINE_3, LINE
+LSEL, S, LOC, Y, -Block_1_height/2
+CM, LINE_4, LINE
+
+LSEL, S, LINE, , Line_0 + 1, MaxLine
+CMSEL, U, LINE_1
+CMSEL, U, LINE_2
+CMSEL, U, LINE_3
+CMSEL, U, LINE_4
+LESIZE, ALL, , , Divisions, , , , ,  !Previously W_Divisions
+
+!----------------------------------------------------  
+!------------------- Prepare mesh ------------------- 
+!---------------------------------------------------- 
+
+!Copy to all corners:
+CSYS, CS_SleeperLocal
+WPCSYS, CS_SleeperLocal
+*IF, ARG3, NE, 'true', THEN  !Kopieer niet als er symmetrie gebruikt wordt.
+	ARSYM, X, Wapening_with_block_A, , , ,0,0  
+*ENDIF
+
+
+*GET, MaxArea, AREA, 0 , NUM, MAXD
+ASEL, S, AREA, , AREA_0 + 1, MaxArea
+ARSYM, Y, ALL, , , ,0,0  
+CM, Wapening_with_block_A, AREA
+
+
+*DEL, Divisions
+*DEL, Block_1_width
+*DEL, Block_1_height
+*DEL, MaxArea
+*DEL, MaxLine
+*DEL, Center
+*DEL, KP_0
+!*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0
+ALLSEL

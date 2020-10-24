@@ -1,0 +1,3 @@
+/POST1  
+/EFACET,1
+PLNSOL, S,EQV, 0,1.0 !Plot nodal solution of equivalent stress in y-direction

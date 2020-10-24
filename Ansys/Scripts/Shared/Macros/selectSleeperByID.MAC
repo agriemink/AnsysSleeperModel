@@ -1,0 +1,24 @@
+ALLSEL
+
+SleeperID = ARG1 !Number 
+WapeningJaNee = ARG2 !String
+
+
+!Select a single sleeper:
+VSEL, S, LOC, X, SleeperID*SleeperDistance - SleeperDistance/2, SleeperID*SleeperDistance + SleeperDistance/2 
+VSEL, R, LOC, Y, -S_Hoogte, 0 !Select only the sleeper volumes
+
+ALLSEL, BELOW, VOLU
+
+
+
+*IF, WapeningJaNee, EQ, 'wapening', THEN
+	ESEL, R, MAT, , Staal
+*ELSEIF, WapeningJaNee, EQ, 'kunststof', THEN
+	ESEL, U, MAT, , Staal
+*ENDIF
+
+
+
+
+!VSEL, R, LOC, Y, -S_Hoogte, -0.01 !Select only the sleeper volumes

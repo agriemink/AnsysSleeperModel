@@ -1,0 +1,51 @@
+
+X_coord_min_Local = ARG1
+X_coord_max_Local = ARG2
+
+
+!----------------------------------------------------------------------
+!-------Create contact between sleeper and Rughellingplaat ------------
+!----------------------------------------------------------------------
+CSYS, CS_Rughellingplaat_L !Use local coordinate system
+CMSEL, S, Rughellingplaten_L
+VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+ASLV, S
+ASEL, R, LOC, Y, 0
+NSLA, S, 1
+CM, contact_nodes, NODE !
+
+!------------------- Fixed contact Sleeper (target) ------------------
+CMSEL, S, Dwarsliggers_V
+VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+ASLV, S
+ASEL, R, LOC, Y, 0
+ASEL, R, LOC, Z, -RH_Lengte/2, RH_Lengte/2
+NSLA, S, 1
+CM, target_nodes, NODE !
+
+*USE, '%Scriptfolder(1)%/Contact/add_Fixedcontact.MAC', Materiaal_RH, Materiaal_S
+!/INPUT, add_Fixedcontact, f, '%Scriptfolder(1)%/Contact/' , 0, 1
+
+!Right side
+CSYS, CS_Rughellingplaat_R !Use local coordinate system
+CMSEL, S, Rughellingplaten_R
+VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+ASLV, S
+ASEL, R, LOC, Y, 0
+NSLA, S, 1
+CM, contact_nodes, NODE !
+
+!------------------- Fixed contact Sleeper (target) ------------------
+CMSEL, S, Dwarsliggers_V
+VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+ASLV, S
+ASEL, R, LOC, Y, 0
+ASEL, R, LOC, Z, -RH_Lengte/2, RH_Lengte/2
+NSLA, S, 1
+CM, target_nodes, NODE !
+
+*USE, '%Scriptfolder(1)%/Contact/add_Fixedcontact.MAC', Materiaal_RH, Materiaal_S
+!/INPUT, add_Fixedcontact, f, '%Scriptfolder(1)%/Contact/' , 0, 1	
+
+*DEL, X_coord_min_Local
+*DEL, X_coord_max_Local

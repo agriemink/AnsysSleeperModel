@@ -1,0 +1,109 @@
+
+X_Min_Local = ARG1
+X_Max_Local = ARG2
+Z_location_Local = ARG3
+
+foundation_stiffness_Local = ARG4
+foundation_damping_Local = ARG5
+
+!----------------------------------------------------------------------
+!---------------------Create spring-damper elements -------------------
+!----------------------------------------------------------------------
+
+!Select the nodes that are outside of the blocks where the reinforcements are. As those nodes are closer together and thus create a stiffer area. 
+ASEL, S, LOC, Z, Z_location_Local
+NSLA, S, 1
+NSEL, R, LOC, X, X_Min_Local+OB_size_width, X_Max_Local-OB_size_width
+CM, Shoulder_L_Contact, NODE
+
+!Create only one shoulder.
+!Select the needed nodes.
+CMSEL, S, Shoulder_L_Contact
+
+!----- Count the nodes to get a large enough offset between the nodes on either side of the spring element.
+*GET, MaxNode_ALL, NODE, 0, NUM, MAXD
+*GET, MaxNodeSelected, NODE, 0, NUM, MAX
+*GET, MinNodeSelected, NODE, 0, NUM, MIN
+NodeDifference = 1 + MaxNode_ALL - MinNodeSelected
+
+!----------- Add spring-damper elements --
+Z_Shoulder = 0.1 !coincident nodes are preferable for COMBIN40 elements.
+
+!LEFT ------------------------------------
+ALLSEL
+
+!Copy nodes to 0.2 m /20cm offset to the current area
+NGEN,2, NodeDifference , Shoulder_L_Contact, , , , , Z_Shoulder,1, 
+!Generated nodes are all the nodes between MaxNode_ALL (before NGEN) and the MaxNode now.
+*GET, MaxNode_ALL_new, NODE, 0, NUM, MAXD
+NSEL, S, NODE, , MaxNode_ALL, MaxNode_ALL_new !Select the newly created nodes.
+CM, Shoulder_Fixed_Nodes_L, NODE
+
+*GET, MaxNode_ALL, NODE, 0, NUM, MAXD !Update MaxNode
+ALLSEL
+
+!Fix new nodes:
+CMSEL, S, Shoulder_Fixed_Nodes_L
+D, ALL, UZ , 0, 
+D, ALL, UX , 0, 
+D, ALL, UY , 0, !Fix ROTZ, and free y to try a sliding constraint.
+ALLSEL
+
+!----- Create COMBIN14 elements
+NSEL, S, , , Shoulder_L_Contact 
+NSEL, A, , , Shoulder_Fixed_Nodes_L 
+
+*GET, AantalNodes, NODE, 0, COUNT, 
+AantalNodes = AantalNodes / 2 !This is the amount of springs.
+NodeNumber = MinNodeSelected
+
+!----------------------------------------------------------------------
+!---------------------Set foundation stiffness ------------------------
+!----------------------------------------------------------------------
+!COMBIN40 ELEMENTS:
+!*get,real_,rcon,0,num,max 
+!Intial_gap = 0.001 !0.1 mm gap at start 
+!R, NSET, K1 - Spring constant, C - Damping coefficient, M - Mass, GAP - Gap size, FSLIDE - Limiting sliding force, K2 - Spring constant (par to slide)
+!r, real_ + 1 , foundation_stiffness_local / AantalNodes, foundation_damping_local / AantalNodes, 0, Intial_gap, 0, 0
+!real, real_+ 1
+
+!COMBIN14 ELEMENTS:
+*get,real_,rcon,0,num,max 
+r, real_ + 1 , foundation_stiffness_Local / AantalNodes, foundation_damping_Local / AantalNodes !Set foundation stiffness 
+real, real_+ 1
+
+
+
+
+
+!----------------------------------------------------------------------
+!---------------------Create elements ---------------------------------
+!----------------------------------------------------------------------
+ESEL, NONE
+!TYPE,Element_COMBIN40 !set element type to combin40
+!KEYOPT,Element_COMBIN40,3,3  !longitudinal spring-damper (UZ degree of freedom)
+
+TYPE,Element_COMBIN14 !set element type to combin14
+
+*DO, i, 1, AantalNodes, 1 !iterate over all the nodes.
+	!Connect all the nodes with COMBIN14 Elements
+	e,NodeNumber, NodeNumber + NodeDifference
+
+	!Set next node number:
+	*GET, NodeNumber, NODE, NodeNumber, NXTH
+*ENDDO 
+
+CM, shoulder_elements, ELEM
+
+
+*DEL, MaxNode_ALL
+*DEL, MaxNodeSelected
+*DEL, MinNodeSelected
+*DEL, MaxNode_ALL_new
+*DEL, NodeDifference
+*DEL, NodeNumber
+*DEL, AantalNodes
+*DEL, real_
+*DEL, i
+*DEL, foundation_stiffness_local
+*DEL, foundation_damping_local

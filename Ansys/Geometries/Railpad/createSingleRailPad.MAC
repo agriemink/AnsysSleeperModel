@@ -1,0 +1,47 @@
+
+MAT, Railpad
+real, realSolids
+!Copy the bottom areas (including the mesh) of the rail to form a railpad. 
+!Rail and railpad are then always fully connected. The railpad and rughellingplaat will be connected by contact.
+
+!ARG 1 = Left or Right
+!ARG 2 = Min X coordinate
+!ARG 3 = Max X coordinate
+
+*IF, ARG1, EQ, 'Left', THEN
+	!------------ Left ------------
+	CSYS, CS_Rail_L
+	CMSEL, S, Rail_V_L
+*ELSEIF, ARG1, EQ, 'Right',
+	!------------ Right ------------
+	CSYS, CS_Rail_R
+	CMSEL, S, Rail_V_R
+*ENDIF
+
+ASLV, S
+ASEL, R, LOC, Y, 0 
+ASEL, R, LOC, X, ARG2, ARG3
+
+!Extrude:
+VEXT, All, ,, 0, -Railpad_thickness, 0
+
+VSEL, R, LOC, Y, 0, -Railpad_thickness !R, because the rail get selected as well.
+
+!Update components:
+*IF, ARG1, EQ, 'Left', THEN
+	!VSEL, R, LOC, Z, -S_Halve_Lengte, 0
+	CMSEL, A, Railpads_V_L
+	CM, Railpads_V_L, VOLU
+*ELSEIF, ARG1, EQ, 'Right',
+	!VSEL, R, LOC, Z, 0, S_Halve_Lengte
+	CMSEL, A, Railpads_V_R
+	CM, Railpads_V_R, VOLU
+*ENDIF
+
+CMSEL, S, Railpads_V_L
+CMSEL, A, Railpads_V_R
+CM, Railpads_V, VOLU
+
+
+
+

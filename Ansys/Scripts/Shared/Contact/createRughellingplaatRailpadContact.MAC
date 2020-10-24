@@ -1,0 +1,53 @@
+NSEL, NONE
+
+X_coord_min_Local = ARG1
+X_coord_max_Local = ARG2
+
+!----------------------------------------------------------------------
+!-------Create contact between railpad and Rughellingplaat ---------------
+!----------------------------------------------------------------------
+CSYS, CS_Railpad_L !Change to local coordinate system
+	!Left
+		!------------------- Fixed contact railpad (contact) -----------------
+		CMSEL, S, Railpads_V_L
+		ASLV, S
+		ASEL, R, LOC, Y, 0
+		NSLA, S, 1
+		NSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+		CM, contact_nodes, NODE !
+
+		!------------------- Fixed contact RH (target) ------------------
+		CMSEL, S, Rughellingplaten_L
+		VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+		ASLV, S
+		ASEL, R, LOC, Y, 0
+		NSLA, S, 1
+		CM, target_nodes, NODE
+		
+		*USE, '%Scriptfolder(1)%/Contact/add_Fixedcontact.MAC', Railpad, Materiaal_RH
+		!/INPUT, add_Fixedcontact, f, '%Scriptfolder(1)%/Contact/' , 0, 1
+
+CSYS, CS_Railpad_R
+	!Right
+		!------------------- Fixed contact railpad (contact) -----------------
+		CMSEL, S, Railpads_V_R
+		ASLV, S
+		ASEL, R, LOC, Y, 0
+		NSLA, S, 1
+		NSEL, R, LOC, X,  X_coord_min_Local, X_coord_max_Local
+		CM, contact_nodes, NODE !
+
+		!------------------- Fixed contact RH (target) ------------------
+		CMSEL, S, Rughellingplaten_R
+		VSEL, R, LOC, X, X_coord_min_Local, X_coord_max_Local
+		ASLV, S
+		ASEL, R, LOC, Y, 0
+		NSLA, S, 1
+		CM, target_nodes, NODE !
+
+		*USE, '%Scriptfolder(1)%/Contact/add_Fixedcontact.MAC', Railpad, Materiaal_RH
+		!/INPUT, add_Fixedcontact, f, '%Scriptfolder(1)%/Contact/' , 0, 1
+
+		
+*DEL, X_coord_min_Local
+*DEL, X_coord_max_Local

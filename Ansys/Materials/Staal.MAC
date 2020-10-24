@@ -1,0 +1,10 @@
+!Material Properties of generic steel
+!
+!
+
+Staal = ARG1
+
+MP,	DENS,	Staal,	7850			!Density			kg/m3
+MP,	EX,		Staal,	210e9			!Youngs' modulus	Pa = N/m2
+MP,	PRXY,	Staal,	0.3 			!Poisson ratio 		-
+MP,	MU,		Staal,  0.2

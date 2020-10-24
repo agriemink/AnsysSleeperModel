@@ -1,0 +1,41 @@
+!Calculate gauge widening
+			*GET, aantal_nodes, NODE, 0, COUNT
+			*DIM, Y_displacements, ARRAY, aantal_nodes + 1, 2
+			
+			NSORT,LOC,Z,0,0, ,0 !Sort by Z coordinate
+			aantal_nodes_voorRotatie = 3
+			
+			nd=ndnext(0)
+			Z_displacement_sum = 0
+			index_ = 0
+			*DOWHILE, nd
+				index_ = index_ + 1
+				/gopr
+				!Loop over selected nodes
+
+				Z_displacement_sum = Z_displacement_sum + UZ(nd)
+				
+				Y_displacements(index_,1) = UY(nd),
+				Y_displacements(index_,2) = NZ(nd)
+
+				nd=ndnext(nd)
+			*ENDDO
+			Z_displacement_L = Z_displacement_sum / aantal_nodes !average of the displacement.
+			
+			Rot_L_sum = 0
+			*DO, index_, 1, aantal_nodes_voorRotatie
+				/gopr
+				DY = Y_displacements(aantal_nodes - index_,1) - Y_displacements(index_,1)
+				DX = Y_displacements(aantal_nodes - index_,2) - Y_displacements(index_,2)
+				
+				*IF, DX, NE, 0, THEN
+				/gopr
+					DY_DX = DY/DX
+					Rot_L_sum = Rot_L_sum + (DY/DX)
+				*ENDIF
+			*ENDDO
+			Rot_L = Rot_L_sum / aantal_nodes_voorRotatie
+			
+			!Displacement due to rotation
+			GaugeChange = Z_displacement_L*1000 + Rot_L*140
+			

@@ -1,0 +1,47 @@
+!Material Properties of KLP-HS 
+!
+!
+
+KUNSTSTOF_HDPE_1060 = ARG1
+
+
+MP,	DENS,	KUNSTSTOF_HDPE_1060,	870				!Density			kg/m3
+MP,	EX,		KUNSTSTOF_HDPE_1060,	1060e6 			!Youngs' modulus	Pa = N/m2
+! MP,	EX,		KUNSTSTOF_HDPE_1060,	900e6 		!Youngs' modulus	Pa = N/m2 = 760 (average + 2 times the standard deviation of 70. Thus only 5% of the samples will be stiffer
+MP,	PRXY,	KUNSTSTOF_HDPE_1060,	0.47392013 		!Poisson ratio 						Calculated from bulk modulus (4090 MPa)
+MP,	MU,		KUNSTSTOF_HDPE_1060,	0.1
+
+!MP, GXY,	KUNSTSTOF_HDPE_1060, 	217e6			!Shear modulus		Pa = N/m2		Calculated from poisson ratio and Ex.	
+
+!Set stress strain table
+
+! TB,PLASTIC,KUNSTSTOF_HDPE_1060,1,9,MISO
+! TBTEMP, 23
+
+! !			Strain		(Limit)stress
+! ! TBPT, DEFI, 0, 			7.848366818e6
+! ! TBPT, DEFI, 2.4 e-2,	7.848366818e6
+! ! TBPT, DEFI, 5	e-2, 	13.18601181e6
+! ! TBPT, DEFI, 7	e-2, 	15.41973423e6
+! ! TBPT, DEFI, 9	e-2, 	16.74719454e6
+! ! TBPT, DEFI, 10	e-2, 	17.17723535e6
+! ! TBPT, DEFI, 11	e-2, 	17.49072132e6
+! ! TBPT, DEFI, 12	e-2, 	17.71264820e6
+! ! TBPT, DEFI, 15.4e-2, 	18.00219786e6
+
+! !			Strain		(Limit)stress
+! TBPT, DEFI, 0, 			7.848366818e6
+! TBPT, DEFI, 2.4	e-2, 	13.18601181e6
+! TBPT, DEFI, 5	e-2, 	15.41973423e6
+! TBPT, DEFI, 7	e-2, 	16.74719454e6
+! TBPT, DEFI, 9	e-2, 	17.17723535e6
+! TBPT, DEFI, 10	e-2, 	17.49072132e6
+! TBPT, DEFI, 11	e-2, 	17.71264820e6
+! TBPT, DEFI, 12	e-2, 	18.00219786e6
+! TBPT, DEFI, 15	e-2, 	18.003e6 !diy
+
+!Prony series
+!TB, PRONY,	Kunststof_HS,	1,	1	,	shear
+!TBDATA,	1,	0.5, 6
+!TBDATA,	2,	0.55, 60
+!TBDATA,	3,	0.40, 600

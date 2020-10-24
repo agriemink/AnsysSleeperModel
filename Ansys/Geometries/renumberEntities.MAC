@@ -1,0 +1,13 @@
+!----------------------------------------------------------------------
+!-----------Renumbers all elements ------------------------------------
+!----------------------------------------------------------------------
+
+ALLSEL
+NUMCMP, KP !Renumber to be sure that there are no gaps
+NUMCMP, LINE 
+NUMCMP, AREA 
+NUMCMP, VOLU 
+*GET, KP_0, KP, 0 , NUM, MAXD
+*GET, Line_0, LINE, 0 , NUM, MAXD
+*GET, Area_0, AREA, 0 , NUM, MAXD
+*GET, Volume_0, VOLU, 0 , NUM, MAXD

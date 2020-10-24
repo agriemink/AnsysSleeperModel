@@ -1,0 +1,26 @@
+
+EPLOT  
+/VIEW,1,,,1 
+/ANG,1  !Front view
+/REP,FAST 
+
+/UDOC,1,DATE,0  
+/REPLOT 
+ESEL, S, CENT, X, -S_Halve_Breedte, S_Halve_Breedte !Select only the (middle) sleeper
+ESEL, R, CENT, Y, -S_Hoogte, 0 
+ESEL, R, CENT, Z, -Spoorwijdte/2 - ESIZE_Sleeper, -Spoorwijdte/2 + ESIZE_Sleeper
+
+!Set middle of screen to the center of the reinforcement
+/FOCUS, , W_x, W_y, 0, 0
+/REP,FAST   
+!Change the distance to 'fullscreen'
+! Help (DIST)  'a distance of   /2 (+10%) produces a full window magnification"
+!OB_SIZE_WIDTH [=0.038] / 2 + x%
+/DIST,1, OB_SIZE_WIDTH*0.8, 0
+/REP,FAST  
+
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningMesh'
+
+ALLSEL
+
+

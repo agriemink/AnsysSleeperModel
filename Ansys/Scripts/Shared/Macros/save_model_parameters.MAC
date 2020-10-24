@@ -1,0 +1,131 @@
+!saveModelParameters !-----------------------------------------------------------------------------------------------
+! Save the used parameters as CSV-file
+
+
+
+!Configure output
+*CFOPEN, 'UsedParameters', csv
+
+*VWRITE, 'Parameter', ';', 'Waarde', 				';', 'Eenheid',
+%s%s%s%s%s
+*VWRITE, 'Spoorwijdte', ';', SPOORWIJDTE*1000, 		';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'S_LENGTE', ';', S_LENGTE*1000, 			';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'S_BREEDTE', ';', S_BREEDTE*1000, 			';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'S_HOOGTE', ';', S_HOOGTE*1000, 			';', '[mm]',
+%s%s%g%s%s
+
+*VWRITE, 'W_LENGTE', ';', W_HALVE_LENGTE*2*1000, 	';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'W_DIAMETER', ';', W_DIAMETER*1000, 		';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'W_DEKKING_top (y)', ';', W_Dekking_y*1000, 			';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'W_DEKKING_side (x)', ';', W_Dekking_x*1000, 			';', '[mm]',
+%s%s%g%s%s
+
+*VWRITE, 'RH_BREEDTE', ';', RH_BREEDTE*1000, 		';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'RH_DIKTE', ';', RH_DIKTE*1000, 			';', '[mm]',
+%s%s%g%s%s
+*VWRITE, 'RH_LENGTE', ';', RH_LENGTE*1000, 			';', '[mm]',
+%s%s%g%s%s
+
+*VWRITE, 'Breedte railvoet', ';', RAILWIJDTE*1000,	';', '[mm]',
+%s%s%g%s%s
+! *VWRITE, 'Dikte railvoet', ';', RAILVOET_DIKTE*1000,';', '[mm]',
+! %s %s %g %s %s
+
+*VWRITE, 'K_FOUNDATION', ';', K_FOUNDATION/1000, 				';', '[kN/mm3]',
+%s%s%g%s%s
+*VWRITE, 'DAMPING_FOUNDATION', ';', DAMPING_FOUNDATION/1000, 	';', '[kN/ms]',
+%s%s%g%s%s
+
+MaterialKunststof = MaterialDatabase(1,Materiaal_S)
+MaterialWapening = MaterialDatabase(1,Materiaal_W)
+*VWRITE, 'Material Kunststof', ';', MaterialKunststof , 	';', '[-]',
+%s%s%s%s%s
+*VWRITE, 'Material Wapening', ';', MaterialWapening , 	';', '[-]',
+%s%s%s%s%s
+
+
+*DO, n, 1, LoadSteps, 1
+
+	*IF, LoadType(1), EQ, 'Force', THEN
+	
+		Railseat_force_L_Q = (Loadtable_Q_sym(n,1) + LoadTable_Q_left(n,1))/1000
+		Railseat_force_L_Y = -(Loadtable_Y_sym(n,1) + LoadTable_Y_left(n,1))/1000
+		
+		Railseat_force_R_Q = (Loadtable_Q_sym(n,1) + LoadTable_Q_right(n,1))/1000
+		Railseat_force_R_Y = (Loadtable_Y_sym(n,1) + LoadTable_Y_right(n,1))/1000
+		
+		Railseat_force_L_y_global = LoadTable_y_L(n,1)/1000
+		Railseat_force_L_z_global = LoadTable_z_L(n,1)/1000
+		
+		Railseat_force_R_y_global = LoadTable_y_R(n,1)/1000
+		Railseat_force_R_z_global = LoadTable_z_R(n,1)/1000
+		
+		Force_angle_loadcase = Force_angle_default
+	
+		!Q = vertical with respect to rail, not to global coordinate system.
+		*VWRITE, '%n% Railseat_force_L_Q', ';', Railseat_force_L_Q, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_L_Y', ';', Railseat_force_L_Y, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_R_Q', ';', Railseat_force_R_Q, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_R_Y', ';', Railseat_force_R_Y, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_L_y_global', ';', Railseat_force_L_y_global, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_L_z_global', ';', Railseat_force_L_z_global, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_R_y_global', ';', Railseat_force_R_y_global, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, '%n% Railseat_force_R_z_global', ';', Railseat_force_R_z_global, 	';', '[kN]',
+		%s%s%g%s%s
+	
+		*VWRITE, 'Force_angle', ';', Force_angle_loadcase, 	';', '[graden]',
+		%s%s%g%s%s
+	*ELSEIF, LoadType(1), EQ, 'Displ'
+		*VWRITE, 'Railseat_disp', ';', Railseat_displacement*1000, 		';', '[mm]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_displacement_y', ';', Railseat_displacement_y*1000, 	';', '[mm]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_displacement_z', ';', Railseat_displacement_z*1000, 	';', '[mm]',
+		%s%s%g%s%s
+	*ELSE
+		*VWRITE, 'Railseat_force', ';', Railseat_force/1000, 		';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_force_y', ';', Railseat_force_y/1000, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_force_z', ';', Railseat_force_z/1000, 	';', '[kN]',
+		%s%s%g%s%s
+		*VWRITE, 'Force_angle', ';', Force_angle/(3.14159/180), 	';', '[graden]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_disp', ';', Railseat_displacement*1000, 		';', '[mm]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_displacement_y', ';', Railseat_displacement_y*1000, 	';', '[mm]',
+		%s%s%g%s%s
+		*VWRITE, 'Railseat_displacement_z', ';', Railseat_displacement_z*1000, 	';', '[mm]',
+		%s%s%g%s%s
+	*ENDIF
+*ENDDO
+
+
+
+*CFCLOS !Close csv.
+
+*DEL, MaterialKunststof
+*DEL, MaterialWapening
+*DEL, Railseat_force_L
+*DEL, Railseat_force_L_y
+*DEL, Railseat_force_L_z
+*DEL, Railseat_force_R
+*DEL, Railseat_force_R_y
+*DEL, Railseat_force_R_z
+
+
+!/EOF !---------------------------------------------------------------------------------------------------------

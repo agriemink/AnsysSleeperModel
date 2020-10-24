@@ -1,0 +1,32 @@
+!Material Properties of KLP-HS 
+!
+!
+
+
+!Todo, waar deze naartoe?
+HDPE = ARG1
+Kunststof_HS = ARG1
+Kunststof_HDPE = ARG1
+
+MP,	DENS,	HDPE,	870				!Density			kg/m3 
+!MP,	EX,		HDPE,	1060e6 			!Youngs' modulus	Pa = N/m2 !2020-03-09 Op aangeven van Aran
+MP,	EX,		HDPE,	1060e6 			!Youngs' modulus	Pa = N/m2 !
+MP,	PRXY,	HDPE,	0.4 			!Poisson ratio from Aran
+! MatlabPlotBendingStiffnessSleeperTypes -> 2.9916 E3 = 2991.6
+
+
+!Prony series
+!Curve fitted with results from HS50 material
+! TB,PRON, HDPE   ,   1,  10,	SHEAR
+! TBTEMP,0.000000
+! TBDATA,     1, 1.39280e-001, 8.18300e-001, 1.31550e-001,
+! TBDATA,     4, 5.94020e+000, 1.07900e-001, 1.13770e-001,
+! TBDATA,     7, 1.11000e-001, 4.63880e+001, 1.64550e-001,
+! TBDATA,    10, 2.97170e+003, 2.65190e-001, 3.76650e+003,
+! TBDATA,    13, 7.44060e-002, 1.31630e-002, 1.91330e-003,
+! TBDATA,    16, 9.99470e+003, 1.43730e-003, 1.00000e+005,
+! TBDATA,    19, 1.39680e-003, 1.00000e+006,
+
+
+MP,	MU,		HDPE,	0.1
+!MP,	PRXY,	HDPE,	0.47392013 		!Poisson ratio 						Calculated from bulk modulus (4090 MPa)

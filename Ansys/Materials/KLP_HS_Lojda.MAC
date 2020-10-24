@@ -1,0 +1,23 @@
+!Material Properties of KLP-HS 
+!
+!
+
+
+!Todo, waar deze naartoe?
+HDPE = ARG1
+Kunststof_HS = ARG1
+Kunststof_HDPE = ARG1
+
+! file:///F:/OneDrive/Documenten/Tu/Afstuderen/Literatuur/Lankhorst/Investigation%20of%20the%20Elastic%20Modulus%20of%20Polymer%20Sleepers%20Under%20a%20Quasistatic%20and%20Cyclic%20Loading.pdf
+! GPa
+! Totale dwarsligger: HS 11.5 +0.4 (+3 %) +1.7 (+15 %) +2.1 (+19 %) +2.4 (+21 %) +2.5 (+21 %) 
+!
+! Aleen kunststof: 5 Hz: 8653.25218 Mpa
+
+
+MP,	DENS,	HDPE,	870				!Density			kg/m3 
+MP,	EX,		HDPE,	8653e6 			!Youngs' modulus	Pa = N/m2 !
+MP,	PRXY,	HDPE,	0.4 			!Poisson ratio from Aran
+
+MP,	MU,		HDPE,	0.1
+!MP,	PRXY,	HDPE,	0.47392013 		!Poisson ratio 						Calculated from bulk modulus (4090 MPa)

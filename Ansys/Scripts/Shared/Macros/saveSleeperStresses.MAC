@@ -1,0 +1,96 @@
+
+ALLSEL
+LoadCase = ARG1
+
+!Basis
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, '' !Selecteer middelste dwarsligger
+
+
+/VIEW,1,1,1,1 !Draai naar juiste standpunt.
+/ANG,1  
+/REP,FAST
+PLNSOL, S, EQV, 0 !Equivalent stress
+/REPLOT
+
+
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStress_LC%LoadCase%'
+*GET, MaxVonMises, PLNSOL, 0, MAX !Maximum value of item in last contour display
+*GET, MinVonMises, PLNSOL, 0, MIN !Minimum value of item in last contour display
+
+!Minus bovenste elementen.
+ALLSEL, BELOW
+ESEL, R, CENT, Y, -S_Hoogte, -0.01
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1Cm_LC%LoadCase%'
+*GET, MaxVonMises_zonder1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_zonder1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+/REPLOT
+
+PLNSOL, S, EQV, 0 !Equivalent stress
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_LC%LoadCase%'
+*GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1Cm_LC%LoadCase%'
+
+*GET, MaxShear_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinShear_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+
+PLNSOL, S, EQV, 0 !Equivalent stress
+!Select bottom elements
+NSEL, S, LOC, Y, -S_Hoogte
+NSEL, R, LOC, Z, -S_Lengte/2, S_Lengte/2
+ESLN, S, 0
+ESEL, U, TYPE, ,Element_COMBIN14
+PLNSOL, S, EQV, 0 !Equivalent stress
+/REPLOT
+*GET, MinVonMisesFoundationStress ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+*GET, MaxVonMisesFoundationStress ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'VonMisesFndtStress_LC%LoadCase%'
+
+PLNSOL, S, Y, 0 !Stress in vertical direction.
+/REPLOT
+*GET, MinYFoundationStress ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+*GET, MaxYFoundationStress ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+/REPLOT
+
+
+!Opmerking	Locatie	Grootheid		Load case 5	Load case 7
+
+!Save to csv
+*CFOPEN, '%saveWithJobname(1)%_MaxStresses%LoadCase%', csv
+*VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Min/Max' ,';','Load case %LoadCase%'
+%C%C%C%C%C%C%C%C%C
+
+*VWRITE, ';Wapening;Stress;Min;', MinVonMises_wapening
+%C%E
+*VWRITE, ';Wapening;Stress;Max;', MaxVonMises_wapening
+%C%E
+*VWRITE, ';Wapening;Shear stress;Min;', MinShear_wapening
+%C%E
+*VWRITE, ';Wapening;Shear stres;Max;', MaxShear_wapening
+%C%E
+*VWRITE, ';Kunststof;Stress;Min;', MinVonMises
+%C%E
+*VWRITE, ';Kunststof;Stress;Max;', MaxVonMises
+%C%E
+*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Min;', MinVonMises_zonder1cm
+%C%C%E
+*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Max;', MaxVonMises_zonder1cm
+%C%C%E
+*VWRITE, 'Foundation stresses VonMises', ';Kunststof;Stress;Min;', MinVonMisesFoundationStress
+%C%C%E
+*VWRITE, 'Foundation stresses VonMises', ';Kunststof;Stress;Max;', MaxVonMisesFoundationStress
+%C%C%E
+*VWRITE, 'Foundation stresses Y', ';Kunststof;Stress;Min;', MinYFoundationStress
+%C%C%E
+*VWRITE, 'Foundation stresses Y', ';Kunststof;Stress;Max;', MaxYFoundationStress
+%C%C%E
+*CFCLOS

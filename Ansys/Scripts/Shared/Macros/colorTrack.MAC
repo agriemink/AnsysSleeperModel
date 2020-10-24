@@ -1,0 +1,49 @@
+
+!Color the volumes and elements:
+
+!Create new components for the elements.
+VSEL, S, MAT, , Materiaal_S
+CM, Kunststof_V, VOLU
+
+CMSEL, S, Kunststof_V
+ESLV, S
+CM, Kunststof_E, ELEM
+
+CMSEL, S, RAIL_V
+ESLV, S
+CM, RAIL_E, ELEM
+
+CMSEL, S, RUGHELLINGPLATEN_L
+CMSEL, A, RUGHELLINGPLATEN_R
+ESLV, S
+CM, RUGHELLINGPLATEN_E, ELEM
+
+CMSEL, S, Railpads_V
+ESLV, S
+CM, Railpads_E, ELEM
+
+CMSEL, S, Wapening_V
+ESLV, S
+CM, Wapening_E, ELEM
+
+!Color the components.
+ALLSEL
+/COLOR,CM,DGRA,Kunststof_V   
+/COLOR,CM,DGRA,Kunststof_E
+
+
+/COLOR,CM,LGRA,RAIL_V   
+/COLOR,CM,LGRA,RAIL_E   
+
+/COLOR,CM,ORAN,RUGHELLINGPLATEN_L   
+/COLOR,CM,ORAN,RUGHELLINGPLATEN_R   
+/COLOR,CM,ORAN,RUGHELLINGPLATEN_E   
+
+/COLOR,CM,CBLU,Railpads_V
+/COLOR,CM,CBLU,Railpads_E
+
+/COLOR,CM,ORAN,Wapening_V
+/COLOR,CM,ORAN,Wapening_E
+
+ALLSEL
+/replot

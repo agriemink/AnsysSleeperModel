@@ -1,0 +1,25 @@
+	/NOPR
+	/EFACET,4
+	!Saves current screen as png and eps.
+	/INQUIRE, jobname__, JOBNAME, !get the jobname as this is the first part of the plotname 
+	
+	/GO
+	*IF, STRLENG(ARG1), GT, 0, THEN
+		*DEL, OutputFilename_, NOPR
+		*DIM, OutputFilename_, STRING, 248
+		OutputFilename_(1) = '%ARG1%'
+	*ELSEIF, STRLENG(OutputFilename_), EQ, 0, AND, ARG1, EQ, 0,
+		*DEL, OutputFilename_, NOPR
+		*DIM, OutputFilename_, STRING, 248
+		OutputFilename_(1) = 'No_filename_specified'
+	*ENDIF
+
+	*USE, '%MacroFolder(1)%save_plot_as_png.MAC'
+	*USE, '%MacroFolder(1)%rename_plot.MAC', 'png', jobname__(1),  OutputFilename_(1)
+
+	
+	*USE, '%MacroFolder(1)%save_plot_as_eps.MAC'
+	*USE, '%MacroFolder(1)%rename_plot.MAC', 'eps', jobname__(1),  OutputFilename_(1)
+	
+	*DEL, OutputFilename_plot
+	*DEL, jobname__

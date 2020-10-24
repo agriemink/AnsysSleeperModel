@@ -1,0 +1,15 @@
+
+
+!  file:///F:/OneDrive/Documenten/Tu/Afstuderen/Literatuur/Lankhorst/Investigation%20of%20the%20Elastic%20Modulus%20of%20Polymer%20Sleepers%20Under%20a%20Quasistatic%20and%20Cyclic%20Loading.pdf
+Beton = ARG1
+
+MP,	DENS,	Beton,	2400			!Density			kg/m3
+MP,	EX,		Beton,	37.1e9 			!Youngs' modulus	Pa = N/m2
+MP,	PRXY,	Beton,	0.2 			!Poisson ratio !Wikipedia
+
+MP,	MU,		Beton,	0.1
+
+! Increase in E-modulus in [GPa] and [%] 
+
+!Loading frequency [Hz] 0.005 	0.01 			1 				3 				5 				7 
+!Prestressed concrete 	37.1 	+0.5 (+1 %) 	+3.1 (+8 %) 	+2.3 (+6 %) 	+4.8 (+13 %) 	N/a * 

@@ -1,0 +1,8 @@
+!Material Properties of generic steel
+!
+
+Ballast = ARG1
+
+!Only the mu is used 
+MP,	MU,		ARG1, 	0.15
+

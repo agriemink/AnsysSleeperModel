@@ -1,0 +1,212 @@
+/PREP7 !start preprocessor
+
+X_COORD = ARG2
+!MakeUseOfSymmetry = ARG3 !'True' == 'Symmetrie'
+W_Divisions = ARG4
+GeometryFolder(1) = '%GeometryFolderCommon(1)%\%SleeperModel(1)%'
+
+!This is the main file for creating the KLP (rectangular) sleeper. 
+!Necessary for this file are loaded parameters 
+*IF, ARG1, EQ, 201, THEN
+	/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1
+*ELSEIF, ARG1, EQ, 202
+	/INPUT, parameters_202, f, '%GeometryFolder(1)%' , 0, 1
+*ELSE
+	/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1 !Default
+*ENDIF
+
+*GET, CS_max , CDSY, 0, NUM, MAX
+CS_SleeperLocal = max(11,CS_max + 1)
+LOCAL, CS_SleeperLocal, CART, X_COORD, -S_Halve_Hoogte, 0, 0, 0,	0, ,  ! 
+!LOCAL, KCN, KCS, XC, YC, ZC, THXY, THYZ, THZX, PAR1, PAR2
+CS_WapeningLocal = max(12,CS_max + 2)
+LOCAL, CS_WapeningLocal, CART, X_COORD + W_x, W_y, 0, 0, 0,	0, ,  ! 
+*DEL, CS_max
+
+real, realSolids
+
+!-----------------------------
+!Create halve Rechthoek / dwarsligger
+*USE, '%GeometryFolder(1)%\Subparts\createSleeperBase.MAC', CS_SleeperLocal, ARG3
+
+!-----------------------------
+!Create halve wapening
+*USE, '%GeometryFolder(1)%\Subparts\createReinforcement.MAC', CS_WapeningLocal, W_Divisions, ARG3
+
+!----------------------------------------------------------------------
+!--------- Merge reinforcement with the base --------------------------
+!----------------------------------------------------------------------
+CMSEL, S, Wapening_with_block_A
+CMSEL, A, Dwarsligger_A
+AGLUE, ALL
+
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+CSYS, CS_SleeperLocal
+ALLSEL
+LSEL, S, LOC, Z, 0
+LSEL, R, LOC, X, -S_Halve_Breedte, S_Halve_Breedte
+LSEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+CM, Z_plane, LINE
+!Concatenate the lines from the middle block
+
+!Vertical lines
+CMSEL, S, Z_plane 
+LSEL, R, LOC, X, S_block_width
+LSEL, R, LOC, Y, 0, S_Halve_Hoogte
+LCCAT, ALL
+
+CMSEL, S, Z_plane 
+LSEL, R, LOC, X, S_block_width
+LSEL, R, LOC, Y, -S_Halve_Hoogte, 0
+LCCAT, ALL
+
+*IF, ARG3, NE, 'true', THEN
+	CMSEL, S, Z_plane 
+	LSEL, R, LOC, X, -S_block_width
+	LSEL, R, LOC, Y, 0, S_Halve_Hoogte
+	LCCAT, ALL
+
+	CMSEL, S, Z_plane 
+	LSEL, R, LOC, X, -S_block_width
+	LSEL, R, LOC, Y, -S_Halve_Hoogte, 0
+	LCCAT, ALL
+
+	!Horizontal lines
+	CMSEL, S, Z_plane
+	LSEL, R, LOC, Y, -S_block_height
+	LSEL, R, LOC, X, -S_Halve_Breedte, 0
+	LCCAT, ALL
+
+	CMSEL, S, Z_plane
+	LSEL, R, LOC, Y, S_block_height
+	LSEL, R, LOC, X, -S_Halve_Breedte, 0
+	LCCAT, ALL
+
+*ENDIF
+
+CMSEL, S, Z_plane 
+LSEL, R, LOC, Y, S_block_height
+LSEL, R, LOC, X, 0, S_Halve_Breedte
+LCCAT, ALL
+
+CMSEL, S, Z_plane
+LSEL, R, LOC, Y, -S_block_height
+LSEL, R, LOC, X, 0, S_Halve_Breedte
+LCCAT, ALL
+
+!Mesh:
+ALLSEL
+ASEL, S, LOC, Z, 0
+ASEL, R, LOC, X, -S_Halve_Breedte, S_Halve_Breedte
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+MSHKEY, 1 !Mapped meshing
+ESIZE, (OB_size_width/2)/W_Divisions
+
+ASEL, U, LOC, X, -S_block_width, S_block_width
+AMESH, ALL
+
+ASEL, S, LOC, Z, 0
+ASEL, R, LOC, X, -S_block_width, S_block_width
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+AMESH, ALL !Mesh two times as the other gives an error.
+
+!Delete the concatenated lines.
+ALLSEL
+LSEL, S, LCCA
+LDEL, ALL
+ALLSEL
+
+
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+!----------------------------------------------------------------------
+!--------- Extrude ----------------------------------------------------
+!----------------------------------------------------------------------
+*USE, '%GeometryFolder(1)%\extrude.MAC', X_COORD
+ALLSEL
+
+!----------------------------------------------------------------------
+!-------Create components ---------------------------------------------
+!----------------------------------------------------------------------
+!wapening
+CSYS, CS_SleeperLocal
+Midpoint_X = S_Halve_Breedte - W_Dekking_x - W_Straal !=W_X)
+Midpoint_Y = S_Halve_Hoogte -  W_Dekking_y - W_Straal 
+
+VSEL, S, LOC, X, Midpoint_X - W_Straal, 			Midpoint_X + W_Straal
+VSEL, R, LOC, Y, Midpoint_Y - W_Straal, 			Midpoint_Y + W_Straal
+VSEL, R, LOC, Z, -W_Halve_Lengte, W_Halve_Lengte
+CM, Wapening_1_V, VOLU
+VSEL, S, LOC, X, Midpoint_X - W_Straal, 			Midpoint_X + W_Straal
+VSEL, R, LOC, Y, -Midpoint_Y - W_Straal, 			-Midpoint_Y + W_Straal
+VSEL, R, LOC, Z, -W_Halve_Lengte, W_Halve_Lengte
+CM, Wapening_2_V, VOLU
+
+VSEL, S, LOC, X, -Midpoint_X - W_Straal, 			-Midpoint_X + W_Straal
+VSEL, R, LOC, Y, Midpoint_Y - W_Straal, 			Midpoint_Y + W_Straal
+VSEL, R, LOC, Z, -W_Halve_Lengte, W_Halve_Lengte
+CM, Wapening_3_V, VOLU
+CM, Wapening_V_RB, VOLU
+VSEL, S, LOC, X, -Midpoint_X - W_Straal, 			-Midpoint_X + W_Straal
+VSEL, R, LOC, Y, -Midpoint_Y - W_Straal, 			-Midpoint_Y + W_Straal
+VSEL, R, LOC, Z, -W_Halve_Lengte, W_Halve_Lengte
+CM, Wapening_4_V, VOLU
+CM, Wapening_V_RO, VOLU
+
+ALLSEL
+CMSEL, S, Wapening_V
+CMSEL, A, Wapening_1_V
+CMSEL, A, Wapening_2_V
+CMSEL, A, Wapening_3_V
+CMSEL, A, Wapening_4_V
+CM, Wapening_V, VOLU
+ESLV, S
+EMODIF, ALL, MAT, Materiaal_W
+!VATT, Materiaal_W
+
+!Dwarsligger
+ALLSEL
+*GET, DoesRughellingplaatExists, COMP, Rughellingplaten, TYPE
+*GET, DoesRailExists, COMP, Rail_V, TYPE
+*GET, DoesRailpadExists, COMP, Railpads_V, TYPE
+*IF, DoesRughellingplaatExists, GT, 0, AND, DoesRailExists, GT, 0, THEN !Unselect only if they exist
+	CMSEL, U, Rughellingplaten
+	CMSEL, U, Rail_V
+*ENDIF
+*IF, DoesRailpadExists, GT, 0, THEN !Unselect only if they exist
+	CMSEL, U, Railpads_V
+*ENDIF
+
+*IF, Materiaal_S, NE, Materiaal_W, THEN
+	CMSEL, U, Wapening_V
+*ENDIF	
+VSEL, R, LOC, X, -S_Halve_Breedte, S_Halve_Breedte
+CM, Kunststof_V_Locaal, VOLU
+
+CMSEL, S, Kunststof_V
+CMSEL, A, Kunststof_V_Locaal
+CM, Kunststof_V, VOLU
+ESLV, S
+EMODIF, ALL, MAT, Materiaal_S
+!VATT, Materiaal_S
+
+!Sleeper in zijn geheel
+VSEL, ALL
+VSEL, R, LOC, Y, -S_Hoogte, 0
+CM, Dwarsliggers_V, VOLU
+
+
+ALLSEL
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+ALLSEL
+
+
+*DEL, DoesRughellingplaatExists
+*DEL, DoesRailExists
+*DEL, DoesRughellingplaatExists
+*DEL, DoesRailExists
+*DEL, MaxLine
+*DEL, Midpoint_X
+*DEL, Midpoint_Y
+*DEL, X_COORD

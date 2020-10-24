@@ -1,0 +1,74 @@
+!/NOPR
+
+CSYS, 0	
+*DEL, Mask_
+*DEL, ReducedValues_
+
+*GET,MaxNode,NODE,0, NUM, MAXD
+*DIM, Mask_,array,MaxNode
+*DIM, ReducedValues_,array,MaxNode,8	!columns array
+
+!Left nodes:
+CMSEL, S, GaugeNodes_L
+NSORT,LOC,X,0,0, ,SELECT !Sort by X coordinate
+
+*VGET, Mask_(1),node,1,NSEL	!Selected nodes
+
+!Displacements
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,2),node,1,U, X		! X-Displacements of nodes
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,3),node,1,U, Y		! Y-Displacements of nodes
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,4),node,1,U, Z		! Z-Displacements of nodes
+
+
+!Right nodes:
+CMSEL, S, GaugeNodes_R
+NSORT,LOC,X,0,0, ,SELECT !Sort by X coordinate
+
+*VGET, Mask_(1),node,1,NSEL	!Selected nodes
+
+
+!Displacements
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,5),node,1,U, X		! X-Displacements of nodes
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,6),node,1,U, Y		! Y-Displacements of nodes
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,7),node,1,U, Z		! Z-Displacements of nodes
+
+!--------------------------------
+CMSEL, S, GaugeNodes_L
+CMSEL, A, GaugeNodes_R
+*VGET, Mask_(1),node,1,NSEL	!Selected nodes
+
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,1),node,1,LOC, X	! X-location of nodes
+
+!Configure output
+*CFOPEN, '%OutputFilename_(1)%_GaugeNodes_%i%', csv
+*VWRITE, 'Node', ';', 'Loc X', ';', 'UX [m] Left', ';', 'UY [m] Left', ';', 'UZ [m] Left', ';', 'UX [m] Right', ';', 'UY [m] Right', ';', 'UZ [m] Right'
+%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C
+
+!*VWRITE ,'Node', ';','X-coordinate', ';','Y-coordinate', ';','Z-coordinate', ';','X-displacement', ';','Y-displacement', ';','Z-displacement', ';', 'Equivalent stress' ';', 'Bonus'
+*vmask, Mask_(1)
+*VWRITE , sequ, ';', ReducedValues_(1,1), ';', ReducedValues_(1,2), ';', ReducedValues_(1,3), ';', ReducedValues_(1,4), ';', ReducedValues_(1,5), ';', ReducedValues_(1,6), ';', ReducedValues_(1,7)
+(F8.0,A,F6.4,A,EN15.4,A,EN15.4E2,A,EN15.4E2,A,EN15.4,A,EN15.4E2,A,EN15.4)
+!Dont use spaces in formatting!
+
+*CFCLOS
+
+!Secondary:
+CMSEL, S, GaugeNodes_R
+CMSEL, A, GaugeNodes_L
+NSORT, LOC, X, 0, 0, , SELECT !Sort by x-coordinate
+OutputFilename_(1) = '%OutputFilename_(1)%_GaugeNodes', csv
+*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+
+
+*DEL, ReducedValues_
+*DEL, Mask_
+*DEL, AantalNodes
+*DEL, Mask_, NOPR
+

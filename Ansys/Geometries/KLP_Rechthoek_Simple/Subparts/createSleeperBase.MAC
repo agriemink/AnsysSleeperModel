@@ -1,0 +1,52 @@
+!----------------------------------------------------------------------
+!-----------Create dwarsligger met rechthoekige doorsnede -------------
+!----------------------------------------------------------------------
+
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+CS_SleeperLocal = ARG1 !TODO, make all other building blocks dependend on X (e.g. The RECTNG commands).
+!MakeUseOfSymmetry = ARG2 !'True' == 'Symmetrie'
+!----------------------------------------------------------------------
+!---------------------Parameters:--------------------------------------
+!----------------------------------------------------------------------
+
+
+!This will be the current coordinate system
+CSYS, CS_SleeperLocal
+WPCSYS, , CS_SleeperLocal 
+MAT, Materiaal_S
+!----------------------------------------------------------------------
+!---------------------Create Rectangular areas (halve ligger) ---------
+!----------------------------------------------------------------------
+ASEL, NONE
+S_block_width = S_Halve_Breedte - OB_size_width !sleeper width without wapening-section
+S_block_height = S_Halve_Hoogte - OB_size_height !sleeper height without wapening-section
+
+!Boven (hoogte == OB_size_height)
+!		X-1					X-2							Y1					Y2		
+RECTNG, 0, 					S_block_width, 				S_block_height, 	S_Halve_Hoogte			
+
+!Midden
+!		X-1					X-2							Y1					Y2		
+RECTNG, 0,					S_Halve_Breedte, 			-S_block_height, 	S_block_height
+
+!onder (breedte === OB_size_width
+!		X-1					X-2							Y1					Y2		
+RECTNG, 0,			 		S_block_width, 				-S_block_height, 	-S_Halve_Hoogte
+
+ASEL, S, AREA, , AREA_0 + 1, AREA_0 + 3 
+
+*IF, ARG2, NE, 'true', THEN 
+	ARSYM,X,ALL, , , ,0,0   !Kopieer niet als er symmetrie gebruikt wordt.
+*ENDIF
+
+AGLUE, ALL
+!VATT, Materiaal_S
+
+CM, Dwarsligger_A, AREA
+ALLSEL
+
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0

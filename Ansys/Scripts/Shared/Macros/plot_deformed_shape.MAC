@@ -1,0 +1,7 @@
+!plotDeformedShape
+
+/VIEW,1,1 !change rotation to 'right' 
+PLDISP,0 !Plot displacement
+
+/AUTO,1 
+/REPLOT

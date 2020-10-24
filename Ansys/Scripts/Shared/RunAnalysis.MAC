@@ -1,0 +1,114 @@
+
+FINISH
+/CWD, '%Working_Directory(1)%' 	!Change working directory to default.
+
+!ARGS, Type analyse, analyse index-file, simulatienaam,  skipsolve: true || false
+*DIM, AnalyisName, STRING, 200
+*DIM, Filename, STRING, 200
+AnalysisType = ARG1
+AnalyisName(1) = ARG2
+Filename(1) = ARG3
+SKIPSOLVE = ARG4
+
+PARSAV, ALL, 'temp'
+/CLEAR
+PARRES, NEW, 'temp'
+
+
+/MKDIR, '%Working_Directory(1)%\%Filename(1)%' 			!Make a new folder for each analysis
+/CWD, '%Working_Directory(1)%\%Filename(1)%' 			!Change working directory
+
+
+/INQUIRE, FileExists, EXIST, '%Analysisfolder(1)%\%AnalyisName(1)%', f
+*IF, FileExists, GT, 0, THEN
+	/INPUT, '%AnalyisName(1)%', f, '%Analysisfolder(1)%' , 0, 1 !Load analysis variables 
+		
+	!Any global variables:
+	T = LoadLocation_X
+	
+	!Save variables.
+	ParameterFiles = 'ParameterFiles_%Filename(1)%'
+	PARSAV, ALL, '%Working_Directory(1)%\%ParameterFiles%', 'f'
+	
+	/FILNAME, %Filename(1)%, ON		!Change filename
+	PARSAV, ALL, 'CustomParameters', 'f'
+	
+	!----------------------------------------------------------------------
+	!TRUE analysis part:
+	!----------------------------------------------------------------------
+	/INPUT, Elements, f, '%Scriptfolder(1)%/Parameters' , 0, 1 		!(Re)set element types
+	*USE, '%MaterialFolder(1)%/Macros/LoadMaterials.MAC'
+	!----------------------------
+	!-------- Geometrie: --------
+	/INPUT, createGeometry, f, '%Scriptfolder(1)%' , 0, 1 !Load geometry
+
+	!----------------------------
+	!----- Foundation: ----------\
+	*IF, GeometryHasFoundation, EQ, 1, THEN !See if the geometry needs a foundation (if it is not a free free model).
+		/INPUT, foundation_index, f, '%Scriptfolder(1)%/Foundation' , 0, 1
+	*ENDIF
+	*DEL, FoundationFileExists
+	!----------------------------
+	!----- Contact areas: -------
+	*IF, GeometryHasContact, EQ, 1, THEN !CustomParameters does exists. (if it is not a free free model).
+		/INPUT, contact_index, f, '%Scriptfolder(1)%/Contact' , 0, 1 !Create contact between->rail and rughellingplaat and rughellingplaat and sleeper 
+	*ENDIF
+	*DEL, ContactFileExists	
+	!----------------------------
+	!----- Constrain nodes: -----
+	/SOLU
+	/INPUT, Constraints, f, '%Scriptfolder(1)%' , 0, 1 !ConstrainNodes
+
+	!----------------------------
+	!------- Apply loads: -------
+	ALLSEL
+	*IF, '%AnalysisType%', NE, 'modal', THEN,
+		/INPUT, ApplyLoads, f, '%Scriptfolder(1)%' , 0, 1 !put loads on nodes
+	*ELSE,
+		!No loading for a modal analysis.	
+		!And solve only once.
+		LoadSteps = 1
+		LSWRITE
+	*ENDIF
+	
+	ALLSEL
+	SAVE, '%Filename(1)%', 'db'
+	!----------------------------
+	!-------- Solve : ---------
+	*IF, SKIPSOLVE, NE, 'TRUE', THEN,
+	
+		!----------------------------------------
+		!-------- Load Analysis files : ---------
+		/INPUT, 'AnalysisSettings_%AnalysisType%' , f, '%Scriptfolder(1)%/AnalysisSettings' , 0, 1 !Load AnalysisSettings
+		FINISH
+
+		/INPUT, Solve , f, '%Scriptfolder(1)%' , 0, 1 !Solve
+
+			
+		ALLSEL
+		!Filename(1) = '%Filename(1)%_%AnalysisType%'
+		SAVE, '%Filename(1)%', 'db'
+	*ENDIF		
+	
+	PARSAV, ALL, 'CustomParameters %AnalyisName(1)%', 'f'
+	!----------------------------
+	!-------- Analysis : ---------
+	/INPUT, PostProcess, MAC, '%Scriptfolder(1)%' , 0, 1 !PostProcess and save files
+	EPLOT
+	ALLSEL
+	SAVE, %Filename(1)%, 'db'
+
+*ELSE
+	/COM, File %Filename(1)% not found.
+	
+	*CFOPEN, 'Filename_does_not_exist%Filename(1)%', txt, , APPEND
+	*CFCLOSE
+*ENDIF
+
+*DEL, Filename
+*DEL, AnalyisName
+*DEL, analysisFilename
+
+FINISH
+
+

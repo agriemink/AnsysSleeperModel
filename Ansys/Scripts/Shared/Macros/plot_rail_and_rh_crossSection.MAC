@@ -1,0 +1,20 @@
+
+! *USE, '%MacroFolder(1)%plot_rail_and_rh_crossSection.MAC'
+
+!Create a plot of the cross section mesh.
+ALLSEL
+/VIEW,1,1 !change rotation to 'right' 
+
+CMSEL, S, RAIL_V_L
+CMSEL, A, Rughellingplaat_V_L
+ALLSEL, BELOW
+
+ESEL, R, CENT, X, 0
+
+/AUTO,1 
+/REPLOT
+
+*USE, '%MacroFolder(1)%save_plot.MAC', 'RailAndRH_Mesh'
+
+
+ALLSEL

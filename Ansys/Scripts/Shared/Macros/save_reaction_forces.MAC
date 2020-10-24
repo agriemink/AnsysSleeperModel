@@ -1,0 +1,58 @@
+!disable warning messages.
+!/NOPR
+!/UIS, MSGPOP, 3
+!/NERR,,,,,0
+
+/go
+/POST1
+
+/INQUIRE, saveWithJobname_Local, JOBNAME, !get the jobname as this is the first part of the plotname 
+
+!Save the reaction forces from the current selected nodes.
+*DIM, SleeperReactionForces, ARRAY, AantalSleepers*2-1, 5
+
+i = 0
+*DO, SleeperIndex, -(AantalSleepers - 1), (AantalSleepers - 1)
+/GO
+	i = i + 1
+
+	X_COORD = SleeperIndex*Sleeperdistance
+	X_MIN = X_COORD - S_Halve_Breedte
+	X_MAX = X_COORD + S_Halve_Breedte
+	
+	!Select Sleepernodes:
+	CMSEL, S, ConstrainedNodes
+	NSEL, R, LOC, X, X_MIN, X_MAX
+	FSUM, ,
+	
+	*GET, ReactionForce_X, FSUM, 0, ITEM, FX,
+	*GET, ReactionForce_Y, FSUM, 0, ITEM, FY,
+	*GET, ReactionForce_Z, FSUM, 0, ITEM, FZ,
+
+	SleeperReactionForces(i,1) = i
+	SleeperReactionForces(i,2) = X_COORD
+	SleeperReactionForces(i,3) = ReactionForce_X
+	SleeperReactionForces(i,4) = ReactionForce_Y
+	SleeperReactionForces(i,5) = ReactionForce_Z
+	
+	!*TAXIS, SleeperReactionForces(i,1), 2,  i, , ReactionForce_X, ReactionForce_Y, ReactionForce_Z
+	
+*ENDDO
+
+analysisIndex = ARG1
+
+!Configure output
+*CFOPEN, '%saveWithJobname_Local(1)%_ReactionForcesPerSleeper_%analysisIndex%', csv
+*VWRITE, 'Sleeper', ';', 'Loc X', ';', 'FX', ';', 'FY', ';', 'FZ'
+%C%C%C%C%C%C%C%C%C
+
+!*VWRITE ,'Node', ';','X-coordinate', ';','Y-coordinate', ';','Z-coordinate', ';','X-displacement', ';','Y-displacement', ';','Z-displacement', ';', 'Equivalent stress' ';', 'Bonus'
+*VWRITE , SleeperReactionForces(1,1), ';', SleeperReactionForces(1,2), ';',SleeperReactionForces(1,3), ';', SleeperReactionForces(1,4), ';', SleeperReactionForces(1,5)
+(F2.0,A,F8.3,A,F10.2,A,F10.2,A,F8.2)
+!Dont use spaces in formatting!
+
+
+*CFCLOS
+
+*DEL, SleeperReactionForces, NOPR
+*DEL, i

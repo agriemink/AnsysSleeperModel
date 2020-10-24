@@ -1,0 +1,36 @@
+	
+	/INQUIRE, jobname_, JOBNAME, !get the jobname as this is the first part of the plotname 
+	
+	*DIM, newFilename, STRING, 200
+	
+	extension = LWCASE(ARG1)
+	newFilename(1) = '%ARG2%_%ARG3%'
+
+	*DEL, OutputFilename_plot
+	*DIM,OutputFilename_plot,STRING, 200
+
+	*DO, n, 0, 999, 1 !Rename all the plots with a clear name.
+		*IF, n, LT, 10, THEN
+			/INQUIRE, DoesExist, EXIST, '%jobname_(1)%00%n%', extension
+			OutputFilename_plot(1) = '%jobname_(1)%00%n%'
+		*ELSEIF, n, LT, 100, THEN
+			/INQUIRE, DoesExist, EXIST, '%jobname_(1)%0%n%', extension
+			OutputFilename_plot(1) = '%jobname_(1)%0%n%'
+		*ELSE
+			/INQUIRE, DoesExist, EXIST, '%jobname_(1)%%n%', extension
+			OutputFilename_plot(1) = '%jobname_(1)%%n%'
+		*ENDIF
+		
+		*IF, DoesExist, EQ, 1, THEN
+			/RENAME, OutputFilename_plot(1), %extension%, , newFilename(1) , %extension%, , 
+			*EXIT
+		*ENDIF
+	*ENDDO
+
+	
+	*DEL, DoesExist
+	*DEL, extension
+	*DEL, jobname_
+	*DEL, newFilename
+	
+	

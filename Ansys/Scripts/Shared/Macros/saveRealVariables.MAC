@@ -1,0 +1,29 @@
+
+
+
+ALLSEL
+
+/VIEW,1,1  !Right
+/PNUM, REAL, 1
+EPLOT
+
+/out,RealVariables,txt
+*GET,maxReal,RCON,0,NUM,MAX ! The maximum real constant set number defined
+*DO,i,1,maxReal,1
+  ESEL,NONE
+  ESEL,S,REAL,,i        ! Select elements with current real number
+  ecount = 0
+  *GET,ecount,ELEM,  0, COUNT
+  *IF,ecount,GT,0,then
+  ! Process here, at this point, variable i is one of the real constant present (and activively used) in model
+	/COM,real: %i%, elm. count: %ecount%
+	
+	*DO, j, 1, 4
+		*GET, myvariable, RCON, i , CONST, j
+		
+		/COM,real index: %j%,  real value: %myvariable%
+  *ENDDO
+*ENDDO
+
+/out
+*DEL, maxReal

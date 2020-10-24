@@ -1,0 +1,22 @@
+!Material Properties of KLP-PE 
+!
+!
+PE = ARG1
+Kunststof_PE = ARG1
+
+MP,	DENS,	ARG1,	880				!Density			kg/m3
+MP,	EX,		ARG1,	330e6 			!Youngs' modulus	Pa = N/m2 !240 uit materiaaldocument 330 uit Arans mail.
+MP,	PRXY,	ARG1,	0.40 			!Poisson ratio from Aran
+! MatlabPlotBendingStiffnessSleeperTypes -> 1.828.9 E3 = 1828.9
+
+! TB,PRON,_MATL   ,   1,  10,SHEAR
+! TBTEMP,0.000000
+! TBDATA,     1, 1.64691e-001, 1.58269e-002, 9.91834e-003,
+! TBDATA,     4, 4.52694e+002, 1.47373e-001, 1.74772e-001,
+! TBDATA,     7, 1.39353e-001, 1.89399e+000, 1.22030e-001,
+! TBDATA,    10, 2.02735e+001, 2.47971e-001, 4.89049e+002,
+! TBDATA,    13, 9.94353e-003, 9.59655e+003, 1.36745e-002,
+! TBDATA,    16, 9.99487e+004, 1.32356e-002, 4.99787e+004,
+! TBDATA,    19, 1.32471e-002, 9.99995e+005,
+
+!MP, GXY,	ARG1, 	217e6			!Shear modulus		Pa = N/m2		Calculated from poisson ratio and Ex.	

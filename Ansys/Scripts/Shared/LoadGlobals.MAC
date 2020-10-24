@@ -1,0 +1,35 @@
+
+*DIM, RunAnalysisMacroName, STRING, 200
+RunAnalysisMacroName(1) = '%Scriptfolder(1)%/RunAnalysis.MAC'
+
+*DIM,MaterialFolder,STRING,200 !Required for initialisation of DefaultParameters-file
+MaterialFolder(1) = '%BaseFolder(1)%\Materials'
+
+*DIM, GeometryFolderCommon, STRING, 100
+GeometryFolderCommon(1) = '%BaseFolder(1)%\Geometries\'
+
+*DIM,GlobalWorkingDirectory,STRING,200
+GlobalWorkingDirectory(1) = '%GitBaseFolder(1)%\Results\'
+
+*DIM, Analysisfolder, STRING, 200
+Analysisfolder(1) = '%BaseFolder(1)%\Analysis'
+
+!Set size of variables:
+! The values should be set in an index-file.
+*DIM, WorkingDirectoryName, STRING, 200
+*DIM, General_Working_Directory, STRING , 200
+*DIM, Working_Directory, STRING , 200
+*DIM, GeometryFolder, STRING, 200
+
+!--------------------------------------------------------------
+!-------- Load default variables : ----------------------------
+!--------------------------------------------------------------
+/INPUT, DefaultParameters, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
+/INPUT, PossibleGeometries, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
+/INPUT, Loads, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
+
+
+
+PARSAV, ALL, 'DefaultParameters', 'f' 
+
+

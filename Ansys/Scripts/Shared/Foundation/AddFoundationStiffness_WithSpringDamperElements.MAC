@@ -1,0 +1,188 @@
+!----------------------------------------------------------------------
+!---------------------Create spring-damper elements -------------------
+!----------------------------------------------------------------------
+
+/GO
+/PREP7
+!Input parameters:
+X_Min_Local = ARG1
+X_Max_Local = ARG2
+Y_location_Local = ARG3
+
+foundation_stiffness_Local = ARG4
+foundation_damping_Local = ARG5
+
+foundation_supported_area_length_local = ARG7 !percentage of L (sleeper length) that determines the length of the middle support portion.
+foundation_supported_area_multiplier_local = ARG8 !factor that defines the difference between the middle suport portion. C2/C1 C1 = edges, C2, middle e.g. 1.2 -> middle portion is 1.2 times the sides.
+
+*IF, ARG7, LT, 0.0001, THEN
+	!When there is no length specified, get every node as middle node instead of all edge nodes. (otherwise the nodes at Z=0 won't have a correct spring stiffness).
+	foundation_supported_area_length_local = 1
+*ENDIF
+*IF, ARG8, LT, 0.0001, THEN
+	!When there is no length specified, get every node as middle node instead of all edge nodes. (otherwise the nodes at Z=0 won't have a correct spring stiffness).
+	C2_over_C1 = 1
+*ELSE
+	C2_over_C1 = ARG8
+*ENDIF
+
+L = S_lengte
+a = foundation_supported_area_length_local*L
+
+!Parameter:
+Y_Foundation = 0.2
+
+!Bottom nodes of sleeper:
+ALLSEL
+NSEL, S, LOC, Y, Y_location_Local
+NSEL, R, LOC, X, X_Min_Local, X_Max_Local
+*GET, AantalNodes, NODE, 0, COUNT, 
+CM, BottomSleeperNodes_Local, NODE !Save Top nodes.
+
+CMSEL, S, BottomSleeperNodes_Local
+NSEL, R, LOC, Z, -a/2, a/2
+*GET, AantalNodesMiddle_, NODE, 0, COUNT, 
+CM, MiddleNodes_, NODE
+
+CMSEL, S, BottomSleeperNodes_Local
+CMSEL, U, MiddleNodes_ !Unselect the middle nodes
+*GET, AantalNodesOutside_, NODE, 0, COUNT, 
+CM, OutsideNodes_, NODE
+
+CMSEL, S, BottomSleeperNodes_Local
+!----------------------------------------------------------------------
+!----------------------------------------------------------------------
+!----------------------------------------------------------------------
+!Calculate spring stiffness:
+k_spring = foundation_stiffness_Local / AantalNodes
+
+k_d_buiten = foundation_stiffness_Local / (AantalNodesOutside_+ AantalNodesMiddle_*C2_over_C1)
+k_d_midden = k_d_buiten*C2_over_C1
+
+!OUD, geeft niet genoeg verschil in funderingsstijfheid, omdat de stijfheid per element amper verschilde. Dit ontstond doordat er ook nog een verschil in elementen / nodes was.
+!C1 = foundation_stiffness_Local / ((L-a)+C2_over_C1*a) !Becomes foundation_stiffness_Local / (1) for zero inpunt.
+!C2 = C2_over_C1*C1
+!k_d_buiten = C1*(L-a)
+!k_d_midden = C2*a
+
+
+!----------------------------------------------------------------------
+!--------------------Set foundation stiffness -------------------------
+!----------------------------------------------------------------------
+*get,real_,rcon,0,num,max
+
+Real_C1 = real_ + 1
+Real_C2 = real_ + 2
+
+
+*IF, AantalNodesOutside_, NE , 0, THEN
+	r, Real_C1 , k_d_buiten, foundation_damping_Local / AantalNodesOutside_ !Set foundation stiffness of node outiside of the centre
+*ENDIF
+*IF, AantalNodesMiddle_, NE , 0, THEN
+	r, Real_C2 , k_d_midden, foundation_damping_Local / AantalNodesMiddle_ !Set foundation stiffness of nodes inside the center portion.
+*ENDIF
+
+!real, real_+ 1
+
+*IF, ARG6, EQ, 'true', THEN !ARG6 = MakeUseOfSymmetry
+	!As symmetry is used, divide the stiffness of the middle sleeper as one half of the nodes is not drawn (and thus not used in the calculation)
+	foundation_stiffness_Local = ARG4/2
+	foundation_damping_Local = ARG5/2
+*ENDIF
+
+CMSEL, S, BottomSleeperNodes_Local
+*IF, AantalNodes, GT, 0, THEN
+	!----- Count the nodes to get a large enough offset between the nodes on either side of the spring element.
+	*GET, MaxNode_ALL, NODE, 0, NUM, MAXD
+	*GET, MaxNodeSelected, NODE, 0, NUM, MAX
+	*GET, MinNodeSelected, NODE, 0, NUM, MIN
+	NodeDifference = 1 + MaxNode_ALL - MinNodeSelected
+	
+	!----------------------------------------------------------------------
+	!----------- Add spring-damper elements -------------------------------
+	!----------------------------------------------------------------------
+
+	!Copy nodes to 0.2 m /20cm offset to the current area
+	NGEN,2, NodeDifference , BottomSleeperNodes_Local, , , , -Y_Foundation, ,1, 
+	NSEL, S, LOC, Y, Y_location_Local - Y_Foundation, , ,
+	NSEL, R, LOC, X, X_Min_Local, X_Max_Local
+	CM, Foundation_Fixed_Nodes_Local, NODE
+
+	!Fix new nodes:
+	CMSEL, S, Foundation_Fixed_Nodes_Local
+	D, ALL, UZ , 0, 
+	D, ALL, UX , 0, 
+	D, ALL, UY , 0, 
+	ALLSEL
+
+	!----- Create COMBIN14 elements
+	NSEL, S, , , BottomSleeperNodes_Local 
+	NSEL, A, , , Foundation_Fixed_Nodes_Local 
+
+	*GET, AantalNodes, NODE, 0, COUNT, 
+	AantalNodes = AantalNodes / 2 !This is the amount of springs.
+	NodeNumber = MinNodeSelected
+	PARSAV, ALL, strcat(strcat('FoundationParameters_', CHRVAL(X_Min_Local)), CHRVAL(X_Max_Local)), PARM !Log for debug purposes.
+	
+	ESEL, NONE
+	TYPE,Element_COMBIN14 !set element type to combin14
+	!KEYOPT,Element_COMBIN14,2,2  !longitudinal spring-damper (UY degree of freedom). 
+	!^^ Don't select direction, direction is then based on element orientation. 
+
+	*DO, i, 1, AantalNodes, 1 !iterate over all the nodes.
+		!Connect all the nodes with COMBIN14 Elements
+		
+		*IF, NZ(NodeNumber), GE, -a/2, AND, NZ(NodeNumber), LE, a/2, THEN
+			!Middle part
+			real, Real_C2
+		*ELSE
+			real, Real_C1
+		*ENDIF
+		
+		e,NodeNumber, NodeNumber + NodeDifference
+
+		!Set next node number:
+		*GET, NodeNumber, NODE, NodeNumber, NXTH
+	*ENDDO 
+
+	!----------------------------------------------------------------------
+	!Update components
+	CM, foundation_elements_Local, ELEM
+	CMSEL, A, foundation_elements
+	CM, foundation_elements, ELEM 
+
+	CMSEL, S, BottomSleeperNodes_Local
+	CMSEL, A, BottomSleeperNodes
+	CM, BottomSleeperNodes, NODE 
+
+	CMSEL, S, Foundation_Fixed_Nodes_Local
+	CMSEL, A, Foundation_Fixed_Nodes
+	CM, Foundation_Fixed_Nodes, NODE 
+	!----------------------------------------------------------------------
+	!----------------------------------------------------------------------
+	!----------------------------------------------------------------------
+*ENDIF
+
+*DEL, AantalNodes
+*DEL, NodeNumber
+*DEL, foundation_stiffness_Local
+*DEL, foundation_damping_Local
+*DEL, X_Min_Local
+*DEL, X_Max_Local
+*DEL, Y_location_Local
+*DEL, MaxNodeSelected
+*DEL, MAXNODE_ALL
+*DEL, NodeDifference
+*DEL, MinNodeSelected
+*DEL, i
+*DEL, k_d_midden
+*DEL, k_d_buiten
+*DEL, k_spring
+*DEL, real_
+*DEL, Real_C1
+*DEL, Real_C2
+*DEL, AantalNodesMiddle_
+*DEL, AantalNodesOutside_
+*DEL, foundation_supported_area_length_local
+*DEL, foundation_supported_area_multiplier_local
+

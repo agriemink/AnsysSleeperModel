@@ -1,0 +1,392 @@
+!----------------------------------------------------------------------
+!-----------Create rail -------------------------------------------
+!----------------------------------------------------------------------
+
+/NOPR
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+!----------------------------------------------------------------------
+!---------------------Parameters:--------------------------------------
+!----------------------------------------------------------------------
+!O:\Afstuderen\Literatuur\Tekening 54E1 (UIC54) - NEN-EN 13674-1.pdf
+Rail_width = 					140 	/ 1000
+Rail_foot_height = 				11 		/ 1000
+Rail_width_web = 				16 		/ 1000
+Rail_height = 					159		/ 1000
+Rail_head_width = 				70		/ 1000
+
+!Nieuwe web height:
+Rail_web_height = (Rail_height - 49.40/1000) + (Rail_width_web/2)/2.75	!Hoogte waar web raakt aan railhead. ook toepassen op bovenstaande (onderkant-code)
+!Rail_web_height = 				96	/ 1000 !== Force apllication height
+Force_apllication_height = Rail_height
+
+Rail_X_middle 			= 76.20/1000 !center of web radius X = tekening-coordinaat, dat wordt hier Y!
+Rail_foot_slope_1 		= 1/10
+Rail_foot_slope_2		= 1/2.75
+Rail_foot_fillet_web 	= 16/1000
+Rail_foot_slope_2_middle_coord 	= 30.2/1000
+
+Rail_head_edge_height = Rail_height - 14.10/1000
+GaugeWideningHeight = Rail_head_edge_height !Close enough to 14mm
+Rail_head_slope = 1/2.75
+Rail_head_slope_middle_coord = 49.40/1000
+Rail_head_corner_radius = 13/1000
+B_54E1 = 49.727/1000
+A_54E1 = 20.024/1000
+
+!Table A.2 EN 13674-1:2011+A1:2017
+Rail_L1 = 35.92 /1000
+Rail_L2 = 12.02 /1000
+Rail_L3 =  1.54 /1000
+Rail_H3 = 66.04 /1000
+
+P3_z = Rail_L3 + Rail_width_web/2
+P2_z = Rail_L2 + P3_z
+P1_z = Rail_L1 + P3_z
+
+MAT, Materiaal_Rail
+real, realSolids
+!----------------------------------------------------------------------
+!---------------------Change Coordinate system :-----------------------
+!----------------------------------------------------------------------
+CSYS, CS_Rail
+
+!----------------------------------------------------------------------
+! 	         X  Y  															Z
+K, KP_0 + 1, 0, 0														, 0 				!Linksonder (midden van de rail)
+K, KP_0 + 2, 0, 0														, Rail_width/2 		!Rechtsonder
+K, KP_0 + 3, 0, Rail_foot_height										, Rail_width/2 		!Rechtsboven
+K, KP_0 + 4, 0, Rail_foot_height + P1_z*Rail_foot_slope_1				, P1_z 				!Overgangspunt 1
+K, KP_0 + 5, 0, Rail_foot_slope_2_middle_coord - P2_z*Rail_foot_slope_2	, P2_z 				!Overgangspunt 2
+K, KP_0 + 6, 0, Rail_X_middle - Rail_H3/2								, Rail_width_web/2 	!Web overgangspunt
+K, KP_0 + 7, 0, Rail_web_height											, Rail_width_web/2 	!Web rechtsboven
+K, KP_0 + 8, 0, Rail_web_height											, 0 				!Web linksboven
+
+L, 		KP_0 + 1, KP_0 + 2 !Line 1
+L, 		KP_0 + 2, KP_0 + 3 !Line 2
+L, 		KP_0 + 3, KP_0 + 4 !Line 3
+L, 		KP_0 + 4, KP_0 + 5 !Line 4
+
+L, 		KP_0 + 6, KP_0 + 7 !Line 5
+L, 		KP_0 + 7, KP_0 + 8 !Line 6
+L, 		KP_0 + 1, KP_0 + 8 !Line 7
+
+L2TAN, Line_0 + 4, Line_0 + 5 !Rail_foot_fillet_web !Line 8
+
+!----- Create extra internal lines for a better mesh ----
+LDIV, Line_0 + 7, 0.25, , , 0 !Divide height in two lines at 0.25. (creates kp 9 and line 9)
+LDIV, Line_0 + 8, 0.5, , , 0 !Divide rail_foot_fillet into two lines (creates kp 10 and line 10)
+L, 		KP_0 + 10, KP_0 + 9 !line 11
+
+
+!Top / head part.
+
+K, KP_0 + 100, 0, Rail_height, 0 !Top of rail
+K, KP_0 + 101, 0, Rail_head_edge_height, Rail_head_width / 2									!Bovenkant van de zijkant railhead 
+K, KP_0 + 102, 0, Rail_height - (Rail_head_slope_middle_coord - ((Rail_head_width/2)*Rail_head_slope)), Rail_head_width/2 	!Onderkant van de zijkant railhead
+
+
+!K, KP_0 + 105, 0, Rail_height - (sin(acos(((Rail_head_width-B)/2)/Rail_head_corner_radius))*Rail_head_corner_radius), B/2 !Intermediate point
+K, KP_0 + 105, 0, Rail_height, A_54E1/2 			!Intermediate point 1
+K, KP_0 + 106, 0, Rail_height - 1.1/1000, B_54E1/2 	!Intermediate point 2
+
+
+L, KP_0 + 100, KP_0 + 105											!Line 12
+L, KP_0 + 105, KP_0 + 106											!Line 13
+LARC, KP_0 + 106, KP_0 + 101, KP_0 + 102, Rail_head_corner_radius 	!Line 14
+L, KP_0 + 101, KP_0 + 102											!Line 15
+L, KP_0 + 102, KP_0 + 7 											!Line 16
+!L, KP_0 + 7, KP_0 + 8												!Line 6
+L, KP_0 + 8, KP_0 + 100												!Line 17
+
+L2ANG, Line_0 + 15, Line_0 + 17,90,90, KP_0 + 107, KP_0 + 108!Creates a middle line (line 20) to improve meshing. 
+!Creates also KP 107 and 108 and line 19 and 20, 
+
+LDELE, Line_0 + 6
+LFILLT, Line_0 + 16, Line_0 + 5, 22/1000 !Fillet, (re)creates line 6
+LANG, Line_0 + 6, KP_0 + 8,90, , !create line between web and edge creates line 21 and 22
+
+*GET, MaxLinenumber, LINE, 0 , NUM, MAXD
+LSEL, S, LINE, , Line_0 + 1, MaxLinenumber
+LGLUE, ALL
+
+!Create areas
+ 
+ASEL, NONE
+AL, Line_0 + 5, Line_0 + 21, Line_0 + 22, Line_0 + 9, Line_0 + 11, Line_0 + 10 			!Web
+AL, Line_0 + 1, Line_0 + 2, Line_0 + 3, Line_0 + 4, Line_0 + 8, Line_0 + 11, Line_0 + 7 !Rail foot
+AL, Line_0 + 12, Line_0 + 13, Line_0 + 14, Line_0 + 15, Line_0 + 20, Line_0 + 19		!Top part of railhead
+AL, Line_0 + 18, Line_0 + 16, Line_0 + 6, Line_0 + 22, Line_0 + 17, Line_0 + 20			!Bottom part of railhead.
+
+
+!----- Mirror ----
+ARSYM,Z,ALL, , , ,0,0  
+AGLUE, ALL
+AATT, Materiaal_Rail !set material
+
+!------ Mesh -----
+AESIZE, ALL, ESIZE_BottomRail
+MSHKEY, 1
+
+
+!Concat lines for mapped meshing later on.
+!Web linkerzijde
+LSEL, S, LINE, , Line_0 + 5
+LSEL, A, LINE, , Line_0 + 10
+LSEL, A, LINE, , Line_0 + 21
+LCCAT, ALL
+ALLSEL
+
+!Web rechterzijde
+LSEL, S, LINE, , Line_0 + 24
+LSEL, A, LINE, , Line_0 + 23
+LSEL, A, LINE, , Line_0 + 28
+LCCAT, ALL
+ALLSEL
+
+!Railfoot Linksonder
+LSEL, S, LINE, , Line_0 + 3, Line_0 + 4
+LSEL, A, LINE, , Line_0 + 8
+LCCAT, ALL
+ALLSEL
+LCCAT, Line_0 + 7, Line_0 + 11
+
+!Railfoot Rechtsonder
+LSEL, S, LINE, , Line_0 + 31, Line_0 + 33
+LCCAT, ALL
+ALLSEL
+LCCAT, Line_0 + 7, Line_0 + 46
+
+!Railhead
+!Onderkant railhead (links)
+LSEL, S, LINE, , Line_0 + 16
+LSEL, A, LINE, , Line_0 + 6
+LSEL, A, LINE, , Line_0 + 22
+LCCAT, ALL
+ALLSEL
+
+!Onderkant railhead (rechts)
+LSEL, S, LINE, , Line_0 + 42
+LSEL, A, LINE, , Line_0 + 43
+LSEL, A, LINE, , Line_0 + 45
+LCCAT, ALL
+ALLSEL
+
+!bovenkant railhead (links)
+LCCAT, Line_0 + 12, Line_0 + 13
+LCCAT, Line_0 + 14, Line_0 + 15
+
+LCCAT, Line_0 + 36, Line_0 + 48
+LCCAT, Line_0 + 37, Line_0 + 38
+ALLSEL
+
+
+*GET, MaxArea, AREA, 0 , NUM, MAXD
+ASEL, S, AREA, , Area_0 + 1, MaxArea
+AMESH, ALL
+
+ALLSEL
+LSEL, S, LCCA
+LDEL, ALL
+ALLSEL
+!--------
+!------ Create component
+*GET, MaxArea, AREA, 0 , NUM, MAXD
+ASEL, NONE
+ASEL, S, AREA, , Area_0 + 1, MaxArea
+CM, RailDoorsnede, AREA
+
+!----------------------------------------------------------------------------------
+!---------------------------- Extrude ---------------------------------------------
+!----------------------------------------------------------------------------------
+esize, , (RH_Breedte/2)/ESIZE_BottomRail !Make the bottom elements as square as possible
+VSEL, NONE
+VEXT, RailDoorsnede, , , RH_Breedte/2, 0, 0, , , 
+*IF, ARG1, NE, 'true', THEN
+	VEXT, RailDoorsnede, , , -RH_Breedte/2, 0, 0, , , 
+*ENDIF
+
+!ASLV, S, 1
+!ASEL, R, LOC, Y, 0
+!CM, Rail_RH_Contact_A, AREA
+
+
+!Extend the rail to cover the whole sleeper distance.
+esize, , (SleeperDistance/2 - RH_Breedte/2)/(ESIZE_BottomRail*2) !Set esize for the resulting rail to 2 times the ESIZE_BottomRail
+ASEL, S, LOC, Y, 0, Rail_height
+ASEL, R, LOC, X, RH_Breedte/2
+ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+VEXT, ALL, , , SleeperDistance/2 - RH_Breedte/2, 0, 0, , , 
+
+*IF, ARG1, NE, 'true', THEN
+	ASEL, S, LOC, Y, 0, Rail_height
+	ASEL, R, LOC, X, -RH_Breedte/2
+	ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+	VEXT, ALL, , , -(SleeperDistance/2 - RH_Breedte/2), 0, 0, , , 
+*ENDIF
+
+startX_coord = SleeperDistance/2
+*IF, AantalSleepers, GT, 1, THEN
+	*DO, SleeperIndex, 1, (AantalSleepers-1)
+		huidigeX_coord = startX_coord + (SleeperIndex -1 )*SleeperDistance
+	
+		delta_1 = SleeperDistance/2 - RH_Breedte/2
+		delta_2 = RH_Breedte/2
+		
+		!2x delta_1 + 2x delta_2 = SleeperDistance
+	
+		!Positieve deel:
+		!Deel 1 (stuk tussen twee rughellingplaten)
+		ASEL, S, LOC, Y, 0, Rail_height
+		ASEL, R, LOC, X, huidigeX_coord
+		ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+		VEXT, ALL, , , delta_1, 0, 0, , , 
+		
+		!Deel 2 (rughellingplaat naar midden van sleeper)
+		ASEL, S, LOC, Y, 0, Rail_height
+		ASEL, R, LOC, X, huidigeX_coord + delta_1
+		ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+		VEXT, ALL, , , delta_2, 0, 0, , , 
+		
+		!Deel 3 (rughellingplaat naar midden van sleeper)
+		ASEL, S, LOC, Y, 0, Rail_height
+		ASEL, R, LOC, X, huidigeX_coord + delta_1 + delta_2
+		ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+		VEXT, ALL, , , delta_2, 0, 0, , , 
+		
+		ASEL, S, LOC, Y, 0, Rail_height
+		ASEL, R, LOC, X, huidigeX_coord + delta_1 + delta_2 + delta_2
+		ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+		VEXT, ALL, , , delta_1, 0, 0, , , 
+		
+		!----------------------------------------------------------
+		!Negatieve deel:
+		*IF, ARG1, NE, 'true', THEN
+			!Deel 1 (stuk tussen twee rughellingplaten)
+			ASEL, S, LOC, Y, 0, Rail_height
+			ASEL, R, LOC, X, -huidigeX_coord
+			ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+			VEXT, ALL, , , -delta_1, 0, 0, , , 
+			
+			!Deel 2 (rughellingplaat naar midden van sleeper)
+			ASEL, S, LOC, Y, 0, Rail_height
+			ASEL, R, LOC, X, -(huidigeX_coord + delta_1)
+			ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+			VEXT, ALL, , , -delta_2, 0, 0, , , 
+			
+			!Deel 3 (rughellingplaat naar midden van sleeper)
+			ASEL, S, LOC, Y, 0, Rail_height
+			ASEL, R, LOC, X, -(huidigeX_coord + delta_1 + delta_2)
+			ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+			VEXT, ALL, , , -delta_2, 0, 0, , , 
+			
+			ASEL, S, LOC, Y, 0, Rail_height
+			ASEL, R, LOC, X, -(huidigeX_coord + delta_1 + delta_2 + delta_2)
+			ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+			VEXT, ALL, , , -delta_1, 0, 0, , , 
+		*ENDIF
+	*ENDDO
+*ENDIF
+
+CSYS, 0
+ESIZE, ESIZE_standaard !Reset esize to default
+CM, Rail_V, VOLU
+
+!Copy rail:
+VSEL, NONE
+CMSEL, S, Rail_V
+VSYMM, Z, ALL, , , , , 0, 0
+CM, Rail_V, VOLU !Update component
+
+!----------------------------------------------------------------------
+!-------Create components ---------------------------------------------
+!----------------------------------------------------------------------
+CMSEL, S, RAIL_V
+VSEL, R, LOC, Z, 0, S_Lengte
+CM, Rail_V_L, VOLU
+
+*GET, Raileinde, NODE, 0, MXLOC, X, , !MXLOC maximum
+
+!Gauge widening nodes:
+	CSYS, CS_Rail_L
+	NSLV, S, 1
+	NSEL, R, LOC, Y, GaugeWideningHeight
+	NSEL, R, LOC, Z, -Rail_head_width / 2 !Binnenkant
+	CM, GaugeNodes_L, Node
+	CSYS, 0
+
+CMSEL, S, RAIL_V
+VSEL, R, LOC, Z, -S_Lengte, 0
+CM, Rail_V_R, VOLU
+
+!Gauge widening nodes:
+	CSYS, CS_Rail_R
+	NSLV, S, 1
+	NSEL, R, LOC, Y, GaugeWideningHeight
+	NSEL, R, LOC, Z, Rail_head_width / 2 !Binnenkant
+	CM, GaugeNodes_R, Node
+	CSYS, 0
+	
+!Constraint nodes:
+	!LEFT
+	CMSEL, S, Rail_V_L
+	CSYS, CS_Rail_L
+	NSLV, S, 1
+	CenterNodeHeight = NY(NODE(0,Rail_X_middle,0))
+	NSEL, R, LOC, Y, CenterNodeHeight !Ongeveer midden van doorsnede
+	NSEL, R, LOC, X, Raileinde, , , 1 !1 assumes symmetry.
+	CM, RailendNodes_L, Node
+	
+	!RIGHT
+	CMSEL, S, Rail_V_R
+	CSYS, CS_Rail_R
+	NSLV, S, 1
+	CenterNodeHeight = NY(NODE(0,Rail_X_middle,0))
+	NSEL, R, LOC, Y, CenterNodeHeight !Ongeveer midden van doorsnede
+	NSEL, R, LOC, X, Raileinde, , , 1 !1 assumes symmetry.
+	CM, RailendNodes_R, Node
+	
+	!COMBINE
+	CMSEL, S, RailendNodes_L
+	CMSEL, A, RailendNodes_R
+	CM, RailendNodes, Node
+
+	CSYS, 0
+
+!----------------------------------------------------------------------
+*DEL,RAIL_H3
+*DEL,RAIL_L1
+*DEL,RAIL_L2
+*DEL,RAIL_L3
+*DEL,delta_1
+*DEL,delta_2
+*DEL,P1_z
+*DEL,P2_z
+*DEL,P3_z
+*DEL,RAIL_WEB_HEIGHT
+*DEL,RAIL_WIDTH_WEB
+*DEL,RAIL_X_MIDDLE
+*DEL,Rail_foot_slope_1
+*DEL,Rail_foot_slope_2
+*DEL,Rail_foot_fillet_web
+*DEL,Rail_foot_slope_2_middle_coord
+*DEL,Rail_head_edge_height
+*DEL,Rail_head_slope
+*DEL,Rail_head_slope_middle_coord
+*DEL,Rail_head_corner_radius
+
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0
+*DEL, MaxLinenumber
+*DEL, MaxArea
+*DEL, SleeperIndex
+*DEL, startX_coord
+
+!Set coordinate system back to the default
+CSYS, 0
+
+
+ALLSEL
+ESIZE, ESIZE_standaard !Reset ESIZE to standard.

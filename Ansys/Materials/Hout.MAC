@@ -1,0 +1,50 @@
+!Material Properties of beech (beuken) 5.9% vochtgehalte
+! "Oorspronkelijk waren dwarsliggers vrijwel altijd van hout. Deze zogenaamde bielzen werden onder meer gemaakt uit gecreosoteerd beukenhout." (wikipedia)
+! http://www.matweb.com/search/datasheet.aspx?matguid=216748b4202446868305405c8cfe51a3
+!http://doc.rero.ch/record/316327/files/10853_2012_Article_6534.pdf
+
+Hout = ARG1
+
+! E-modulus uit: P:\Afstuderen\Literatuur\Lankhorst\[21996512 - Civil and Environmental Engineering] Investigation of the Elastic Modulus of Polymer Sleepers Under a Quasistatic and Cyclic Loading.pdf
+! Beech 12.9 +0.1 (+1 %) +0.4 (+3 %) +0.7 (+5 %) +0.9 (+7 %) +1.0 (+7 %) 
+
+MP,	DENS,	Hout,	683  	!Density			kg/m2
+MP,	EX,		Hout,	12.9e9  !Pa !E_T
+MP,	PRXY,	Hout,	0.04 			!Poisson ratio RL Radial->longitudinal. https://www.fpl.fs.fed.us/documnts/fplgtr/fplgtr113/ch04.pdf
+
+
+!MP,	EY,		Hout,	1.80e6  !Pa !E_R
+!MP,	EZ,		Hout,	12.02e6 !Pa !E_L Parralel to grain 
+!MP,	PRXY,	Hout,	0.15	! Kunstmatig verlaagd (vanaf 0.23)
+!MP,	PRYZ,	Hout,	0.35	! Kunstmatig verlaagd (vanaf .43)
+!MP,	PRXZ,	Hout,	0.04	!  
+!MP,	GXY,	Hout,	0.430e6 !Pa 
+!MP,	GYZ,	Hout,	1.370e6 !Pa 
+!MP,	GXZ,	Hout,	1.010e6 !Pa 
+
+
+
+
+! 2020-03-09 Eerste versie:
+!MP,	DENS,	Hout,	683  	!Density			kg/m2
+!MP,	EX,		Hout,	8.10e6  !Pa !E_T
+!MP,	EY,		Hout,	1.80e6  !Pa !E_R
+!MP,	EZ,		Hout,	12.02e6 !Pa !E_L Parralel to grain 
+!MP,	PRXY,	Hout,	0.15	! Kunstmatig verlaagd (vanaf 0.23)
+!MP,	PRYZ,	Hout,	0.35	! Kunstmatig verlaagd (vanaf .43)
+!MP,	PRXZ,	Hout,	0.04	!  
+!MP,	GXY,	Hout,	0.430e6 !Pa 
+!MP,	GYZ,	Hout,	1.370e6 !Pa 
+!MP,	GXZ,	Hout,	1.010e6 !Pa 
+
+!MP,	MU,		Hout,   0.2
+
+
+!O:\Afstuderen\Literatuur\BetonnenDwarsliggers\Concrete_sleeper_tuned_to_replace_a_timber_sleeper.pdf
+!Table A.2: Properties of timber sleepers
+!Property Value
+!length 2.5 m
+!EI 8.55*10^5 Nm2
+!kGA 1.25*10^8 N
+!m 32 kg/m
+!mr2 0.058 kgm

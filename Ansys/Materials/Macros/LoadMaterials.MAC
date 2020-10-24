@@ -1,0 +1,29 @@
+
+! Requires MaterialDatabase to be set.
+!
+
+/PREP7
+
+*GET, AantalMaterialen, PARM, MaterialDatabase, DIM, 2
+
+*DO, material_index, 1, AantalMaterialen
+
+	*GET, MaxMatNr, MAT, 0, NUM, MAX
+
+	
+	*IF, MaxMatNr+1, NE, material_index, THEN
+		A = MaxMatNr
+		B = material_index
+		!PARSAV, ALL, 'TEMP2'!debug file
+	*ENDIF
+	
+	Materialname = MaterialDatabase(1,material_index)
+
+	*USE, '%MaterialFolder(1)%/%Materialname%.MAC', material_index
+*ENDDO
+
+
+*DEL, material_index
+*DEL, MaxMatNr
+*DEL, AantalMaterialen
+

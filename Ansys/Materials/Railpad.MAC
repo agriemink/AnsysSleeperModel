@@ -1,0 +1,20 @@
+!Material Properties of generic steel
+!
+!
+
+Railpad = ARG1
+
+!http://www.trackelast.com/fc9.html
+MP,	DENS,	ARG1,	1150 			!Density			kg/m3
+MP,	EX,		ARG1,	202e6			!Youngs' modulus	Pa = N/m2 !Dynamic
+MP,	PRXY,	ARG1,	0.4 			!Poisson ratio 		- 
+	!Follows from the data. 
+	!F = K * u -> u = F/k = 58.8/480 = 0.1225 mm
+	!omega = F/A = 58.8 / (140^2) = 3 N/mm2
+	! E = omega / (u/d) = 3 / (0.1225 / 4.5) = 110.2 e6 N/m2 !Static
+
+MP,	MU,		ARG1, 	0.5
+
+!Tensile strength =	6.0 MPa
+!Static Stiffness		140 x 140 x 4.5mm, 58.8 kN	480	kN/mm
+!Dynamic Stiffness		140 x 140 x 4.5mm, 58.8 kN, 20Hz	880	kN/mm

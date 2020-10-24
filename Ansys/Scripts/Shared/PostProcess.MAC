@@ -1,0 +1,258 @@
+ALLSEL
+FINISH
+!/OUTPUT
+
+*DEL, MacroFolder, NOPR
+*DIM,MacroFolder,STRING,100
+MacroFolder(1) = '%BASEFOLDER(1)%\Scripts\Shared\Macros\'
+!/PSEARCH, '%Scriptfolder(1)%\Macros' !Specifies a directory to be searched for "unknown command" macro files.
+/POST1
+!disable warning messages.
+! /NOPR
+! /UIS, MSGPOP, 3
+! /NERR,,,,,0
+
+!First start with the common output, then analyis specific data.
+
+!-------------------------
+!----- Parameters --------
+!-------------------------
+*DEL, OutputFilename_
+*DIM,OutputFilename_,STRING,248
+
+*GET,MaxNode,NODE,0, NUM, MAXD
+
+!-------------------------
+!---- List of Macros -----
+!-------------------------
+!
+!
+!	save_results_to_csv
+!	save_plot
+!	save_plot_as_png !Gets called by save_plot
+!	save_plot_as_eps !Gets called by save_plot
+!	save_model_parameters
+!	save_deformed_shape
+!	save_array_to_csv 						!not used atm
+!	plot_nodal_solution_eqv_stress			!not used atm
+!	plot_loading_graph
+!	plot_deformed_shape
+!-------------------------
+*DEL, saveWithJobname
+/INQUIRE, saveWithJobname, JOBNAME, !get the jobname as this is the first part of the plotname 
+extension = 'png' !Set default extension
+
+
+!Save all the parameters:
+*USE, '%MacroFolder(1)%save_model_parameters.MAC'
+
+!Color the track:
+*USE, '%MacroFolder(1)%colorTrack.MAC'
+
+ALLSEL
+VPLOT, ALL
+*USE, '%MacroFolder(1)%save_plot.MAC', 'FullModel'
+
+!Save wapening-mesh
+*USE, '%MacroFolder(1)%save_WapeningMesh.MAC'
+
+!Save images of the different materials:
+*USE, '%MacroFolder(1)%saveElelementsPerMaterialType.MAC'
+
+!--- Save number of sleeper elements:
+*USE, '%MacroFolder(1)%save_elementCount.MAC'
+
+!----------------------------------------------
+*DEL, ResultFile, NOPR
+*DIM, ResultFile, STRING, 200
+ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)%'
+/INQUIRE, ResultFileExists, EXIST, '%ResultFile(1)%', rst
+
+*IF, ResultFileExists, EQ, 1, THEN
+
+	INRES,ALL !Identifies the data to be retrieved from the results file. All = All solution items
+
+	!Set load step.
+	*GET, AantalLoadSteps, ACTIVE, 0, SET, NSET, , 			
+	SET, FIRST
+
+	!----------------------------------------------
+	!-------- Save data per load step -------------
+	!----------------------------------------------
+		*DO, i, 1, AantalLoadSteps, 1			
+			!*USE, '%MacroFolder(1)%save_plot.MAC', 'Rail cross section'
+			
+			!Common post processing:
+		
+			!Save plot of deformed shape
+			ALLSEL
+			*USE, '%MacroFolder(1)%plot_deformed_shape.MAC'
+			OutputFilename_(1) = '%saveWithJobname(1)%_DeformedShape_%i%'
+			*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedShape_%i%'
+			
+			VSEL, S, LOC, Y, -S_Hoogte, 0
+			ALLSEL, BELOW		
+			*USE, '%MacroFolder(1)%plot_deformed_shape.MAC'
+			*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedSleeper_%i%'
+
+						!Stresses and deformations:
+			*IF, '%AnalysisType%', NE, 'modal', THEN,
+				/view,1,1,1,1
+				PLNSOL, S, EQV, 0 !Equivalent stress
+				!OutputFilename_(1) = '%saveWithJobname(1)%_SleeperStresses_%i%'
+				!*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses_%i%'
+				PLNSOL, S, 1, 0 !Principal stress
+				*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses1stPrincipal_%i%'
+				ALLSEL
+				
+				!Save center sleeper max and minimal stresses.
+				*USE, '%MacroFolder(1)%saveSleeperStresses.MAC', i
+				ALLSEL
+				
+				!Save maximum stresses in reinforcement
+				*GET, DoesCompExists, COMP, Wapening_V, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Wapening_V_RO
+					NSLV, S, 1 !Select nodes corresponding to the selected volumes
+					OutputFilename_(1) = '%saveWithJobname(1)%_WapeningOnder_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+					
+					CMSEL, S, Wapening_V_RB
+					NSLV, S, 1 
+					OutputFilename_(1) = '%saveWithJobname(1)%_WapeningBoven_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+					
+					!Create plot of reinforcement stresses.
+					VSEL, S, LOC, Y, -S_Hoogte, 0
+					ALLSEL, BELOW	
+					ESEL, R, MAT, , Staal
+					PLNSOL, S, EQV, 0
+					*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_%i%'
+					PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
+					*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningShearStresses_%i%'
+				*ENDIF
+
+				!Save deformation of foundation nodes
+				*GET, DoesCompExists, COMP, Bottomsleepernodes, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Bottomsleepernodes
+					OutputFilename_(1) = '%saveWithJobname(1)%_Foundationdeformations_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF	
+				
+				!Save foundation stresses
+				*USE, '%MacroFolder(1)%plot_deformed_shape.MAC'
+				*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedShape_%i%'
+
+				!Save deformation of rail nodes (to allow for measurement of the rotation)
+				*GET, DoesCompExists, COMP, Rail_V_L, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Rail_V_L
+					CMSEL, A, Rail_V_R
+					NSLV, S, 1 !Select nodes corresponding to the selected volumes
+					OutputFilename_(1) = '%saveWithJobname(1)%_Rail_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF
+				
+				!Save deformation of rughellingplaat nodes (to allow for measurement of the rotation)
+				*GET, DoesCompExists, COMP, Rughellingplaten_L, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Rughellingplaten_L
+					NSLV, S, 1 !Select nodes corresponding to the selected volumes
+					NSEL, R, LOC, Y, 0
+					OutputFilename_(1) = '%saveWithJobname(1)%_Rughellingplaten_L_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF
+				
+				!Save deformation of rughellingplaat nodes (to allow for measurement of the rotation)
+				*GET, DoesCompExists, COMP, Rughellingplaten_R, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Rughellingplaten_R
+					NSLV, S, 1 !Select nodes corresponding to the selected volumes
+					NSEL, R, LOC, Y, 0
+					OutputFilename_(1) = '%saveWithJobname(1)%_Rughellingplaten_R_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF
+				
+				
+				!Save deformation (and stresses) of spoorstaaf nodes (to allow for measurement of the gauge widening)
+				*GET, DoesCompExists_L, COMP, GaugeNodes_L, TYPE
+				*IF, DoesCompExists_L, GT, 0, THEN
+					CMSEL, S, GaugeNodes_L
+					OutputFilename_(1) = '%saveWithJobname(1)%_Rail_L_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+					CSYS, 0			
+				*ENDIF
+				*GET, DoesCompExists_R, COMP, GaugeNodes_R, TYPE
+				*IF, DoesCompExists_R, GT, 0, THEN
+					CMSEL, S, GaugeNodes_R
+					OutputFilename_(1) = '%saveWithJobname(1)%_Rail_R_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+					CSYS, 0
+				*ENDIF
+				*IF, DoesCompExists_R, GT, 0, AND, DoesCompExists_L, GT, 0, THEN
+					!Select only the gauge nodes.
+					CMSEL, S, GaugeNodes_L
+					CMSEL, A, GaugeNodes_R
+					
+					OutputFilename_(1) = '%saveWithJobname(1)%_GaugeNodes_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF
+				
+			
+				!Save stresses in sleeper nodes (kunststof)
+				*GET, DoesCompExists, COMP, Kunststof_V, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					CMSEL, S, Kunststof_V
+					NSLV, S, 1 !Select nodes corresponding to the selected volumes
+					OutputFilename_(1) = '%saveWithJobname(1)%_SleeperStressesKunststof_%i%'
+					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+				*ENDIF
+
+				OutputFilename_(1) = '%saveWithJobname(1)%_saveGaugeWidening_'
+				*USE, '%MacroFolder(1)%saveGaugeWidening.MAC'
+				
+				!Save reaction forces per sleeper
+				*GET, DoesCompExists, COMP, ConstrainedNodes, TYPE
+				*IF, DoesCompExists, GT, 0, THEN
+					!Save reaction forces
+					*USE, '%MacroFolder(1)%save_reaction_forces.MAC', i
+				*ENDIF
+			
+				
+				
+			
+			*ELSEIF, '%AnalysisType%', EQ, 'modal', THEN,
+				!specific modal analyis output.
+
+			*ENDIF
+			
+			ALLSEL
+			
+			SET,NEXT !Select next load step / result
+		*ENDDO
+
+		*IF, '%AnalysisType%', NE, 'modal', THEN,
+		
+
+				
+			!Save loading graph TODO fix
+			*USE, '%MacroFolder(1)%plot_loading_graph.MAC'
+			*USE, '%MacroFolder(1)%save_plot.MAC', 'Loads'
+			
+		*ELSEIF, '%AnalysisType%', EQ, 'modal', THEN,
+			!Save frequencies
+			*USE, '%MacroFolder(1)%save_eigenfrequencies.MAC'
+			
+		*ENDIF
+	*ENDIF
+/GOPR
+
+*DEL, ResultFileExists
+*DEL, i
+*DEL, AantalLoadSteps
+
+T = 'Post Processing finished'
+
+FINISH

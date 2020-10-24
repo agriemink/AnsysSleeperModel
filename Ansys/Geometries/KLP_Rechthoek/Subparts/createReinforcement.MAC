@@ -1,0 +1,207 @@
+!------------------------------------------------------------------------
+!-----------Create reinforcement with an octagonal cross section --------
+!------------------------------------------------------------------------
+
+!Needed is a Dwarsligger_A component with the main part of the cross section
+CS_WapeningLocal = ARG1
+Divisions = ARG2
+!ARG3 = symmetrie
+
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+!--------------------------------------------------------------------------------------------------------------------------------------------
+!------------------------------------- WAPENING ---------------------------------------------------------------------------------------------
+!--------------------------------------------------------------------------------------------------------------------------------------------
+CSYS, CS_WapeningLocal
+WPCSYS, , CS_WapeningLocal
+
+ASEL, NONE
+
+!----------------------------------------------------------------------
+!---------------------Parameters:--------------------------------------
+!----------------------------------------------------------------------
+Block_1_height = OB_size_height !Buitenkant (OB = outer block) 
+Block_1_width = OB_size_width
+
+!Gets defined in the parameter file
+!Size_InnerBlock = W_Straal*0.96
+!Radius_InnerBlock = Size_InnerBlock / 0.675
+
+!OB_fill_ratio = 0.5
+Block_2_height = W_Diameter + OB_fill_ratio*W_Dekking_y*2 !Binnenkant, einde van wapening-blok)
+Block_2_width = W_Diameter + OB_fill_ratio*W_Dekking_x*2
+
+!----------------------------------------------------------------------
+!-----------Create wapening -------------------------------------------
+!----------------------------------------------------------------------
+
+!-------------------------------------
+!--------Create quarter: -------------
+!-------------------------------------
+Center = KP_0 + 1 
+K, Center , 0, 0, 0
+KP_0 = KP_0 + 1
+
+!Outer Block
+K, KP_0 + 1, 0,								Block_2_height/2, 			0 !Linksboven 
+K, KP_0 + 2, Block_2_width/2, 				Block_2_height/2, 			0 !Rechtsboven
+K, KP_0 + 3, Block_2_width/2, 				0, 							0 !Rechtsonder
+
+L, KP_0 + 1, KP_0 + 2 !Line 1
+L, KP_0 + 2, KP_0 + 3 !Line 2
+
+!Set kp edge of wapening
+KBETW, Center, KP_0 + 1, KP_0 + 11, DIST, W_Straal
+KBETW, Center, KP_0 + 2, KP_0 + 12, DIST, W_Straal
+KBETW, Center, KP_0 + 3, KP_0 + 13, DIST, W_Straal
+
+L, KP_0 + 11, KP_0 + 1 !Line 3
+L, KP_0 + 12, KP_0 + 2 !Line 4
+L, KP_0 + 13, KP_0 + 3 !Line 5
+
+L, Center, KP_0 + 11	!Line 5
+L, Center, KP_0 + 13	!Line 6
+
+LARC, KP_0 + 11, KP_0 + 12, Center, W_Straal !Line 7
+LARC, KP_0 + 12, KP_0 + 13, Center, W_Straal !Line 8
+
+!Inner Block
+K, KP_0 + 100, -Size_InnerBlock / 2, 	Size_InnerBlock / 2, 	0 !inner block keypoint
+K, KP_0 + 102, Size_InnerBlock / 2, 	Size_InnerBlock / 2, 	0 !inner block keypoint
+K, KP_0 + 104, Size_InnerBlock / 2, 	-Size_InnerBlock / 2, 	0 !inner block keypoint
+
+!Line between keypoints (diagonal line)
+L, KP_0 + 102, KP_0 + 12	!Line 9
+
+LARC, KP_0 + 102, KP_0 + 104, Center, Radius_InnerBlock !Line 10
+LARC, KP_0 + 100, KP_0 + 102, Center, Radius_InnerBlock !Line 11
+
+!create kp halfway on line:
+*GET, MaxLine, LINE, 0 , NUM, MAXD
+LSEL, S, LINE, , Line_0 + 1, MaxLine
+LCSL, ALL !Divides intersecting lines at their point(s) of intersection.
+
+KSEL, S, KP, , KP_0 + 100
+KSEL, A, KP, , KP_0 + 104
+LSLK, S, 0
+
+LDELE, ALL, , , 1
+ALLSEL
+
+
+!----------------------------------------------------------------------
+!---------------------Create areas: -----------------------------------
+!----------------------------------------------------------------------
+AATT, Materiaal_S
+AL, Line_0 + 1,		Line_0 + 3,		Line_0 + 4,		Line_0 + 8
+AL, Line_0 + 4,		Line_0 + 2,		Line_0 + 5,		Line_0 + 9
+
+ASEL, S, AREA, , Area_0 + 1, Area_0 + 2
+
+!Middle; daadwerkelijke wapening
+AATT, Materiaal_W
+AL, Line_0 + 15,	Line_0 +  8, 	Line_0 + 19, 	Line_0 + 10
+AL, Line_0 + 18,	Line_0 + 10,	Line_0 + 9,		Line_0 + 16
+AL, Line_0 + 13, 	Line_0 + 19, 	Line_0 + 18, 	Line_0 + 14
+
+ASEL, S, AREA, , Area_0 + 3, Area_0 + 5
+
+!----------------------------------------------------------------------
+!---------------------Create outside block: ---------------------------
+!----------------------------------------------------------------------
+AATT, Materiaal_S
+!Outer Block
+K, KP_0 + 1001, 0,								Block_1_height/2, 			0 !Linksboven 
+K, KP_0 + 1003, Block_1_width/2, 				Block_1_height/2, 			0 !Rechtsboven
+K, KP_0 + 1005, Block_1_width/2, 				0, 							0 !Rechtsonder
+
+! L, KP_0 + 1001, KP_0 + 1002 !Line 20
+! L, KP_0 + 1002, KP_0 + 1003 !Line 21
+! L, KP_0 + 1003, KP_0 + 1004 !Line 22
+! L, KP_0 + 1004, KP_0 + 1005 !Line 23
+
+A, KP_0 + 1001, KP_0 + 1003, KP_0 + 2, KP_0 + 1 	!Links
+A, KP_0 + 1003, KP_0 + 1005, KP_0 + 3, KP_0 + 2 	!Rechts
+
+!A, KP_0 + 1001, KP_0 + 1002, KP_0 + 2, KP_0 + 1 	!Linksboven
+!A, KP_0 + 1002, KP_0 + 1003, KP_0 + 1004, KP_0 + 2 	!Rechtsboven
+!A, KP_0 + 2, KP_0 + 1004, KP_0 + 1005, KP_0 + 3	!Rechtsonder
+
+!----------------------------------------------------------------------
+!---------------------Copy areas: -------------------------------------
+!----------------------------------------------------------------------
+!Copy internally (local coordinate system)
+ASEL, S, AREA, , Area_0 +1, Area_0 + 8
+
+ARSYM, Y, ALL, , , , 0, 0
+ARSYM, X, ALL, , , , 0, 0
+
+AGLUE, ALL
+!----------------------------------------------------------------------
+!---------------------Create CM, move ---------------------------------
+!----------------------------------------------------------------------
+*GET, MaxArea, AREA, 0 , NUM, MAXD
+ASEL, S, AREA, , Area_0 + 1, MaxArea
+
+CM, Wapening_with_block_A, AREA
+
+!Set materials:
+ASEL, R, LOC, X, -W_Straal, W_Straal
+ASEL, R, LOC, Y, -W_Straal, W_Straal
+AATT, Materiaal_W
+CM, Wapening_A, AREA
+
+ASEL, S, AREA, , Area_0 + 1, MaxArea
+CMSEL, U, Wapening_A
+AATT, Materiaal_S
+CM, Wapening_Block_A, AREA
+
+!*GET, MaxLine, LINE, 0 , NUM, MAXD
+!LSEL, S, LINE, , Line_0 + 1, MaxLine
+
+eSIZEmiddle = (Size_InnerBlock/2)/Divisions
+
+KSEL, S, KP, , Center
+LSLK, S, 0
+LESIZE, ALL, , , Divisions, , , , , !Previously W_divisions
+
+CMSEL, S, Wapening_A
+LSLA, S
+LSEL, R, LOC, Y, Size_InnerBlock/2, W_Straal
+LSEL, R, LOC, X, 0
+LESIZE, ALL, eSIZEmiddle, , , , , , , 
+
+CMSEL, S, Wapening_A
+LSLA, S
+LSEL, R, LOC, Y, 0
+LSEL, R, LOC, X, Size_InnerBlock/2, W_Straal
+LESIZE, ALL, eSIZEmiddle, , , , , , , 
+
+
+
+
+!----------------------------------------------------------------------
+!---------------------Copy areas: -------------------------------------
+!----------------------------------------------------------------------
+CSYS, CS_SleeperLocal !Midpoint of sleeper
+CMSEL, S, Wapening_with_block_A
+ARSYM,Y,ALL, , , ,0,0   
+*IF, ARG3, NE, 'true', THEN 
+	ARSYM,X,ALL, , , ,0,0   !Kopieer niet als er symmetrie gebruikt wordt.
+*ENDIF
+CM, Wapening_with_block_A, AREA
+
+*DEL, Divisions
+*DEL, Center
+*DEL, Block_1_width
+*DEL, Block_1_height
+*DEL, Block_2_width
+*DEL, Block_2_height
+*DEL, MaxArea
+*DEL, MaxLine
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0
+
+ALLSEL

@@ -1,0 +1,42 @@
+
+
+CSYS, CS_Railpad
+MAT, Railpad
+real, realSolids
+ESIZE, , 2
+
+!Copy the bottom areas (including the mesh) of the rail to form a railpad. 
+!Rail and railpad are then always fully connected. The railpad and rughellingplaat will be connected by contact.
+
+!Create empty components:
+VSEL, NONE
+CM, Railpads_V_L, VOLU
+CM, Railpads_V_R, VOLU
+CM, Railpads, VOLU
+
+
+startX_coord = 0
+*DO, SleeperIndex, 1, AantalSleepers
+	/GO
+	X_coord_min = startX_coord - S_Halve_Breedte
+	X_coord_max = startX_coord + S_Halve_Breedte
+	
+	!Positive X
+	*USE, '%GeometryFolderCommon(1)%\Railpad\createSingleRailPad.MAC', 'Left', X_coord_min, X_coord_max
+	*USE, '%GeometryFolderCommon(1)%\Railpad\createSingleRailPad.MAC', 'Right', X_coord_min, X_coord_max
+	
+	*IF, SleeperIndex, GT, 1, AND, ARG1, NE, 'true', THEN
+		!Negative X
+		*USE, '%GeometryFolderCommon(1)%\Railpad\createSingleRailPad.MAC', 'Left', -X_coord_max, -X_coord_min
+		*USE, '%GeometryFolderCommon(1)%\Railpad\createSingleRailPad.MAC', 'Right', -X_coord_max, -X_coord_min
+	*ENDIF
+
+	startX_coord = SleeperDistance*SleeperIndex !update start coordinate
+*ENDDO
+
+ALLSEL
+
+*DEL, startX_coord
+*DEL, X_coord_min
+*DEL, X_coord_max
+*DEL, SleeperIndex

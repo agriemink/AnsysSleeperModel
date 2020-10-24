@@ -1,0 +1,99 @@
+
+!----------------------------------------------------------------------
+!------- Extrude dwarsligger; middle of rail is the starting point -----
+!----------------------------------------------------------------------
+
+X_LOC_MIN = -S_Halve_Breedte
+X_LOC_MAX = S_Halve_Breedte
+
+
+CSYS, CS_SleeperLocal
+!Create component, select everything below the rughellingplaat:
+ALLSEL 
+ASEL, S, LOC, Z, 0
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+CM, Dwarsligger_A, AREA
+
+
+
+
+
+
+!Z-coorindaten 
+Start = 0	!Z-coorindaat van coordinaatsysteem
+Z_1 = Spoorwijdte/2 - RH_lengte/2   !Begin rughellingplaat
+Z_2 = Spoorwijdte/2   				!Recht onder rail
+Z_3 = Spoorwijdte/2 + RH_lengte/2 	!Einde rughellingplaat
+Z_4 = W_Halve_Lengte - Start	!Einde wapening	
+Z_5 = S_Halve_Lengte - Start	!Halve lengte	
+
+ESIZE, , (Z_1) / ESIZE_Sleeper
+
+VEXT, Dwarsligger_A, , , 0, 0, -Z_1, , , 
+VEXT, Dwarsligger_A, , , 0, 0, Z_1, , , 
+!----------------------------------------------------------------------
+!Tussen rughellingplaat en midden van rughellingplaat
+ESIZE, , (Z_2 - Z_1) / ESIZE_Sleeper !Smaller size in the middle is possible, but then the foundation becomes stiffer as well.
+ASEL, S, LOC, Z, Z_1
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+
+
+VEXT, ALL, , , 0, 0, Z_2 - Z_1 , , , 
+ASEL, S, LOC, Z, -Z_1
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, -(Z_2 - Z_1) , , , 
+!----------------------------------------------------------------------
+!Tussen midden van rughellingplaat en einde van rughellingplaat
+ESIZE, , (Z_3 - Z_2) / ESIZE_Sleeper !Smaller size in the middle is possible, but then the foundation becomes stiffer as well.
+
+ASEL, S, LOC, Z, Z_2
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, Z_3 - Z_2, , , 
+ASEL, S, LOC, Z, -Z_2
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, -(Z_3 - Z_2), , , 
+!----------------------------------------------------------------------
+
+!----------------------------------------------------------------------
+!Naar einde wapening
+ESIZE, , (Z_4 - Z_3) / ESIZE_Sleeper
+ASEL, S, LOC, Z, Z_3
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+
+VEXT, ALL, , , 0, 0, Z_4 - Z_3 , , , 
+ASEL, S, LOC, Z, -Z_3
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, -(Z_4 - Z_3) , , , 
+!----------------------------------------------------------------------
+!Naar einde ligger
+ESIZE, , (Z_5 - Z_4) / ESIZE_Sleeper
+
+ASEL, S, LOC, Z, Z_4
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, Z_5 - Z_4, , , 
+ASEL, S, LOC, Z, -Z_4
+ASEL, R, LOC, X, X_LOC_MIN, X_LOC_MAX !Make sure only this sleeper is selected and not other sleepers
+ASEL, R, LOC, Y, -S_Halve_Hoogte, S_Halve_Hoogte
+VEXT, ALL, , , 0, 0, -(Z_5 - Z_4), , , 
+!----------------------------------------------------------------------
+
+
+*DEL, Z_1
+*DEL, Z_2
+*DEL, Z_3
+*DEL, Z_4
+*DEL, Z_5
+*DEL, X_LOC_MIN
+*DEL, X_LOC_MAX
+*DEL, Start
+
+ESIZE, ESIZE_standaard
+ALLSEL

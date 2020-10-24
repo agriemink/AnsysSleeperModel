@@ -1,0 +1,80 @@
+!*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
+
+
+!*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
+
+!*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_LC5'
+
+!*USE, '%MacroFolder(1)%StubSaveSleeperStresses.MAC'
+
+
+
+
+!*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, ''
+
+*GET, AantalLoadSteps, ACTIVE, 0, SET, NSET, , 			
+SET, FIRST
+
+!----------------------------------------------
+!-------- Save data per load step -------------
+!----------------------------------------------
+/POST1
+*DO, i, 2, AantalLoadSteps, 1
+SET, i !Load load step:
+
+ALLSEL
+!Basis
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, '' !Selecteer middelste dwarsligger
+
+/VIEW,1,1,1,1 !Draai naar juiste standpunt.
+/ANG,1  
+/REP,FAST
+PLNSOL, S, EQV, 0 !Equivalent stress
+
+/REPLOT
+
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStresses_LC%i%'
+*GET, MaxVonMises, PLNSOL, 0, MAX !Maximum value of item in last contour display
+*GET, MinVonMises, PLNSOL, 0, MIN !Minimum value of item in last contour display
+
+!Minus bovenste elementen.
+ALLSEL, BELOW, ELEM
+ESEL, R, CENT, Y, -S_Hoogte, -0.01
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressesMinBovensteCentimeter_LC%i%'
+*GET, MaxVonMises_zonder1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_zonder1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+/REPLOT
+
+PLNSOL, S, EQV, 0 !Equivalent stress
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_LC%i%'
+*GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+/REPLOT
+
+
+
+!Opmerking	Locatie	Grootheid		Load case 5	Load case 7
+
+!Save to csv
+*CFOPEN, '%saveWithJobname(1)%_MaxStresses%i%', csv
+*VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Min/Max' ,';','Load case %i%'
+%C%C%C%C%C%C%C%C%C
+
+*VWRITE, ';Wapening;Stress;Min;', MinVonMises_wapening
+%C%E
+*VWRITE, ';Wapening;Stress;Max;', MaxVonMises_wapening
+%C%E
+*VWRITE, ';Kunststof;Stress;Min;', MinVonMises
+%C%E
+*VWRITE, ';Kunststof;Stress;Max;', MaxVonMises
+%C%E
+*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Min;', MinVonMises_zonder1cm
+%C%C%E
+*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Max;', MaxVonMises_zonder1cm
+%C%C%E
+
+*CFCLOS
+
+*ENDDO

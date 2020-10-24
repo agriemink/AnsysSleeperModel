@@ -1,0 +1,125 @@
+!----------------------------------------------------------------------
+!-----------Create rughellingplaat ------------------------------------
+!----------------------------------------------------------------------
+
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
+X_COORD_Local = ARG1
+!----------------------------------------------------------------------
+!---------------------Parameters:--------------------------------------
+!----------------------------------------------------------------------
+!When debugging use:
+! /PREP7
+! ET,1,MESH200
+! KEYOPT,1,1,7
+! KEYOPT,1,2,0
+! Element_SOLID185 = 2
+! ET,Element_SOLID185,SOLID185   
+! RH_Dikte = 18 / 1000
+! RH_Lengte = 360 / 1000 	!Lengterichting van dwarsligger
+! RH_Breedte = 170 / 1000	!Lengterichting van spoor
+! ESIZE_BottomRail = 0.01
+
+! Spoorwijdte = 1.500
+! Rail_width = 0.140
+
+! CS_Rail = 100
+! !LOCAL, CS_Rail, CART, 0, RH_Dikte, Spoorwijdte / 2, 0, -2.86, 0, ,  ! 1 op 20
+! LOCAL, CS_Rail, CART, 0, RH_Dikte, Spoorwijdte / 2, 0, -1.43, 0, ,  ! 1 op 40
+! CSYS, 0
+
+MAT, Materiaal_RH
+real, realSolids
+!----------------- Fixed parameters uit: O:\Afstuderen\_Literatuur\ProRail\Tekeningen\TKG047648 BL00 versie C - RUGHELLINGPLAAT 54E1 (UIC54) HELLING 1_40 15-301 (Gewalste rug(helling)platen).pdf
+RH_dikte_min = 15/1000
+RH_dikte_max = 17/1000
+RH_dikte_mid = RH_Dikte
+
+Rail_foot_support_width = (249)/1000 	!Waarde uit tekening
+fillet_size = 20/1000 					!should be less than 53 mm.
+!----------------------------------------------------------------------
+!---------------------Create Rectangular area  ------------------------
+!----------------------------------------------------------------------
+ASEL, NONE
+
+CSYS, CS_Railpad_L !Use coordinate system from the railpad as this is rotated. Note that the x-center of the coordinate system is at x = 0.
+! 	         X  		Y 			Z
+K, KP_0 + 1, X_COORD_Local, 	0			, Rail_foot_support_width/2 - fillet_size		!Links
+K, KP_0 + 2, X_COORD_Local, 	0			, 0 											!Midden
+K, KP_0 + 3, X_COORD_Local, 	0			, -Rail_foot_support_width/2 					!Rechts
+CSYS, CS_Rughellingplaat_L !Return to the RH coordinate system.
+
+K, KP_0 + 4, X_COORD_Local, RH_dikte_min	, -RH_Lengte/2 							!Rechtsboven
+K, KP_0 + 5, X_COORD_Local, 0				, -RH_Lengte/2 							!Rechtsonder
+K, KP_0 + 6, X_COORD_Local, 0				, 0										!Middenonder
+K, KP_0 + 7, X_COORD_Local, 0				, RH_Lengte/2 							!Linksonder
+K, KP_0 + 8, X_COORD_Local, RH_dikte_max	, RH_Lengte/2 							!Linksboven
+K, KP_0 + 9, X_COORD_Local, RH_dikte_max	, Rail_foot_support_width/2				!Extra voor fillet
+
+L, 		KP_0 + 2, KP_0 + 3 !Line 1
+L, 		KP_0 + 3, KP_0 + 4 !Line 2
+L, 		KP_0 + 4, KP_0 + 5 !Line 3
+L, 		KP_0 + 5, KP_0 + 6 !Line 4
+L, 		KP_0 + 6, KP_0 + 7 !Line 5
+L, 		KP_0 + 7, KP_0 + 8 !Line 6
+L, 		KP_0 + 8, KP_0 + 9 !Line 7
+L, 		KP_0 + 9, KP_0 + 1 !Line 8
+L, 		KP_0 + 1, KP_0 + 2 !Line 9
+
+L, 		KP_0 + 2, KP_0 + 6 !Line 10
+
+ASEL, NONE
+AL, Line_0 + 1, Line_0 + 2, Line_0 + 3, Line_0 + 4, Line_0 + 10					!Area 1
+AL, Line_0 + 5, Line_0 + 6, Line_0 + 7,  Line_0 + 8,  Line_0 + 9, Line_0 + 10	!Area 2
+
+!------ Mesh -----
+!Make dependend on Esize
+AESIZE, ALL, ESIZE_BottomRail
+MSHKEY, 1
+
+AATT, Materiaal_RH !set material
+
+AMAP, Area_0 + 1,  KP_0 + 4, KP_0 + 5, KP_0 + 6, KP_0 + 2
+AMAP, Area_0 + 2,  KP_0 + 8, KP_0 + 2, KP_0 + 6, KP_0 + 7
+esize, , (RH_Breedte/2)/ESIZE_BottomRail !Make the bottom elements as square as possible
+
+!----------------------------------------------------------------------
+!---------------------Create CM, set material, move -------------------
+!----------------------------------------------------------------------
+CM, Rughellingplaat_A, AREA
+
+VSEL, NONE
+*IF, ARG2, NE, 'true', THEN !Lijnen in het negatieve x-vlak
+	VEXT, Rughellingplaat_A, , , -RH_Breedte/2	, 0, 0, , , 
+*ENDIF
+VEXT, Rughellingplaat_A, , , RH_Breedte/2	, 0, 0, , ,
+!ASEL, ALL
+
+!Copy to other side.
+CSYS, 0
+VSYMM, Z, ALL, , , , , 0, 0
+
+!Create components
+CMSEL, A, Rughellingplaten
+CM, Rughellingplaten, VOLU
+
+CMSEL, S, Rughellingplaten
+VSEL, R, LOC, Z, 0, S_Lengte
+CM, Rughellingplaten_L, VOLU
+
+CMSEL, S, Rughellingplaten
+VSEL, R, LOC, Z, 0, -S_Lengte
+CM, Rughellingplaten_R, VOLU
+
+ALLSEL
+
+!Set coordinate system back to the default
+CSYS, 0
+ESIZE, ESIZE_standaard !Reset ESIZE to standard.
+
+
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0
+*DEL, X_COORD_Local
