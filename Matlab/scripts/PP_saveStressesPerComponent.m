@@ -1,8 +1,5 @@
 function [] = PP_saveStressesPerComponent(dataFolder, data_filenames, analysis_fileNames, output_directory, loadCases)
-
     %
-
-    
     numberOfAnalysis = size(analysis_fileNames,1);
     numberOfMaterials = size(data_filenames,1);    
     
@@ -15,7 +12,8 @@ function [] = PP_saveStressesPerComponent(dataFolder, data_filenames, analysis_f
    % Stresses = cell(1, numberOfAnalysis);
     
    %%Write to xls
-   OutputFile = strcat(output_directory, 'StressesPerMaterial');
+   old_directory = cd(output_directory);
+   OutputFile = 'StressesPerMaterial';
    %delete old file
    delete(strcat(OutputFile, '.xls'));
         
@@ -43,12 +41,7 @@ function [] = PP_saveStressesPerComponent(dataFolder, data_filenames, analysis_f
             Stresses{analysis_index, :} = StressesPerAnalysis;
 
         end
-    
-    
         
-    
-
-
         for stress_index = 1:size(stress_names,1)
             base_row = (stress_index-1)*(numberOfAnalysis+4) + 1;
 
@@ -74,6 +67,6 @@ function [] = PP_saveStressesPerComponent(dataFolder, data_filenames, analysis_f
 
         end 
     end
-    
+    cd(old_directory);
 end
 

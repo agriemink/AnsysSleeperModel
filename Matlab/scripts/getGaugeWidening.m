@@ -1,5 +1,5 @@
 function [ gaugeWidening ] = getGaugeWidening(filename)
-
+        
     [ Node, LocX, LocY, LocZ, UXm, UYm, UZm] = importDeformationCSV(filename);
     data = struct('node', num2cell(Node), 'X', num2cell(LocX), 'Y', num2cell(LocY), 'Z', num2cell(LocZ), 'Ux', num2cell(UXm), 'Uy', num2cell(UYm),'Uz', num2cell(UZm));
     %data = [(1:size(Node,1))', Node, LocX, LocY, LocZ, UXm, UYm, UZm];

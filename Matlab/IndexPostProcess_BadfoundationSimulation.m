@@ -1,7 +1,7 @@
 %%Post process 
 clear;clc;close all;
 
-basefolder = 'O:/Afstuderen/Ansys/_AnsysModelWorkingDirectory/';
+basefolder = 'O:/AnsysSleeperModel/Results/';
 
 %% Input:
 analysisfolder = '20200527_static_BadFoundations';

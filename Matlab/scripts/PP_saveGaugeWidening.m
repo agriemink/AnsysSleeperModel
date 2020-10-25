@@ -72,7 +72,7 @@ function [results] = PP_saveGaugeWidening(dataFolder, analysis_fileNames, output
             xlabel('X-coordinate [m]');
             hold off
 
-            filename = strrep(sprintf('%s/%s - %s ', outputFolder, loadCase_name, '_gaugeWideningOverview'), '.', ',');
+            filename = strrep(sprintf('%s%s - %s ', outputFolder, loadCase_name, '_gaugeWideningOverview'), '.', ',');
             saveas(gcf, filename, 'png');
             saveas(gcf, filename ,'epsc');
             saveas(gcf, filename ,'m');
@@ -82,11 +82,12 @@ function [results] = PP_saveGaugeWidening(dataFolder, analysis_fileNames, output
     
     %% Create gauge widening excel:
     alfabet = ['ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
+    old_folder = cd(outputFolder); %Change directory
     for loadCase_index = 1:size(LoadCases,1)
         if exist('results', 'var') == 1
             loadCase_name = sprintf('LoadCase%d', LoadCases(loadCase_index));
 
-            filename = strrep(sprintf('%s/%s ', outputFolder, 'gaugeWideningOverview'), '.', ',');
+            filename = 'gaugeWideningOverview';
             tab = 'gauge widening';
             if loadCase_index == 1
                 xlswrite(filename, {'Load case:'}, tab , 'A2');
@@ -121,7 +122,7 @@ function [results] = PP_saveGaugeWidening(dataFolder, analysis_fileNames, output
             end
         end
     end
-    
+    cd(old_folder); %Change directory back to orignal folder.
   
     %% Create overview of parameters:
    %TODO

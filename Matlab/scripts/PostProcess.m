@@ -3,7 +3,7 @@ function [] = PostProcess(analysisfolder, LoadCases, general_outputfolder, analy
 %%Post process 
 aantalLoadCases = length(LoadCases);
 
-basefolder = 'O:/Afstuderen/Ansys/_AnsysModelWorkingDirectory/';
+basefolder = 'O:/AnsysSleeperModel/Results/';
 resultsFolder = strcat(basefolder, analysisfolder, '/'); %Where to find results
 if ~exist(resultsFolder, 'dir') 
    disp('Resultsfolder not found');
