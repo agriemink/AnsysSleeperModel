@@ -8,6 +8,7 @@ AantalMaterialen = 7
 *DIM, Materials, Array, AantalMaterialen
 
 !Entry should be equal to file name.
+!And entry itself has to provide the name of the material.
 MaterialDatabase(1,1) = 'Staal'
 MaterialDatabase(1,2) = 'KLP_PE_Lojda'
 MaterialDatabase(1,3) = 'KLP_HS_Lojda'

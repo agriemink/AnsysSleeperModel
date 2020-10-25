@@ -39,13 +39,11 @@ analysisType_ = 'static'
 ! ----------------------------------------------------------
 ! ----------------------------------------------------------
 
-
 *DO, Boilerplate, 0, 1
 	! -------- Folder name of general working directory --------
 	General_Working_Directory(1) = '%GlobalWorkingDirectory(1)%%Date_%_%analysisType_%_%WorkingDirectoryName(1)%'
 	*EXIT
 *ENDDO
-
 
 ! ----------------------------------------------------------
 ! ------------- Analysis specific parameters: --------------
@@ -61,12 +59,30 @@ WorkingDirectoryNameAddition(1) = '' !Directory name addition to general folder:
 
 ! ----------------------------------------------------------
 ! -------------------- Analysis loading: -------------------
-
 ! analysis index-file should be a existing file in the analysis-folder. 
 ! The 'simulatienaam' can be a custom name.
 
 /INPUT, Loads2LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+!*USE, %RunAnalysisMacroName(1)%, analysisType_, '[existiong analysis-file]', '[custom name]', skipsolve_all
 *USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_1Div', '202_HDPE_1Div', skipsolve_all
 
-!*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_1Div', '202_HDPE_1Div', skipsolve_all
+! Bad foundation analysis:
+fundering_Multiplier_size = 6
+fundering_Ondersteund_size = 11
+*DIM, MultiplierOndersteundArr, ARRAY, fundering_Multiplier_size
+*DIM, OndersteundPercentageArr, ARRAY, fundering_Ondersteund_size
+MultiplierOndersteundArr(1) = 10, 7.5, 5, 4, 2, 0.1
+OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45, 0.4, 0.1
+
+
+*DO, i_index, 1, fundering_Multiplier_size, 1 !iterate over all the nodes.
+	*DO, j_index, 1, fundering_Ondersteund_size, 1 !iterate over all the nodes.
+		fundering_MultiplierOndersteund = MultiplierOndersteundArr(i_index) !Global, to be used in the analysis-file
+		fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
+
+		*IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_2Div_fundering', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+		*ENDIF
+	*ENDDO
+*ENDDO
 

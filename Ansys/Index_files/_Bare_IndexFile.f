@@ -2,16 +2,17 @@ FINISH
 /CLEAR
 /GO
 
+!Essentials ------------------------------------------------
+Drive = 'O' !Change to own local drive letter
+*DIM,GitBaseFolder,STRING,200
+GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
+
 *DO, Boilerplate, 0, 1
-	!Essentials ------------------------------------------------
-	Drive = 'O' !Change to own local drive letter
-	*DIM,GitBaseFolder,STRING,200
-	GitBaseFolder(1) = '%Drive%:\Afstuderen\AnsysSleeperModel' !Change to own path
-	
+	!These folders should be fine and do not have to be changed
 	*DIM,BaseFolder,STRING,200
 	BaseFolder(1) = '%GitBaseFolder(1)%\Ansys'
 	*DIM, Scriptfolder, STRING, 200
-	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\Shared'
+	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\General'
 	!Load global folder and filenames:
 	*USE, '%Scriptfolder(1)%/LoadGlobals.MAC'
 
@@ -25,11 +26,11 @@ FINISH
 *ENDDO
 
 ! ----------------------------------------------------------
-! ------------- General changeable parameters: -------------
-G_index_file(1) = '[Filename]' !Set to current filename to track back the parameters file to this index file.
+! ------------- General adjustable parameters: -------------
+G_index_file(1) = '[Filename]' !Optional Set to current filename to track back the parameters file to this index file.
 WorkingDirectoryName(1) = '[Custom name for directory]' !Directory name for results
 
-!Do or not solve each model, 'TRUE' skips the solve action.
+!Do or not solve each model, 'TRUE' skips the solve action and only generates the geometry.
 skipsolve_all = 'FALSE' 
 !skipsolve_all = 'TRUE' 
 
@@ -39,13 +40,11 @@ analysisType_ = 'static'
 ! ----------------------------------------------------------
 ! ----------------------------------------------------------
 
-
 *DO, Boilerplate, 0, 1
 	! -------- Folder name of general working directory --------
 	General_Working_Directory(1) = '%GlobalWorkingDirectory(1)%%Date_%_%analysisType_%_%WorkingDirectoryName(1)%'
 	*EXIT
 *ENDDO
-
 
 ! ----------------------------------------------------------
 ! ------------- Analysis specific parameters: --------------
@@ -58,7 +57,6 @@ WorkingDirectoryNameAddition(1) = '[extra text to differentiate each analysis]' 
 	/CWD, '%Working_Directory(1)%' 	!Set working directory to default.
 	*EXIT
 *ENDDO
-
 
 ! ----------------------------------------------------------
 ! -------------------- Analysis loading: -------------------
