@@ -32,8 +32,8 @@ Z_location = S_Halve_Lengte !lateral foundation postion / location, at the end o
 	
 	*GET, SleeperArraySize, PARM, Sleepers, DIM, 1
 	*IF, SleeperArraySize, GE, 6, THEN !Bad foundation parameters. Introduce a symmetric, stiffer or less stiff area in the middle.
-		foundation_supported_area_factor = Sleepers(5,SleeperIndex)
-		foundation_supported_area_mp = Sleepers(6,SleeperIndex) !multiplier
+		foundation_supported_area_factor = Sleepers(5,SleeperIndex) ! A percentage of the length <1
+		foundation_supported_area_mp = Sleepers(6,SleeperIndex) !multiplier % C
 	*ENDIF
 	
 	!5) foundation_supported_area_factor center-piece of the foundation as factor of the total length. E.g. for a value of 0.4, the center portion [0.4 * S_lengte] is supported by K_d/length times the foundation_supported_area_mp

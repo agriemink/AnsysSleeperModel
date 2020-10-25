@@ -1,7 +1,8 @@
 !----------------------------------------------------------------------
 !---------------------Create spring-damper elements -------------------
 !----------------------------------------------------------------------
-
+!																												ARG1, 	ARG2, 	ARG3, 		ARG4, 					ARG5, 				ARG6, 				ARG7, 								ARG8		
+! input shoulde be as *USE, '%Scriptfolder(1)%/Foundation/AddFoundationStiffness_WithSpringDamperElements.MAC', X_Min, 	X_Max, 	Y_location, foundation_stiffness, 	foundation_damping, MakeUseOfSymmetry, 	foundation_supported_area_factor,	foundation_supported_area_mp
 /GO
 /PREP7
 !Input parameters:
@@ -17,8 +18,11 @@ foundation_supported_area_multiplier_local = ARG8 !factor that defines the diffe
 
 *IF, ARG7, LT, 0.0001, THEN
 	!When there is no length specified, get every node as middle node instead of all edge nodes. (otherwise the nodes at Z=0 won't have a correct spring stiffness).
-	foundation_supported_area_length_local = 1
+	A_value = 1
+*ELSE
+	A_value = ARG7
 *ENDIF
+
 *IF, ARG8, LT, 0.0001, THEN
 	!When there is no length specified, get every node as middle node instead of all edge nodes. (otherwise the nodes at Z=0 won't have a correct spring stiffness).
 	C2_over_C1 = 1
@@ -26,11 +30,10 @@ foundation_supported_area_multiplier_local = ARG8 !factor that defines the diffe
 	C2_over_C1 = ARG8
 *ENDIF
 
-L = S_lengte
-a = foundation_supported_area_length_local*L
+a = A_value*S_lengte
 
 !Parameter:
-Y_Foundation = 0.2
+Y_Foundation = 0.2 !Depth/length of the foundation.
 
 !Bottom nodes of sleeper:
 ALLSEL
