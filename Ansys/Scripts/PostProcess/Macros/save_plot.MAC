@@ -3,7 +3,7 @@
 	!Saves current screen as png and eps.
 	/INQUIRE, jobname__, JOBNAME, !get the jobname as this is the first part of the plotname 
 	
-	/GO
+	!/GO
 	*IF, STRLENG(ARG1), GT, 0, THEN
 		*DEL, OutputFilename_, NOPR
 		*DIM, OutputFilename_, STRING, 248

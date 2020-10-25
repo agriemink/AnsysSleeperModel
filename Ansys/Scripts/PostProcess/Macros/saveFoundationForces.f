@@ -1,4 +1,4 @@
-
+/NOPR
 
 NSEL, S, LOC, Y, -S_Hoogte
 NSEL, R, LOC, X, 0
@@ -41,7 +41,7 @@ nd=ndnext(0) !Gets first node
 
 	Z_COORD_Prev = Z_COORD_ARRAY(1)
 	*DO, index_, 1, aantalMidsideNodes
-		/GO
+		!/GO
 		*IF, index_+1, LE, aantalMidsideNodes, THEN
 			Z_COORD_Next = Z_COORD_ARRAY(index_+1)
 		*ELSE
@@ -80,7 +80,7 @@ nd=ndnext(0) !Gets first node
 
 !Configure output
 
-
+T = 'saveFoundationForces'
 *VWRITE, 'Node', ';', 'Loc X', ';', 'Loc Y', ';', 'Loc Z', ';', 'UX [m]', ';', 'UY [m]', ';', 'UZ [m]'
 %C%C%C%C%C%C%C%C%C%C%C%C%C
 

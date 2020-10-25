@@ -1,19 +1,19 @@
 !disable warning messages.
-!/NOPR
-!/UIS, MSGPOP, 3
-!/NERR,,,,,0
+/NOPR
+/UIS, MSGPOP, 3
+/NERR,,,,,0
 
-/go
+!/go
 /POST1
 
 /INQUIRE, saveWithJobname_Local, JOBNAME, !get the jobname as this is the first part of the plotname 
-
+ALLSEL
 !Save the reaction forces from the current selected nodes.
 *DIM, SleeperReactionForces, ARRAY, AantalSleepers*2-1, 5
 
 i = 0
 *DO, SleeperIndex, -(AantalSleepers - 1), (AantalSleepers - 1)
-/GO
+	/NOPR
 	i = i + 1
 
 	X_COORD = SleeperIndex*Sleeperdistance
@@ -56,3 +56,5 @@ analysisIndex = ARG1
 
 *DEL, SleeperReactionForces, NOPR
 *DEL, i
+
+/GO

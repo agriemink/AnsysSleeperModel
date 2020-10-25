@@ -1,4 +1,4 @@
-
+\GO
 ALLSEL
 LoadCase = ARG1
 
@@ -94,3 +94,5 @@ PLNSOL, S, Y, 0 !Stress in vertical direction.
 *VWRITE, 'Foundation stresses Y', ';Kunststof;Stress;Max;', MaxYFoundationStress
 %C%C%E
 *CFCLOS
+
+/NOPR

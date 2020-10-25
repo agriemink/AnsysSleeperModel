@@ -1,4 +1,4 @@
-	
+	/NOPR
 	/INQUIRE, jobname_, JOBNAME, !get the jobname as this is the first part of the plotname 
 	
 	*DIM, newFilename, STRING, 200

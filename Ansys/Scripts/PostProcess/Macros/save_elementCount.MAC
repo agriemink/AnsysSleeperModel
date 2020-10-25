@@ -1,5 +1,5 @@
 
-*DEL, FilenameElementCount
+
 *DIM, FilenameElementCount, STRING, 150
 FilenameElementCount(1) = 'ElementCount'
 
