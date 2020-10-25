@@ -7,7 +7,7 @@ FINISH
 	!Essentials ------------------------------------------------
 	Drive = 'O'
 	*DIM,BaseFolder,STRING,200
-	BaseFolder(1) = '%Drive%:\Afstuderen\Ansys\_AnsysModel'
+	BaseFolder(1) = '%Drive%:\AnsysSleeperModel\Ansys'
 	*DIM, Scriptfolder, STRING, 200
 	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\Shared'
 	!Load global folder and filenames:
@@ -34,7 +34,7 @@ skipsolve_all = 'FALSE'
 !Type of analysis, 'modal' or 'static'
 analysisType_ = 'static'  
 
-/INPUT, LoadsOnlyVertical, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Change loading characteristics
+/INPUT, LoadsOnlyVertical, f, '%BaseFolder(1)%\Loads' , 0, 1 !Change loading characteristics
 
 ! ----------------------------------------------------------
 ! ----------------------------------------------------------

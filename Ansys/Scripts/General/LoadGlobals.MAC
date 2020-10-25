@@ -1,3 +1,5 @@
+*DIM,GlobalWorkingDirectory,STRING,200
+GlobalWorkingDirectory(1) = '%GitBaseFolder(1)%\Results\'
 
 *DIM, RunAnalysisMacroName, STRING, 200
 RunAnalysisMacroName(1) = '%Scriptfolder(1)%/RunAnalysis.MAC'
@@ -7,9 +9,6 @@ MaterialFolder(1) = '%BaseFolder(1)%\Materials'
 
 *DIM, GeometryFolderCommon, STRING, 100
 GeometryFolderCommon(1) = '%BaseFolder(1)%\Geometries\'
-
-*DIM,GlobalWorkingDirectory,STRING,200
-GlobalWorkingDirectory(1) = '%GitBaseFolder(1)%\Results\'
 
 *DIM, Analysisfolder, STRING, 200
 Analysisfolder(1) = '%BaseFolder(1)%\Analysis'
@@ -24,9 +23,9 @@ Analysisfolder(1) = '%BaseFolder(1)%\Analysis'
 !--------------------------------------------------------------
 !-------- Load default variables : ----------------------------
 !--------------------------------------------------------------
-/INPUT, DefaultParameters, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
-/INPUT, PossibleGeometries, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
-/INPUT, Loads, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load default variables
+/INPUT, DefaultParameters, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load default variables
+/INPUT, PossibleGeometries, f, '%GeometryFolderCommon(1)%' , 0, 1 !Load default variables
+/INPUT, Loads, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load default variables
 
 
 

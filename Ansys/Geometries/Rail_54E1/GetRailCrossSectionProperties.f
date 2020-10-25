@@ -1,7 +1,7 @@
 !Boilerplate:
 Drive = 'O'
 *DIM,BaseFolder,STRING,200
-BaseFolder(1) = '%Drive%:\Afstuderen\Ansys\_AnsysModel'
+BaseFolder(1) = '%Drive%:\AnsysSleeperModel\Ansys'
 *DIM, Scriptfolder, STRING, 200
 Scriptfolder(1) = '%BaseFolder(1)%\Scripts\Shared'
 !Load global folder and filenames:

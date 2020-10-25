@@ -1,7 +1,7 @@
 ALLSEL
 !------------------- Apply loads to the rail --------------------------
 !----------------------------------------------------------------------
-!Requires set loadtables. Originally generated in Parameters/Loads
+!Requires set loadtables. Originally generated in the Loads-folder
 ! aangrijpingspunt is midden van de rail, over een lengte van force_length symmetrisch vanuit het centrum in rail/lengte-richting.
 
 *IF, A_54E1, GT, 0.0001, THEN

@@ -27,6 +27,7 @@ PARRES, NEW, 'temp'
 	T = LoadLocation_X
 	
 	!Save variables.
+
 	ParameterFiles = 'ParameterFiles_%Filename(1)%'
 	PARSAV, ALL, '%Working_Directory(1)%\%ParameterFiles%', 'f'
 	
@@ -35,8 +36,8 @@ PARRES, NEW, 'temp'
 	
 	!----------------------------------------------------------------------
 	!TRUE analysis part:
-	!----------------------------------------------------------------------
-	/INPUT, Elements, f, '%Scriptfolder(1)%/Parameters' , 0, 1 		!(Re)set element types
+	!---------------------------------------------------------------------
+	/INPUT, Elements, f, '%Basefolder(1)%/Parameters' , 0, 1 		!(Re)set element types
 	*USE, '%MaterialFolder(1)%/Macros/LoadMaterials.MAC'
 	!----------------------------
 	!-------- Geometrie: --------
@@ -93,7 +94,7 @@ PARRES, NEW, 'temp'
 	PARSAV, ALL, 'CustomParameters %AnalyisName(1)%', 'f'
 	!----------------------------
 	!-------- Analysis : ---------
-	/INPUT, PostProcess, MAC, '%Scriptfolder(1)%' , 0, 1 !PostProcess and save files
+	/INPUT, PostProcess, MAC, '%Basefolder(1)%/Scripts/PostProcess' , 0, 1 !PostProcess and save files
 	EPLOT
 	ALLSEL
 	SAVE, %Filename(1)%, 'db'

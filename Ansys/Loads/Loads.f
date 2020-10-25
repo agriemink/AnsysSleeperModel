@@ -1,3 +1,19 @@
+*DO, Boilerplate, 0, 1
+*DEL, LoadTable_y_L
+*DEL, LoadTable_z_L
+*DEL, LoadTable_y_R
+*DEL, LoadTable_z_R
+*DEL, TimeArray
+*DEL, Loadtable_Q_sym
+*DEL, Loadtable_Y_sym
+*DEL, LoadTable_Q_left
+*DEL, LoadTable_Y_left
+*DEL, LoadTable_Q_right
+*DEL, LoadTable_Y_right
+*DEL, LoadTable
+*EXIT
+*ENDDO
+
 !----------------------------------------------------------------------
 !------- Forces / loads -----------------------------------------------
 !----------------------------------------------------------------------
@@ -46,8 +62,6 @@ Array_size = 7
 TimeArray(1,1) 	= 1, 2, 3, 4, 5, 6, 7! Time this should be as long as Array_size -------
 
 *DO, i, 1, Array_size !Fill load table with time
-
-	
 	Loadtable_Q_sym(i,0) 	= TimeArray(i,1)
 	Loadtable_Y_sym(i,0) 	= TimeArray(i,1)
 	
@@ -68,15 +82,21 @@ Y_prud_homme = (10+(Q/1000)/3)*1000 !Convert Q to kN and the result back to Newt
 Y_prud_homme_DAF = (10+(Q_DAF/1000)/3)*1000
 !Loading in Newtons, static 110 kN, quasi-dynamic load of 209 kN (without other sleepers contributing)
 
-!Loadtable_Q_sym(1,1) = 		0,	-15000, -30000, -Q/3, 	-Q/2, 			-Q, 			-Q,	
-!Loadtable_Q_sym(1,1) = 		0,	-Q/3, 	-Q/2, 	-Q, 	-Q,	 		-Q_DAF,			-Q_DAF !Original
-Loadtable_Q_sym(1,1) = 		0,	-Q/3, 	-Q/2, 	-Q, 	-Q,	 		-Q_DAF,			-Q_DAF	
-Loadtable_Y_sym(1,1) = 		0, 	0, 		0, 		0, 		0, 		 		0, 				0
+!Some load cases, comment the non-used version(s). All loadtables are saved to a parameter-file and graphically saved as well.
+!Original load cases:
+Loadtable_Q_sym(1,1) = 		0,	-Q/3, 	-Q/2, 	-Q, 	-Q,	 			-Q_DAF,			-Q_DAF !Original
+LoadTable_Q_left(1,1) = 	0, 	0, 		0, 		0, 		Y_prud_homme, 	Y_prud_homme,	Y_prud_homme_DAF
 
-!Based on forces
-LoadTable_Q_left(1,1) = 	0, 	0, 		0, 		0, 		0, 				0, 				0
+!Lower load cases better match with experiments:
+Loadtable_Q_sym(1,1) = 		0,	-15000, -30000, -Q/3, 	-Q/2, 			-Q, 			-Q,	
 LoadTable_Y_left(1,1) =		0, 	0, 		0, 		0, 		0, 				0, 				Y_prud_homme_DAF
 
+!
+!Loadtable_Q_sym(1,1) = 		0,	-Q/3, 	-Q/2, 	-Q, 	-Q,	 		-Q_DAF,			-Q_DAF	
+!LoadTable_Y_left(1,1) =		0, 	0, 		0, 		0, 		0, 				0, 				Y_prud_homme_DAF
+
+!Basic zeros
+Loadtable_Y_sym(1,1) = 		0, 	0, 		0, 		0, 		0, 		 		0, 				0
 LoadTable_Q_right(1,1) = 	0, 	0, 		0, 		0, 		0, 				0, 				0
 LoadTable_Y_right(1,1) = 	0, 	0, 		0, 		0, 		0, 				0, 				0
 

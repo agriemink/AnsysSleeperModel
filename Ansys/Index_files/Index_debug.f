@@ -2,14 +2,17 @@ FINISH
 /CLEAR
 /GO
 
+!Essentials ------------------------------------------------
+Drive = 'O' !Change to own local drive letter
+*DIM,GitBaseFolder,STRING,200
+GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
 
 *DO, Boilerplate, 0, 1
-	!Essentials ------------------------------------------------
-	Drive = 'O'
+	!These folders should be fine and do not have to be changed
 	*DIM,BaseFolder,STRING,200
-	BaseFolder(1) = '%Drive%:\Afstuderen\Ansys\_AnsysModel'
+	BaseFolder(1) = '%GitBaseFolder(1)%\Ansys'
 	*DIM, Scriptfolder, STRING, 200
-	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\Shared'
+	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\General'
 	!Load global folder and filenames:
 	*USE, '%Scriptfolder(1)%/LoadGlobals.MAC'
 
@@ -24,8 +27,8 @@ FINISH
 
 ! ----------------------------------------------------------
 ! ------------- General changeable parameters: -------------
-G_index_file(1) = 'Index_fixed_gauge_displacement.f' !Set to current filename to track back the parameters file to this index file.
-WorkingDirectoryName(1) = 'Results_fixed_displacement' !Directory name for results
+G_index_file(1) = 'Index_debug.f' !Set to current filename to track back the parameters file to this index file.
+WorkingDirectoryName(1) = 'Debug' !Directory name for results
 
 !Do or not solve each model, 'TRUE' skips the solve action.
 skipsolve_all = 'FALSE' 
@@ -33,10 +36,6 @@ skipsolve_all = 'FALSE'
 
 !Type of analysis, 'modal' or 'static'
 analysisType_ = 'static'  
-
-LoadType(1) = 'Displacement' ! ''
-/INPUT, DisplacementLoad, f, '%Scriptfolder(1)%\Parameters' , 0, 1 !Load custom displacement loading
-
 ! ----------------------------------------------------------
 ! ----------------------------------------------------------
 
@@ -59,11 +58,15 @@ WorkingDirectoryNameAddition(1) = '' !Directory name addition to general folder:
 	/CWD, '%Working_Directory(1)%' 	!Set working directory to default.
 	*EXIT
 *ENDDO
-'
 
 ! ----------------------------------------------------------
-!								 Type analyse, analyse index-file, simulatienaam,  skipsolve: true || false
+! -------------------- Analysis loading: -------------------
 
-*USE, %RunAnalysisMacroName(1)%, 'static', '202_HDPE_2Div', '202_HDPE_2Div', 'FALSE' 
+! analysis index-file should be a existing file in the analysis-folder. 
+! The 'simulatienaam' can be a custom name.
 
+/INPUT, Loads2LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_1Div', '202_HDPE_1Div', skipsolve_all
+
+!*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_1Div', '202_HDPE_1Div', skipsolve_all
 

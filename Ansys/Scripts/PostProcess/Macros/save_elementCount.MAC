@@ -1,5 +1,5 @@
 
-
+*DEL, FilenameElementCount
 *DIM, FilenameElementCount, STRING, 150
 FilenameElementCount(1) = 'ElementCount'
 
@@ -26,7 +26,7 @@ ESEL, A, MAT, , Materiaal_S !Add the sleeper material-elements to the selection.
 *CFOPEN, '%Working_Directory(1)%\%FilenameElementCount(1)%', csv, , APPEND
 
 
-*VWRITE, '%Filename(1)%', ';', AantalElements, ';', AantalSleeperElements
+*VWRITE, '%FilenameElementCount(1)%', ';', AantalElements, ';', AantalSleeperElements
 %C%C%I%C%I
 
 *CFCLOS

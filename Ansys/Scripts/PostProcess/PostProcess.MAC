@@ -4,7 +4,7 @@ FINISH
 
 *DEL, MacroFolder, NOPR
 *DIM,MacroFolder,STRING,100
-MacroFolder(1) = '%BASEFOLDER(1)%\Scripts\Shared\Macros\'
+MacroFolder(1) = '%Basefolder(1)%/Scripts/PostProcess/Macros/'
 !/PSEARCH, '%Scriptfolder(1)%\Macros' !Specifies a directory to be searched for "unknown command" macro files.
 /POST1
 !disable warning messages.
