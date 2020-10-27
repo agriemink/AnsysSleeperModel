@@ -1,12 +1,13 @@
 /PREP7 !start preprocessor
 
-X_COORD = ARG2
+X_COORD = ARG2 !Centre of sleeper
 !MakeUseOfSymmetry = ARG3 !'True' == 'Symmetrie'
 W_Divisions = ARG4
 GeometryFolder(1) = '%GeometryFolderCommon(1)%\%SleeperModel(1)%'
 
 !This is the main file for creating the KLP (rectangular) sleeper. 
 !Necessary for this file are loaded parameters 
+!Custom geometries can be added here as well.
 *IF, ARG1, EQ, 201, THEN
 	/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1
 *ELSEIF, ARG1, EQ, 202
@@ -210,3 +211,8 @@ ALLSEL
 *DEL, Midpoint_X
 *DEL, Midpoint_Y
 *DEL, X_COORD
+
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0

@@ -149,6 +149,9 @@ CM, Dwarsliggers_V, VOLU
 *USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
 *USE, '%Scriptfolder(1)%\deleteMESH200.MAC' !Delete mesh elements
 CSYS, 0
-
+*DEL, KP_0
+*DEL, Line_0
+*DEL, Area_0
+*DEL, Volume_0
 
 SAVE, %Filename(1)%, 'db'
