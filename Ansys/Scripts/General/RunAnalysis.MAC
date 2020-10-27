@@ -41,6 +41,7 @@ PARRES, NEW, 'temp'
 	*USE, '%MaterialFolder(1)%/Macros/LoadMaterials.MAC'
 	!----------------------------
 	!-------- Geometrie: --------
+	/NOPR
 	/INPUT, createGeometry, f, '%Scriptfolder(1)%' , 0, 1 !Load geometry
 
 	!----------------------------
