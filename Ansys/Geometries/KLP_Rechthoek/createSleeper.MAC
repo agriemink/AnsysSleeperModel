@@ -3,6 +3,10 @@
 X_COORD = ARG2 !Centre of sleeper
 !MakeUseOfSymmetry = ARG3 !'True' == 'Symmetrie'
 W_Divisions = ARG4
+*IF, W_Divisions, LT, 1, THEN
+	W_Divisions = 1 !Set default if unusable data is entered
+*ENDIF
+
 GeometryFolder(1) = '%GeometryFolderCommon(1)%\%SleeperModel(1)%'
 
 !This is the main file for creating the KLP (rectangular) sleeper. 

@@ -5,7 +5,9 @@ GeometryHasFoundation = 1
 W_x = S_Breedte/2 - W_Dekking_x - W_Straal 
 W_y = -W_Dekking_y - W_Straal
 
-!W_Divisions = 2 !2 is minimum and default !More than 2 results in too many nodes!
+*IF, W_Divisions, LT, 1, THEN
+	W_Divisions = 1 !Set default if unusable data is entered
+*ENDIF
 
 !Wapening block size:
 OB_size_height = W_Diameter + W_Dekking_y*2
