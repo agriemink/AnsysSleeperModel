@@ -12,92 +12,138 @@ LoadCase = ARG1
 PLNSOL, S, EQV, 0 !Equivalent stress
 /REPLOT
 
-
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
-*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStress_LC%LoadCase%'
-*GET, MaxVonMises, PLNSOL, 0, MAX !Maximum value of item in last contour display
-*GET, MinVonMises, PLNSOL, 0, MIN !Minimum value of item in last contour display
+PLNSOL, S, Y, 0 !Y-stress (vertical)
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunYStresses_LC%LoadCase%'
+*GET, MaxY_kunststof ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinY_kunststof ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-!Minus bovenste elementen.
+PLNSOL, S, 1, 0 !1st principal stress
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'Kun1stStresses_LC%LoadCase%'
+*GET, Max1_kunststof ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, Min1_kunststof ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunVonMisesStresses_LC%LoadCase%'
+*GET, MaxVonMises_kunststof ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_kunststof ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+!------------------------------------------------------------
+!! Kunststof minu bovenste elementenlaag ~1 cm
 ALLSEL, BELOW
 ESEL, R, CENT, Y, -S_Hoogte, -0.01
 /REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1Cm_LC%LoadCase%'
-*GET, MaxVonMises_zonder1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-*GET, MinVonMises_zonder1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+PLNSOL, S, Y, 0 !Y-stress (vertical)
 /REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunYStresses1cm_LC%LoadCase%'
+*GET, MaxY_kunststof_1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinY_kunststof_1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-PLNSOL, S, Y, 0 !Stress Y-plane
+PLNSOL, S, 1, 0 !1st principal stress
 /REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1CmY_LC%LoadCase%'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'Kun1stStresses1cm_LC%LoadCase%'
+*GET, Max1_kunststof_1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, Min1_kunststof_1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-ALLSEL
-PLNSOL, S, EQV, 0 !Equivalent stress
+PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunVonMises1cm_LC%LoadCase%'
+*GET, MaxVonMises_kunststof_1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_kunststof_1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+!------------------------------------------------------------
+!! Wapening 'gewoon'
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
+PLNSOL, S, Y, 0 !Y-stress (vertical)
 /REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_LC%LoadCase%'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapYStresses_LC%LoadCase%'
+*GET, MaxY_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinY_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+PLNSOL, S, 1, 0 !1st principal stress
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'Wap1stStresses_LC%LoadCase%'
+*GET, Max1_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, Min1_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapVonMisesStresses_LC%LoadCase%'
 *GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-
+!Wapening shear stress
 PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 /REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningShearStresses_LC%LoadCase%'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningShear_LC%LoadCase%'
 *GET, MaxShear_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinShear_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-ALLSEL
-PLNSOL, S, EQV, 0 !Equivalent stress
+
+!Foundation stresses:
+PLNSOL, S, Y, 0 !Equivalent stress
 !Select bottom elements
 NSEL, S, LOC, Y, -S_Hoogte
 NSEL, R, LOC, Z, -S_Lengte/2, S_Lengte/2
 ESLN, S, 0
 ESEL, U, TYPE, ,Element_COMBIN14
-PLNSOL, S, EQV, 0 !Equivalent stress
-/REPLOT
-*GET, MinVonMisesFoundationStress ,PLNSOL,0,MIN !Minimum value of item in last contour display 
-*GET, MaxVonMisesFoundationStress ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-/REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'VonMisesFndtStress_LC%LoadCase%'
 
-PLNSOL, S, Y, 0 !Stress in vertical direction.
+PLNSOL, S, Y, 0 !Y-stress (vertical)
 /REPLOT
-*GET, MinYFoundationStress ,PLNSOL,0,MIN !Minimum value of item in last contour display 
-*GET, MaxYFoundationStress ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'FunYStresses_LC%LoadCase%'
+*GET, MaxY_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinY_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
+PLNSOL, S, 1, 0 !1st principal stress
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'Fun1stStresses_LC%LoadCase%'
+*GET, Max1_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, Min1_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'FunVonMisesStresses_LC%LoadCase%'
+*GET, MaxVonMises_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinVonMises_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
 !Opmerking	Locatie	Grootheid		Load case 5	Load case 7
-ALLSEL
-!Save to csv
-*CFOPEN, '%saveWithJobname(1)%_MaxStresses%LoadCase%', csv
-*VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Min/Max' ,';','Load case %LoadCase%'
-%C%C%C%C%C%C%C%C%C
 
-*VWRITE, ';Wapening;Stress;Min;', MinVonMises_wapening
-%C%E
-*VWRITE, ';Wapening;Stress;Max;', MaxVonMises_wapening
-%C%E
-*VWRITE, ';Wapening;Shear stress;Min;', MinShear_wapening
-%C%E
-*VWRITE, ';Wapening;Shear stres;Max;', MaxShear_wapening
-%C%E
-*VWRITE, ';Kunststof;Stress;Min;', MinVonMises
-%C%E
-*VWRITE, ';Kunststof;Stress;Max;', MaxVonMises
-%C%E
-*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Min;', MinVonMises_zonder1cm
-%C%C%E
-*VWRITE, 'Zonder bovenste cm', ';Kunststof;Stress;Max;', MaxVonMises_zonder1cm
-%C%C%E
-*VWRITE, 'Foundation stresses VonMises', ';Kunststof;Stress;Min;', MinVonMisesFoundationStress
-%C%C%E
-*VWRITE, 'Foundation stresses VonMises', ';Kunststof;Stress;Max;', MaxVonMisesFoundationStress
-%C%C%E
-*VWRITE, 'Foundation stresses Y', ';Kunststof;Stress;Min;', MinYFoundationStress
-%C%C%E
-*VWRITE, 'Foundation stresses Y', ';Kunststof;Stress;Max;', MaxYFoundationStress
-%C%C%E
+!Save to csv
+*CFOPEN, '%saveWithJobname(1)%_MaxYStresses%LoadCase%', csv
+*VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Load case %LoadCase%;;'
+%C%C%C%C%C%C%C%
+
+! *VWRITE, ';[Locatie];[Welke spanning];', [minimale waarde], ';' [maximale waarde] 
+*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof, ';' MaxVonMises_kunststof
+%C%E%C%E
+*VWRITE, ';Kunststof;1st princple stress;', Min1_kunststof, ';' Max1_kunststof
+%C%E%C%E
+*VWRITE, ';Kunststof;Y stress;', MinY_kunststof, ';' MaxY_kunststof
+%C%E%C%E
+*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof_1cm, ';' MaxVonMises_kunststof_1cm
+%C%E%C%E
+*VWRITE, ';Kunststof;1st princple stress;', Min1_kunststof_1cm, ';' Max1_kunststof_1cm
+%C%E%C%E
+*VWRITE, ';Kunststof;Y stress;', MinY_kunststof_1cm, ';' MaxY_kunststof_1cm
+%C%E%C%E
+*VWRITE, ';Wapening;Von Mises stress;', MinVonMises_wapening, ';' MaxVonMises_wapening
+%C%E%C%E
+*VWRITE, ';Wapening;1st princple stress;', Min1_wapening, ';' Max1_wapening
+%C%E%C%E
+*VWRITE, ';Wapening;Y stress;', MinY_wapening, ';' MaxY_wapening
+%C%E%C%E
+*VWRITE, ';Wapening;Shear stress;', MinShear_wapening, ';' MaxShear_wapening
+%C%E%C%E
+*VWRITE, ';Fundering;Von Mises stress;', MinVonMises_fundering, ';' MaxVonMises_fundering
+%C%E%C%E
+*VWRITE, ';Fundering;1st princple stress;', Min1_fundering, ';' Max1_fundering
+%C%E%C%E
+*VWRITE, ';Fundering;Y stress;', MinY_fundering, ';' MaxY_fundering
+%C%E%C%E
+
 *CFCLOS
 
 ALLSEL
