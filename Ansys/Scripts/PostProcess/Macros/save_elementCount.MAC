@@ -42,5 +42,6 @@ ESEL, A, MAT, , Materiaal_S !Add the sleeper material-elements to the selection.
 
 *DEL, FileExists
 *DEL, FilenameElementCount
+*DEL, Analysis_Name
 *DEL, AantalElements
 *DEL, AantalSleeperElements
