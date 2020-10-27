@@ -1,6 +1,12 @@
+!save_model_plots Save nice plots of the whole model
 
+/TRIAD, OFF !Don't show origin 'triad'
 ALLSEL
+
+/AUTO,1  !Zoom so everything in in the frame.
+/REP,FAST 
 VPLOT, ALL
+
 *USE, '%MacroFolder(1)%save_plot.MAC', 'FullModel'
 
 !Plot with rebar sticking out:
@@ -13,3 +19,4 @@ ALLSEL
 	*USE, '%MacroFolder(1)%save_plot.MAC', 'HalfModelWithRebar'
 *ENDIF
 
+/TRIAD, ON
