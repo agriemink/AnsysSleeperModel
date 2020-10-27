@@ -1,0 +1,31 @@
+/GO
+ALLSEL
+LoadCase_Local = ARG1
+
+!Save deformation (and stresses) of spoorstaaf nodes (to allow for measurement of the gauge widening)
+*GET, DoesCompExists_L, COMP, GaugeNodes_L, TYPE
+*IF, DoesCompExists_L, GT, 0, THEN
+	CMSEL, S, GaugeNodes_L
+	OutputFilename_(1) = '%saveWithJobname(1)%_Rail_L_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Rail_L_
+	CSYS, 0			
+*ENDIF
+*GET, DoesCompExists_R, COMP, GaugeNodes_R, TYPE
+*IF, DoesCompExists_R, GT, 0, THEN
+	CMSEL, S, GaugeNodes_R
+	OutputFilename_(1) = '%saveWithJobname(1)%_Rail_R_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Rail_R_
+	CSYS, 0
+*ENDIF
+*IF, DoesCompExists_R, GT, 0, AND, DoesCompExists_L, GT, 0, THEN
+	!Select only the gauge nodes.
+	CMSEL, S, GaugeNodes_L
+	CMSEL, A, GaugeNodes_R
+	
+	OutputFilename_(1) = '%saveWithJobname(1)%_GaugeNodes_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_GaugeNodes_
+*ENDIF
+
+ALLSEL
+
+*DEL, LoadCase_Local

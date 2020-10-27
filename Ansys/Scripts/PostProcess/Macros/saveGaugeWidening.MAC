@@ -1,5 +1,7 @@
 !/NOPR
 
+
+OutputFilename_(1) = '%saveWithJobname(1)%_saveGaugeWidening_'
 CSYS, 0	
 ALLSEL
 *DEL, Mask_

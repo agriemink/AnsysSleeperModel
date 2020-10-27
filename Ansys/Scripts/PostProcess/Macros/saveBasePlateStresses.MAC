@@ -1,0 +1,27 @@
+/GO
+ALLSEL
+LoadCase_Local = ARG1
+!saveBasePlateStresses
+
+!Save deformation of rughellingplaat nodes (to allow for measurement of the rotation)
+*GET, DoesCompExists, COMP, Rughellingplaten_L, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	CMSEL, S, Rughellingplaten_L
+	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	NSEL, R, LOC, Y, 0
+	OutputFilename_(1) = '%saveWithJobname(1)%_Rughellingplaten_L_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Rughellingplaten_L_
+*ENDIF 
+
+!Save deformation of rughellingplaat nodes (to allow for measurement of the rotation)
+*GET, DoesCompExists, COMP, Rughellingplaten_R, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	CMSEL, S, Rughellingplaten_R
+	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	NSEL, R, LOC, Y, 0
+	OutputFilename_(1) = '%saveWithJobname(1)%_Rughellingplaten_R_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Rughellingplaten_R_
+*ENDIF
+
+
+ALLSEL

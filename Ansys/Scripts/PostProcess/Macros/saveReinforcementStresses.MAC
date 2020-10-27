@@ -1,0 +1,42 @@
+/GO
+ALLSEL
+LoadCase_Local = ARG1
+SleeperID = ARG2
+!saveReinforcementStresses
+
+*IF, ARG2, LE, 0.0001, THEN
+	SleeperID = 0 
+*ENDIF
+
+!Basis
+*USE, '%MacroFolder(1)%selectSleeperByID.MAC', SleeperID, 'wapening' !Selecteer dwarsligger by ID
+
+/VIEW,1,1,1,1 !Draai naar juiste standpunt.
+/ANG,1  
+/REP,FAST
+PLNSOL, S, EQV, 0 !Equivalent stress
+/REP,FAST 
+
+!Create plot of reinforcement stresses.
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_Sleeper%SleeperID%_%LoadCase_Local%'
+PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningShearStresses_Sleeper%SleeperID_%LoadCase_Local%'
+
+
+*GET, DoesCompExists, COMP, Wapening_V, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	CMSEL, S, Wapening_V_RO
+	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	OutputFilename_(1) = '%saveWithJobname(1)%_WapeningOnder_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' ! _WapeningOnder_
+	
+	CMSEL, S, Wapening_V_RB
+	NSLV, S, 1 
+	OutputFilename_(1) = '%saveWithJobname(1)%_WapeningBoven_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' ! _WapeningBoven_
+
+*ENDIF
+
+
+
+ALLSEL

@@ -1,0 +1,19 @@
+/GO
+ALLSEL
+LoadCase_Local = ARG1
+!saveFoundationStresses
+
+
+*GET, DoesCompExists, COMP, Bottomsleepernodes, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	CMSEL, S, Bottomsleepernodes
+	OutputFilename_(1) = '%saveWithJobname(1)%_Foundationdeformations_%LoadCase_Local%'
+	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Foundationdeformations_
+*ENDIF	
+
+!Save foundation stresses
+*USE, '%MacroFolder(1)%plot_deformed_shape.MAC'
+*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedShape_%LoadCase_Local%'
+
+
+ALLSEL

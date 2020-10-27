@@ -1,0 +1,15 @@
+
+ALLSEL
+VPLOT, ALL
+*USE, '%MacroFolder(1)%save_plot.MAC', 'FullModel'
+
+!Plot with rebar sticking out:
+ALLSEL
+*GET, DoesCompExists, COMP, Wapening_V, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	VSEL, S, LOC, Z, -S_Lengte/2, 0
+	CMSEL, A, Wapening_V
+	
+	*USE, '%MacroFolder(1)%save_plot.MAC', 'HalfModelWithRebar'
+*ENDIF
+

@@ -1,6 +1,6 @@
 	/NOPR
 	/INQUIRE, jobname_, JOBNAME, !get the jobname as this is the first part of the plotname 
-	
+	*DEL, newFilename
 	*DIM, newFilename, STRING, 200
 	
 	extension = LWCASE(ARG1)

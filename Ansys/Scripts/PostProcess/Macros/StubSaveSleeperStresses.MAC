@@ -31,7 +31,7 @@ ALLSEL
 /REP,FAST
 PLNSOL, S, EQV, 0 !Equivalent stress
 
-/REPLOT
+/REP,FAST 
 
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
 *USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStresses_LC%i%'
@@ -44,14 +44,14 @@ ESEL, R, CENT, Y, -S_Hoogte, -0.01
 *USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressesMinBovensteCentimeter_LC%i%'
 *GET, MaxVonMises_zonder1cm ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinVonMises_zonder1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
-/REPLOT
+/REP,FAST 
 
 PLNSOL, S, EQV, 0 !Equivalent stress
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
 *USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningStresses_LC%i%'
 *GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
-/REPLOT
+/REP,FAST 
 
 
 

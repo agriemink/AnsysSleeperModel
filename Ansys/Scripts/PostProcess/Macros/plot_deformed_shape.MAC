@@ -1,7 +1,19 @@
 !plotDeformedShape
+LoadCase_local = ARG1
 
 /VIEW,1,1 !change rotation to 'right' 
 PLDISP,0 !Plot displacement
 
 /AUTO,1 
 /REPLOT
+
+*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedShape_%LoadCase_local%'
+
+VSEL, S, LOC, Y, -S_Hoogte, 0
+ALLSEL, BELOW		
+/VIEW,1,1 !change rotation to 'right' 
+PLDISP,0 !Plot displacement
+
+/AUTO,1 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedSleeper_%LoadCase_local%'
