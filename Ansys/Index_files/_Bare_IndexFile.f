@@ -59,7 +59,17 @@ WorkingDirectoryNameAddition(1) = '[extra text to differentiate each analysis]' 
 *ENDDO
 
 ! ----------------------------------------------------------
+! ---------------- Global parameter loading: ---------------
+/INPUT, Loads, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+
+
+
+! ----------------------------------------------------------
 ! -------------------- Analysis loading: -------------------
+
+
+
+
 
 ! analysis index-file should be a existing file in the analysis-folder. 
 ! The 'simulatienaam' can be a custom name.
