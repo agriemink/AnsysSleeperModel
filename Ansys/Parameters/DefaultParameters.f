@@ -9,7 +9,7 @@ DOF,UX,UY,UZ,ROTX,ROTY,ROTZ
 !------- Parameters ---------------------------------------------------
 !----------------------------------------------------------------------
 !
-! Standaard parameters zijn in meters, Newton
+! Standaard parameters zijn meters, Newton
 !
 !Sleeper / dwarsligger
 S_Lengte = 2.600
@@ -24,9 +24,6 @@ RH_Dikte = 18 / 1000 	!Verschillende tekeningen, bij alle base plates is de dikt
 RH_Lengte = 360 / 1000 	!lengterichting van de dwarsligger 
 RH_Breedte = 170 / 1000 !lengterichting van het spoor
 
-!D_fixed = 24 / 1000 !fixed edge of RH, where the bolts are. D_fixed = 1/2 RH_Lengte => fully fixed. 
-!D_fixed = RH_Lengte/2 !D_fixed should be between 0 and 1/2 RH_Lengte
-
 !Rail pad
 Railpad_thickness = 4.5 / 1000 !4.5 mm, Railpro site
 
@@ -39,22 +36,27 @@ Damping_foundation = 32000000 !Ns/m !From paper from Dollevoet and Zilli
 K_shoulder = 10000000 !10 Kn/m = 1e6 N/mm
 Damping_shoulder = 32000000 !Take the same as foundation
 
-
 !More or less fixed parameters:
 Spoorwijdte = 1.5 !m
 Railwijdte = 0.140 !140 mm (Define here or in railprofile?)
-
+Rail_angle_1_20 = 2.86*(3.14159/180) !Equal to rail angle 1:20 !convert degrees to radians !Degrees
+Rail_angle_1_40 = 1.43*(3.14159/180) !Equal to rail angle 1:40 !convert degrees to radians !Degrees
+Rail_angle = Rail_angle_1_40 !Variable that is used in loading-files
+ 
 !Utility parameters
 S_Halve_Lengte = S_Lengte / 2
 S_Halve_Breedte = S_Breedte / 2
 S_Halve_Hoogte = S_Hoogte / 2
 
+!Default application of loading:
+!Geef x-afstand vanuit de oorsprong.
+LoadLocation_X = 0
+!LoadLocation_X = 1.25 !Halve asafstand
+
 !----------------------------------------------------------------------
 !-------Parameters Mesh -----------------------------------------------
 !----------------------------------------------------------------------
 MSHKEY, 1 !Mapped meshing
-
-
 
 ESIZE_standaard = 0.015
 ESIZE_BottomRail = 0.015
