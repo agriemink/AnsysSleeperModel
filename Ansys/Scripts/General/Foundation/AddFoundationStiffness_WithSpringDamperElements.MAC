@@ -43,7 +43,12 @@ NSEL, R, LOC, X, X_Min_Local, X_Max_Local
 CM, BottomSleeperNodes_Local, NODE !Save Top nodes.
 
 CMSEL, S, BottomSleeperNodes_Local
-NSEL, R, LOC, Z, -a/2, a/2
+*IF, a, NE, 0, THEN !Not equal to 0
+	NSEL, R, LOC, Z, -a/2, a/2
+*ELSE
+	!A zero value for `a` will result in some nodes selected at z = 0, but zero length should result in zero nodes.
+	NSEL, NONE
+*ENDIF
 *GET, AantalNodesMiddle_, NODE, 0, COUNT, 
 CM, MiddleNodes_, NODE
 
@@ -135,7 +140,10 @@ CMSEL, S, BottomSleeperNodes_Local
 	*DO, i, 1, AantalNodes, 1 !iterate over all the nodes.
 		!Connect all the nodes with COMBIN14 Elements
 		
-		*IF, NZ(NodeNumber), GE, -a/2, AND, NZ(NodeNumber), LE, a/2, THEN
+		! NZ([node nr]) = get z-coordinate of node number
+		*IF, a, EQ, 0, THEN
+			real, Real_C1 !Otherwise the middle nodes get the value C2 even when a = 0
+		*ELSEIF, NZ(NodeNumber), GE, -a/2, AND, NZ(NodeNumber), LE, a/2, THEN
 			!Middle part
 			real, Real_C2
 		*ELSE
