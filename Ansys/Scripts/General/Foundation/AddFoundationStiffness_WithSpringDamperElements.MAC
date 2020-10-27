@@ -13,8 +13,8 @@ Y_location_Local = ARG3
 foundation_stiffness_Local = ARG4
 foundation_damping_Local = ARG5
 
-foundation_supported_area_length_local = ARG7 !percentage of L (sleeper length) that determines the length of the middle support portion.
-foundation_supported_area_multiplier_local = ARG8 !factor that defines the difference between the middle suport portion. C2/C1 C1 = edges, C2, middle e.g. 1.2 -> middle portion is 1.2 times the sides.
+! ARG7 = percentage of L (sleeper length) that determines the length of the middle support portion.
+!ARG8 = factor that defines the difference between the middle suport portion. C2/C1 C1 = edges, C2, middle e.g. 1.2 -> middle portion is 1.2 times the sides.
 
 *IF, ARG7, LT, 0.0001, THEN
 	!When there is no length specified, get every node as middle node instead of all edge nodes. (otherwise the nodes at Z=0 won't have a correct spring stiffness).
