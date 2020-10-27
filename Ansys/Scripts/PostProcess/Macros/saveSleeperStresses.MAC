@@ -1,7 +1,7 @@
 /GO
 ALLSEL
 LoadCase = ARG1
-
+/NOPR
 !Basis
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, '' !Selecteer middelste dwarsligger
 

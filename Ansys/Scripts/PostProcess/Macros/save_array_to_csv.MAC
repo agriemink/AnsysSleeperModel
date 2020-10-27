@@ -1,6 +1,6 @@
 !s_ArrayToCSV
 /UIS, MSGPOP, 3 !disable warning messages.
-
+/NOPR
 !Needs a data array, header array and an output filename.
 
 !*IF, '%Output(1)%', NE, '0', THEN
