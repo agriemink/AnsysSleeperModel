@@ -1,17 +1,16 @@
 FINISH
 /CLEAR
 /GO
+!Essentials ------------------------------------------------
+Drive = 'O' !Change to own local drive letter
+*DIM,GitBaseFolder,STRING,200
+GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
 
 *DO, Boilerplate, 0, 1
-	!Essentials ------------------------------------------------
-	Drive = 'O' !Change to own local drive letter
-	*DIM,GitBaseFolder,STRING,200
-	GitBaseFolder(1) = '%Drive%:\Afstuderen\AnsysSleeperModel' !Change to own path
-	
 	*DIM,BaseFolder,STRING,200
 	BaseFolder(1) = '%GitBaseFolder(1)%\Ansys'
 	*DIM, Scriptfolder, STRING, 200
-	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\Shared'
+	Scriptfolder(1) = '%BaseFolder(1)%\Scripts\General'
 	!Load global folder and filenames:
 	*USE, '%Scriptfolder(1)%/LoadGlobals.MAC'
 
@@ -63,28 +62,31 @@ WorkingDirectoryNameAddition(1) = '' !Optional directory name addition to genera
 ! analysis index-file should be a existing file in the analysis-folder. 
 ! The 'simulatienaam' can be a custom name.
 !								 Type analyse, 	analyse index-file, 	simulatienaam,  		skipsolve: true || false
+/INPUT, Loads2LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
 *USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_Presentation', 'PresentationExample', skipsolve_all
-fundering_MultiplierOndersteund = 1
-fundering_OndersteundPercentage = 1
-*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_PresentationFoundation', '202_HDPE_Multiple', skipsolve_all
-
-! Example with changing foundation parameters:
-fundering_Multiplier_size = 3
-fundering_Ondersteund_size = 3
-*DIM, MultiplierOndersteundArr, ARRAY, fundering_Multiplier_size
-*DIM, OndersteundPercentageArr, ARRAY, fundering_Ondersteund_size
-MultiplierOndersteundArr(1) = 10, 100, 1000 
-OndersteundPercentageArr(1) = 0.5, 0.19123, 0.01 
+! fundering_MultiplierOndersteund = 1
+! fundering_OndersteundPercentage = 1
+! *USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_PresentationFoundation', '202_HDPE_Multiple', skipsolve_all
 
 
-*DO, i_index, 1, fundering_Multiplier_size, 1 !iterate over all the nodes.
-	*DO, j_index, 1, fundering_Ondersteund_size, 1 !iterate over all the nodes.
-		fundering_MultiplierOndersteund = MultiplierOndersteundArr(i_index) !Global, to be used in the analysis-file
-		fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
 
-		*IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
-			*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_PresentationFoundation', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
-		*ENDIF
-	*ENDDO
-*ENDDO
+! ! Example with changing foundation parameters:
+! fundering_Multiplier_size = 3
+! fundering_Ondersteund_size = 3
+! *DIM, MultiplierOndersteundArr, ARRAY, fundering_Multiplier_size
+! *DIM, OndersteundPercentageArr, ARRAY, fundering_Ondersteund_size
+! MultiplierOndersteundArr(1) = 10, 100, 1000 
+! OndersteundPercentageArr(1) = 0.5, 0.19123, 0.01 
+
+
+! *DO, i_index, 1, fundering_Multiplier_size, 1 !iterate over all the nodes.
+	! *DO, j_index, 1, fundering_Ondersteund_size, 1 !iterate over all the nodes.
+		! fundering_MultiplierOndersteund = MultiplierOndersteundArr(i_index) !Global, to be used in the analysis-file
+		! fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
+
+		! *IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
+			! *USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_PresentationFoundation', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+		! *ENDIF
+	! *ENDDO
+! *ENDDO
 
