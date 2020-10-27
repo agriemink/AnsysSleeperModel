@@ -112,37 +112,39 @@ PLNSOL, S, EQV, 0 !Von Mises Equivalent stress
 !Opmerking	Locatie	Grootheid		Load case 5	Load case 7
 
 !Save to csv
-*CFOPEN, '%saveWithJobname(1)%_MaxYStresses%LoadCase%', csv
+*CFOPEN, '%saveWithJobname(1)%_Stresses%LoadCase%', csv
 *VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Load case %LoadCase%;;'
-%C%C%C%C%C%C%C%
+%C%C%C%C%C%C%C
+*VWRITE, '', ';', '',';', '',';', 'min;max;'
+%C%C%C%C%C%C%C
 
 ! *VWRITE, ';[Locatie];[Welke spanning];', [minimale waarde], ';' [maximale waarde] 
-*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof, ';' MaxVonMises_kunststof
-%C%E%C%E
-*VWRITE, ';Kunststof;1st princple stress;', Min1_kunststof, ';' Max1_kunststof
-%C%E%C%E
-*VWRITE, ';Kunststof;Y stress;', MinY_kunststof, ';' MaxY_kunststof
-%C%E%C%E
-*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof_1cm, ';' MaxVonMises_kunststof_1cm
-%C%E%C%E
-*VWRITE, ';Kunststof;1st princple stress;', Min1_kunststof_1cm, ';' Max1_kunststof_1cm
-%C%E%C%E
-*VWRITE, ';Kunststof;Y stress;', MinY_kunststof_1cm, ';' MaxY_kunststof_1cm
-%C%E%C%E
-*VWRITE, ';Wapening;Von Mises stress;', MinVonMises_wapening, ';' MaxVonMises_wapening
-%C%E%C%E
-*VWRITE, ';Wapening;1st princple stress;', Min1_wapening, ';' Max1_wapening
-%C%E%C%E
-*VWRITE, ';Wapening;Y stress;', MinY_wapening, ';' MaxY_wapening
-%C%E%C%E
-*VWRITE, ';Wapening;Shear stress;', MinShear_wapening, ';' MaxShear_wapening
-%C%E%C%E
-*VWRITE, ';Fundering;Von Mises stress;', MinVonMises_fundering, ';' MaxVonMises_fundering
-%C%E%C%E
-*VWRITE, ';Fundering;1st princple stress;', Min1_fundering, ';' Max1_fundering
-%C%E%C%E
-*VWRITE, ';Fundering;Y stress;', MinY_fundering, ';' MaxY_fundering
-%C%E%C%E
+*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof, ';', MaxVonMises_kunststof
+%C%G%C%G
+*VWRITE, ';Kunststof;1st principle stress;', Min1_kunststof, ';', Max1_kunststof
+%C%G%C%G
+*VWRITE, ';Kunststof;Y stress;', MinY_kunststof, ';', MaxY_kunststof
+%C%G%C%G
+*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof_1cm, ';', MaxVonMises_kunststof_1cm
+%C%G%C%G
+*VWRITE, ';Kunststof;1st principle stress;', Min1_kunststof_1cm, ';', Max1_kunststof_1cm
+%C%G%C%G
+*VWRITE, ';Kunststof;Y stress;', MinY_kunststof_1cm, ';', MaxY_kunststof_1cm
+%C%G%C%G
+*VWRITE, ';Wapening;Von Mises stress;', MinVonMises_wapening, ';', MaxVonMises_wapening
+%C%G%C%G
+*VWRITE, ';Wapening;1st principle stress;', Min1_wapening, ';', Max1_wapening
+%C%G%C%G
+*VWRITE, ';Wapening;Y stress;', MinY_wapening, ';', MaxY_wapening
+%C%G%C%G
+*VWRITE, ';Wapening;Shear stress;', MinShear_wapening, ';', MaxShear_wapening
+%C%G%C%G
+*VWRITE, ';Fundering;Von Mises stress;', MinVonMises_fundering, ';', MaxVonMises_fundering
+%C%G%C%G
+*VWRITE, ';Fundering;1st principle stress;', Min1_fundering, ';', Max1_fundering
+%C%G%C%G
+*VWRITE, ';Fundering;Y stress;', MinY_fundering, ';', MaxY_fundering
+%C%G%C%G
 
 *CFCLOS
 
