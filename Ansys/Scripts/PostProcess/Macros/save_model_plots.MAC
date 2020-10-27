@@ -4,6 +4,8 @@
 ALLSEL
 
 /AUTO,1  !Zoom so everything in in the frame.
+/VIEW,1,1,1,1   !Rotate to isometric view
+/ANG,1  
 /REP,FAST 
 VPLOT, ALL
 
