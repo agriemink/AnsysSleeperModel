@@ -1,7 +1,6 @@
 !-----Solve -------------------------------------
-
-!Delete some parameters that do not have to be in the parameter-file.
-*DEL, AREA_0
+ALLSEL
+!Save all parameters to be able to check them afterwards
 PARSAV, ALL, 'CustomParameters', 'f'
 
 /SOLU

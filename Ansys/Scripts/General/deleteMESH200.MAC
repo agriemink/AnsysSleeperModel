@@ -1,0 +1,8 @@
+!Delete mesh elements.
+
+ALLSEL
+ACLEAR, ALL
+ESEL, S, ENAME, ,200
+
+
+
