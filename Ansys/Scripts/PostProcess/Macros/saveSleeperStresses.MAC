@@ -1,4 +1,4 @@
-\GO
+/GO
 ALLSEL
 LoadCase = ARG1
 
@@ -27,6 +27,11 @@ ESEL, R, CENT, Y, -S_Hoogte, -0.01
 *GET, MinVonMises_zonder1cm ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 /REPLOT
 
+PLNSOL, S, Y, 0 !Stress Y-plane
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1CmY_LC%LoadCase%'
+
+ALLSEL
 PLNSOL, S, EQV, 0 !Equivalent stress
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'wapening'
 /REPLOT
@@ -34,14 +39,14 @@ PLNSOL, S, EQV, 0 !Equivalent stress
 *GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
+
 PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 /REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'KunststofStressMin1Cm_LC%LoadCase%'
-
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapeningShearStresses_LC%LoadCase%'
 *GET, MaxShear_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinShear_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-
+ALLSEL
 PLNSOL, S, EQV, 0 !Equivalent stress
 !Select bottom elements
 NSEL, S, LOC, Y, -S_Hoogte
@@ -63,7 +68,7 @@ PLNSOL, S, Y, 0 !Stress in vertical direction.
 
 
 !Opmerking	Locatie	Grootheid		Load case 5	Load case 7
-
+ALLSEL
 !Save to csv
 *CFOPEN, '%saveWithJobname(1)%_MaxStresses%LoadCase%', csv
 *VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Min/Max' ,';','Load case %LoadCase%'
@@ -95,4 +100,5 @@ PLNSOL, S, Y, 0 !Stress in vertical direction.
 %C%C%E
 *CFCLOS
 
+ALLSEL
 /NOPR

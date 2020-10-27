@@ -2,6 +2,12 @@ ALLSEL
 FINISH
 !/OUTPUT
 
+!FIX to remove any unwanted mesh elements. 
+!Preferably they are not present anymore at this point.
+ESEL, S, ELEM, Element_MESH200
+ACLEAR, ALL
+*USE, '%GeometryFolderCommon(1)%\renumberEntities.MAC' !Renumber to be sure that there are no gaps
+
 *DEL, MacroFolder, NOPR
 *DIM,MacroFolder,STRING,100
 MacroFolder(1) = '%Basefolder(1)%/Scripts/PostProcess/Macros/'
@@ -111,6 +117,7 @@ ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)
 				ALLSEL
 				
 				!Save maximum stresses in reinforcement
+				PLNSOL, S, EQV, 0 !Equivalent stress
 				*GET, DoesCompExists, COMP, Wapening_V, TYPE
 				*IF, DoesCompExists, GT, 0, THEN
 					CMSEL, S, Wapening_V_RO
@@ -210,8 +217,8 @@ ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)
 					*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
 				*ENDIF
 
-				OutputFilename_(1) = '%saveWithJobname(1)%_saveGaugeWidening_'
-				*USE, '%MacroFolder(1)%saveGaugeWidening.MAC'
+				!OutputFilename_(1) = '%saveWithJobname(1)%_saveGaugeWidening_'
+				!*USE, '%MacroFolder(1)%saveGaugeWidening.MAC'
 				
 				!Save reaction forces per sleeper
 				*GET, DoesCompExists, COMP, ConstrainedNodes, TYPE
