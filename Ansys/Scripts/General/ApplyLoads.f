@@ -6,7 +6,9 @@ ALLSEL
 
 *IF, A_54E1, GT, 0.0001, THEN
 	force_length = A_54E1
-*ELSE 
+*ELSEIF, force_length, GT, 0.0001, THEN
+	force_length = force_length 
+*ELSE	
 	force_length = 0.02 !m Default
 *ENDIF
 
