@@ -21,11 +21,11 @@ PARRES, NEW, 'temp'
 
 /INQUIRE, FileExists, EXIST, '%Analysisfolder(1)%\%AnalyisName(1)%', f
 *IF, FileExists, GT, 0, THEN
+	/PREP7 
 	/INPUT, '%AnalyisName(1)%', f, '%Analysisfolder(1)%' , 0, 1 !Load analysis variables 
-		
+
 	!Any global variables:
 	T = LoadLocation_X
-	
 	!Save variables.
 
 	ParameterFiles = 'ParameterFiles_%Filename(1)%'
