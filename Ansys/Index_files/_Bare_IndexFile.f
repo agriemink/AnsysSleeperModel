@@ -48,7 +48,7 @@ analysisType_ = 'static'
 
 ! ----------------------------------------------------------
 ! ------------- Analysis specific parameters: --------------
-WorkingDirectoryNameAddition(1) = '[extra text to differentiate each analysis]' !Directory name addition to general folder:
+WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
 
 ! ----------------------------------------------------------
 *DO, Boilerplate, 0, 1
@@ -60,7 +60,7 @@ WorkingDirectoryNameAddition(1) = '[extra text to differentiate each analysis]' 
 
 ! ----------------------------------------------------------
 ! ---------------- Global parameter loading: ---------------
-/INPUT, Loads, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+/INPUT, _Bare_Loadfile3LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
 
 
 
@@ -68,13 +68,10 @@ WorkingDirectoryNameAddition(1) = '[extra text to differentiate each analysis]' 
 ! -------------------- Analysis loading: -------------------
 
 
-
-
-
 ! analysis index-file should be a existing file in the analysis-folder. 
 ! The 'simulatienaam' can be a custom name.
 !								 Type analyse, 	analyse index-file, 	simulatienaam,  		skipsolve: true || false
-*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_Simple_1Div', '202_HDPE_Simple_1Div', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, '_ExampleSingleSleeper', 'SingleSleeper', skipsolve_all
 
 
 ! Example with changing foundation parameters:
@@ -92,7 +89,7 @@ OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45,
 		fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
 
 		*IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
-			*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_2Div_fundering', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			!*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_2Div_fundering', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
 		*ENDIF
 	*ENDDO
 *ENDDO
