@@ -58,6 +58,9 @@ TimeArray(1,1) 	= 1, 2, 3, 4, 5, 6, 7! Time this should be as long as Array_size
 *ENDDO
 
 !Define loads:
+
+LoadType(1) = 'Force' ! 'Displacement' [meters] or 'Force' [Newtons]
+
 !Some suggestions:
 !Loading in Newtons, static 110 kN, quasi-dynamic load of 209 kN (without other sleepers contributing)
 !Single sleeper loading is about 35%
