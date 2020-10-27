@@ -23,14 +23,14 @@ PARRES, NEW, 'temp'
 *IF, FileExists, GT, 0, THEN
 	/PREP7 
 	/INPUT, '%AnalyisName(1)%', f, '%Analysisfolder(1)%' , 0, 1 !Load analysis variables 
-
+	
 	!Any global variables:
 	T = LoadLocation_X
 	!Save variables.
 
 	ParameterFiles = 'ParameterFiles_%Filename(1)%'
 	PARSAV, ALL, '%Working_Directory(1)%\%ParameterFiles%', 'f'
-	
+	FINISH
 	/FILNAME, %Filename(1)%, ON		!Change filename
 	PARSAV, ALL, 'CustomParameters', 'f'
 	
