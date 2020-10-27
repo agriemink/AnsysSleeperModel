@@ -93,7 +93,7 @@ LoadTable_Q_left(1,1) = 	0, 	0, 		0, 		0, 		Y_prud_homme, 	Y_prud_homme,	Y_prud_
 
 
 *DO, Boilerplate, 0, 1
-	angle = Rail_angle !rail angle should be set as parameter.
+	angle = RailRotation !RailRotation angle should be set as parameter.
 	!Create load tables.
 	*DO, i, 1, LoadSteps
 		!LEFT

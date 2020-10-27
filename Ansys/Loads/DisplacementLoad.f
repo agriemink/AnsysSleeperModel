@@ -77,7 +77,7 @@ LoadTable_Y_right(1,1) = 	0, 	0
 !Some load cases, comment the non-used version(s). All loadtables are saved to a parameter-file and graphically saved as well.
 
 *DO, Boilerplate, 0, 1
-	angle = Rail_angle !rail angle should be set as parameter.
+	angle = RailRotation !RailRotation angle should be set as parameter.
 	!Create load tables.
 	*DO, i, 1, LoadSteps
 		!LEFT

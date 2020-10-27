@@ -12,11 +12,11 @@ DOF,UX,UY,UZ,ROTX,ROTY,ROTZ
 ! Standaard parameters zijn meters, Newton
 !
 !Sleeper / dwarsligger
-S_Lengte = 2.600
-S_Breedte = 0.250
-S_Hoogte = 0.150
+S_Lengte = 2.600	!Length
+S_Breedte = 0.250	!Width
+S_Hoogte = 0.150	!Height
 
-SleeperDistance = 0.6
+SleeperDistance = 0.6 !Centre to centre distance
 AantalSleepers = 1
 
 !Rughellingplaat [TKG047648 BL00 versie C - RUGHELLINGPLAAT 54E1 (UIC54) HELLING 1_40 15-301 (Gewalste rug(helling)platen)]
@@ -38,10 +38,10 @@ Damping_shoulder = 32000000 !Take the same as foundation
 
 !More or less fixed parameters:
 Spoorwijdte = 1.5 !m
-Railwijdte = 0.140 !140 mm (Define here or in railprofile?)
+Railwijdte = 0.140 !140 mm (This value is not used only indicative)
 Rail_angle_1_20 = 2.86*(3.14159/180) !Equal to rail angle 1:20 !convert degrees to radians !Degrees
 Rail_angle_1_40 = 1.43*(3.14159/180) !Equal to rail angle 1:40 !convert degrees to radians !Degrees
-Rail_angle = Rail_angle_1_40 !Variable that is used in loading-files
+RailRotation = Rail_angle_1_40 !Variable that is used in loading-files
  
 !Utility parameters
 S_Halve_Lengte = S_Lengte / 2
