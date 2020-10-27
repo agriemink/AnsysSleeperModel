@@ -1,5 +1,5 @@
 /NOPR
-
+ALLSEL
 NSEL, S, LOC, Y, -S_Hoogte
 NSEL, R, LOC, X, 0
 CM, BottomMidsideNodes, NODE

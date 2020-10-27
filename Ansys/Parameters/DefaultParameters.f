@@ -49,8 +49,8 @@ S_Halve_Breedte = S_Breedte / 2
 S_Halve_Hoogte = S_Hoogte / 2
 
 !Default application of loading:
-!Geef x-afstand vanuit de oorsprong.
-LoadLocation_X = 0
+!Provide the distance from the centre / origin. 
+LoadLocation_X = 0 !Default
 !LoadLocation_X = 1.25 !Halve asafstand
 
 !----------------------------------------------------------------------
