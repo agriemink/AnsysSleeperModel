@@ -1,10 +1,11 @@
-
+	
 FINISH
 /CWD, '%Working_Directory(1)%' 	!Change working directory to default.
 
 !ARGS, Type analyse, analyse index-file, simulatienaam,  skipsolve: true || false
-*DIM, AnalyisName, STRING, 200
-*DIM, Filename, STRING, 200
+*DIM, AnalyisName, STRING, 248
+*DIM, Filename, STRING, 248
+
 AnalysisType = ARG1
 AnalyisName(1) = ARG2
 Filename(1) = ARG3
@@ -14,9 +15,10 @@ PARSAV, ALL, 'temp'
 /CLEAR
 PARRES, NEW, 'temp'
 
+AnalysisCounter = AnalysisCounter + 1
 
-/MKDIR, '%Working_Directory(1)%\%Filename(1)%' 			!Make a new folder for each analysis
-/CWD, '%Working_Directory(1)%\%Filename(1)%' 			!Change working directory
+/MKDIR, '%Working_Directory(1)%\%AnalysisCounter%_%Filename(1)%' 		!Make a new folder for each analysis
+/CWD, '%Working_Directory(1)%\%AnalysisCounter%_%Filename(1)%' 			!Change working directory
 
 
 /INQUIRE, FileExists, EXIST, '%Analysisfolder(1)%\%AnalyisName(1)%', f
@@ -24,12 +26,11 @@ PARRES, NEW, 'temp'
 	/PREP7 
 	/INPUT, '%AnalyisName(1)%', f, '%Analysisfolder(1)%' , 0, 1 !Load analysis variables 
 	
-	!Any global variables:
-	T = LoadLocation_X
-	!Save variables.
-
-	ParameterFiles = 'ParameterFiles_%Filename(1)%'
-	PARSAV, ALL, '%Working_Directory(1)%\%ParameterFiles%', 'f'
+	
+	*DEL, ParameterFiles
+	*DIM, ParameterFiles, STRING, 248
+	ParameterFiles(1) = '%ParameterFiles(1)% _%Filename(1)%'
+	PARSAV, ALL, '%Working_Directory(1)%\%ParameterFiles(1)%', 'f'
 	FINISH
 	/FILNAME, %Filename(1)%, ON		!Change filename
 	PARSAV, ALL, 'CustomParameters', 'f'

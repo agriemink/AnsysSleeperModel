@@ -27,7 +27,7 @@ Analysisfolder(1) = '%BaseFolder(1)%\Analysis'
 /INPUT, PossibleGeometries, f, '%GeometryFolderCommon(1)%' , 0, 1 !Load default variables
 /INPUT, Loads, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load default variables
 
-
+AnalysisCounter = 0
 
 PARSAV, ALL, 'DefaultParameters', 'f' 
 
