@@ -1,0 +1,13 @@
+!Material Properties of KLP-HS 
+!
+!
+
+
+!Todo, waar deze naartoe?
+HDPE_max_1250 = ARG1
+Kunststof_1250 = ARG1
+
+MP,	DENS,	ARG1,	870				!Density			kg/m3 
+MP,	EX,		ARG1,	1250e6 			!Youngs' modulus	Pa = N/m2 !Minimal expected stiffness value
+MP,	PRXY,	ARG1,	0.4 			!Poisson ratio from Aran
+MP,	MU,		ARG1,	0.1

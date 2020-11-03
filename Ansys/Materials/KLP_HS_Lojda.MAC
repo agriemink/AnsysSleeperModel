@@ -1,9 +1,6 @@
 !Material Properties of KLP-HS 
 !
 !
-
-
-!Todo, waar deze naartoe?
 HDPE = ARG1
 Kunststof_HS = ARG1
 Kunststof_HDPE = ARG1

@@ -62,11 +62,12 @@ extension = 'png' !Set default extension
 
 !----------------------------------------------
 *DEL, ResultFile, NOPR
-*DIM, ResultFile, STRING, 200
-ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)%'
-/INQUIRE, ResultFileExists, EXIST, '%ResultFile(1)%', rst
+*DIM, ResultFile, STRING, 248
+/INQUIRE, ResultFile, RSTFILE
+!ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)%'
+!/INQUIRE, ResultFileExists, EXIST, '%ResultFile(1)%', rst
 
-*IF, ResultFileExists, EQ, 1, THEN
+!*IF, ResultFileExists, EQ, 1, THEN
 
 	INRES,ALL !Identifies the data to be retrieved from the results file. All = All solution items
 
@@ -77,69 +78,70 @@ ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)
 	!----------------------------------------------
 	!-------- Save data per load step -------------
 	!----------------------------------------------
-		*DO, LoadCase, 1, AantalLoadSteps, 1			
-			!*USE, '%MacroFolder(1)%save_plot.MAC', 'Rail cross section'
-			ALLSEL
-			!----------------------------------------------
-			!-------- Common post processing: -------------
-			!----------------------------------------------
-			
-			!Save plot of deformed shape, with and without baseplate and rail.
-			*USE, '%MacroFolder(1)%plot_deformed_shape.MAC', LoadCase
+	*DO, LoadCase, 1, AantalLoadSteps, 1			
+		!*USE, '%MacroFolder(1)%save_plot.MAC', 'Rail cross section'
+		ALLSEL
+		!----------------------------------------------
+		!-------- Common post processing: -------------
+		!----------------------------------------------
+		
+		!Save plot of deformed shape, with and without baseplate and rail.
+		*USE, '%MacroFolder(1)%plot_deformed_shape.MAC', LoadCase
 
-			!Stresses and deformations:
-			*IF, '%AnalysisType%', NE, 'modal', THEN,
-				/view,1,1,1,1
-				PLNSOL, S, EQV, 0 !Equivalent stress
-				!OutputFilename_(1) = '%saveWithJobname(1)%_SleeperStresses_%i%'
-				!*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
-				!*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses_%i%'
-				!PLNSOL, S, 1, 0 !Principal stress
-				!*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses1stPrincipal_%i%'
-				!ALLSEL
-				
-				!Save center sleeper max and minimal stresses.
-				! Essential as it also produces the results neede for Matlab post processing!
-				!
-				*USE, '%MacroFolder(1)%saveSleeperStresses.MAC', LoadCase
-				
-				!Save maximum stresses in reinforcement (extra sleeper id as property)
-				*USE, '%MacroFolder(1)%saveReinforcementStresses.MAC', LoadCase, 0
-
-				!Save deformation of foundation nodes
-				*USE, '%MacroFolder(1)%saveFoundationStresses.MAC', LoadCase
-
-				!Save deformation of rail nodes + gauge nodes
-				*USE, '%MacroFolder(1)%saveRailStresses.MAC', LoadCase
-				
-				!Save deformation of rughellingplaat / base plate nodes
-				*USE, '%MacroFolder(1)%saveBasePlateStresses.MAC', LoadCase
-				
-				!*USE, '%MacroFolder(1)%saveGaugeWidening.MAC', LoadCase
-				
-				!Save reaction forces per sleeper
-				*GET, DoesCompExists, COMP, ConstrainedNodes, TYPE
-				*IF, DoesCompExists, GT, 0, THEN
-					!Save reaction forces
-					*USE, '%MacroFolder(1)%save_reaction_forces.MAC', LoadCase
-				*ENDIF
-			
-			ALLSEL		
-			SET,NEXT !Select next load step / result
-		*ENDDO
-
+		!Stresses and deformations:
 		*IF, '%AnalysisType%', NE, 'modal', THEN,
-			ALLSEL
-			!Save loading graph
-			*USE, '%MacroFolder(1)%plot_loading_graph.MAC'
-			*USE, '%MacroFolder(1)%save_plot.MAC', 'Loads'
+			/view,1,1,1,1
+			PLNSOL, S, EQV, 0 !Equivalent stress
+			!OutputFilename_(1) = '%saveWithJobname(1)%_SleeperStresses_%i%'
+			!*USE, '%MacroFolder(1)%save_results_to_csv.MAC'
+			!*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses_%i%'
+			!PLNSOL, S, 1, 0 !Principal stress
+			!*USE, '%MacroFolder(1)%save_plot.MAC', 'SleeperStresses1stPrincipal_%i%'
+			!ALLSEL
 			
-		*ELSEIF, '%AnalysisType%', EQ, 'modal', THEN,
-			!Save frequencies
-			*USE, '%MacroFolder(1)%save_eigenfrequencies.MAC'
+			!Save center sleeper max and minimal stresses.
+			! Essential as it also produces the results neede for Matlab post processing!
+			!
+			*USE, '%MacroFolder(1)%saveSleeperStresses.MAC', LoadCase
 			
+			!Save maximum stresses in reinforcement (extra sleeper id as property)
+			*USE, '%MacroFolder(1)%saveReinforcementStresses.MAC', LoadCase, 0
+
+			!Save deformation of foundation nodes
+			*USE, '%MacroFolder(1)%saveFoundationStresses.MAC', LoadCase
+
+			!Save deformation of rail nodes + gauge nodes
+			*USE, '%MacroFolder(1)%saveRailStresses.MAC', LoadCase
+			
+			!Save deformation of rughellingplaat / base plate nodes
+			*USE, '%MacroFolder(1)%saveBasePlateStresses.MAC', LoadCase
+			
+			!*USE, '%MacroFolder(1)%saveGaugeWidening.MAC', LoadCase
+			
+			!Save reaction forces per sleeper
+			*GET, DoesCompExists, COMP, ConstrainedNodes, TYPE
+			
+			*IF, DoesCompExists, GT, 0, THEN
+				!Save reaction forces
+				*USE, '%MacroFolder(1)%save_reaction_forces.MAC', LoadCase
+			*ENDIF
 		*ENDIF
+		ALLSEL		
+		SET,NEXT !Select next load step / result
+	*ENDDO
+
+	*IF, '%AnalysisType%', NE, 'modal', THEN,
+		ALLSEL
+		!Save loading graph
+		*USE, '%MacroFolder(1)%plot_loading_graph.MAC'
+		*USE, '%MacroFolder(1)%save_plot.MAC', 'Loads'
+		
+	*ELSEIF, '%AnalysisType%', EQ, 'modal', THEN,
+		!Save frequencies
+		*USE, '%MacroFolder(1)%save_eigenfrequencies.MAC'
+		
 	*ENDIF
+!*ENDIF
 /GOPR
 
 *DEL, ResultFileExists

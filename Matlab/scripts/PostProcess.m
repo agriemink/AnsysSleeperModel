@@ -49,7 +49,8 @@ mkdir(general_outputfolder);
 %% Maximum stresses per component (material):
      if ~exist('data_filenames_optional','var')
          data_filenames = { ...
-            'Rail'; ...
+            'Rail_L'; ...
+            'Rail_R'; ...
             'WapeningBoven'; ...
             'WapeningOnder'; ...
             'SleeperStressesKunststof';...
@@ -64,6 +65,15 @@ mkdir(general_outputfolder);
         t = 'PP_saveStressesPerComponent' 
         PP_saveStressesPerComponent(strcat(resultsFolder, '%s/%s_%s_%s_Stresses.csv'), data_filenames, analysis_names_general, general_outputfolder, LoadCases)
      end
-   
+     
+%%
+    if exist('analysis_names_general','var')
+        for index = 1:aantalLoadCases    
+           PP_FoundationDisplacements(strcat(resultsFolder, '%s/%s_', 'Foundationdeformations', '_', num2str(LoadCases(index)) ,'_Deformations.csv'), analysis_names_general, general_outputfolder, num2str(LoadCases(index)));
+
+        end     
+        
+    end     
+
 end
 

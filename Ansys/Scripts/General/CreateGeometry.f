@@ -5,8 +5,9 @@
 ! 1) SleeperModel, [1 = KLP_Rechthoek, 2 = KLP_Rechthoek_Simple] !Circulal reinforcement or octagonal.
 ! 2) SleeperType, 201 or 202 !These differ in reinforcement size and should have a different base material.
 ! 3) divisions (W_divisions), 1, 2, 3, etc.
-! 4) foundation
-!
+! 4) foundation stiffness whole sleeper
+! 5) foundation centre size as percentage [e.g. 0.2 => 20% of total lenght gets multiplied by next parameter
+! 6) foundation multiplier of centre stiffness.
 ! Further, 	extend -> copy, copy all sleepers into the negative area
 !        	extend -> add symmetry boundary conditions at X = 0
 

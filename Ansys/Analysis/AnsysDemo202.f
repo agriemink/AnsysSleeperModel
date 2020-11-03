@@ -1,18 +1,17 @@
 *DIM, analysisFilename, STRING, 200
-analysisFilename(1) = '202_HDPE_Presentation'
-
+analysisFilename(1) = '202Sleeper' !Optional name. This gets saved as parameter so it is possible to track the results back to this file.
 
 !Use materials as set in the materials folder [DefineMaterialnumber.f]
 Materiaal_S = Kunststof_HDPE
 Materiaal_W = Staal
 Materiaal_RH = Staal
 Materiaal_Rail = Staal
-AantalSleepers = 3 !This is on one side + the middle sleeper, so: 2n - 1 !
+AantalSleepers = 1 !This is on one side + the middle sleeper, so: 2n - 1 !
 
-LoadLocation_X = 0
-W_Divisions = 1
+LoadLocation_X = 0 !Location of load application.
+W_Divisions = 2 !Defines the amount of reinforcement divisions, 2 or 3 works best.
 
-MakeUseOfSymmetry = 'false'
+MakeUseOfSymmetry = 'false' !Option to use only half of the models {Not well tested) 
 *DEL, Sleepers, NOPR
 *DIM, Sleepers, Array, 6, AantalSleepers !Change to 6 for bad foundation analysis.
 
@@ -21,6 +20,4 @@ MakeUseOfSymmetry = 'false'
 
 ! Sleepers(1,1) = [1 || 2], [201 || 202], [amount of reinforcement divisions, 2 or 3 works best], [k_d total sleeper stiffness]
 Sleepers(1,1) = 2, 202, W_Divisions, K_foundation, fundering_OndersteundPercentage, fundering_MultiplierOndersteund !Use K_foundation as it is an provided default.Other values set in index-file. 
-Sleepers(1,2) = 2, 202, 1, K_foundation, fundering_OndersteundPercentage, fundering_MultiplierOndersteund
-Sleepers(1,3) = 2, 202, 1, K_foundation, fundering_OndersteundPercentage, fundering_MultiplierOndersteund
 

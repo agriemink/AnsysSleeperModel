@@ -1,13 +1,20 @@
-function [] = plotAndSave( X, Y, titleText, x_axisLabel, y_axisLabel, figureNr, loadCase, folder)
+function [] = plotAndSave( X, Y, titleText, x_axisLabel, y_axisLabel, figureNr, loadCase, folder, legendName)
  
     if figureNr <= 0
        figure; 
     else
        figure(figureNr);
-       hold on;
+       hold all;
     end
 
-    plot(X,Y)
+    if nargin <= 8 %No legend name
+        plot(X,Y) 
+    else
+        plot(X,Y, 'DisplayName', legendName)
+        legend;
+    end
+    
+   
     title(titleText);
     xlabel(x_axisLabel)
     ylabel(y_axisLabel)

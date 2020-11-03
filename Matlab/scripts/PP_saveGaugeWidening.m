@@ -14,12 +14,13 @@ function [results] = PP_saveGaugeWidening(dataFolder, analysis_fileNames, output
 
     %analysis_names = {'202_HDPE_foundation_0.5_2'}; %Only for debug purposes
     for loadCase_index = 1:size(LoadCases,1)
+        foundationFigNr = figure;
         analysis_files_foundation = strcat(resultsFolder, analysis_names, '\', analysis_names, '_Foundationdeformations_', num2str(LoadCases(loadCase_index)) ,'_Deformations.csv');
         analysis_files_rail = strcat(resultsFolder, analysis_names, '\', analysis_names, '_GaugeNodes_', num2str(LoadCases(loadCase_index)) ,'_Deformations.csv');
         
         loadCase_name = sprintf('LoadCase%d', LoadCases(loadCase_index));
     
-        for analysis_index = 1:size(analysis_names,2)
+        for analysis_index = 1:length(analysis_names)
             analysis_name = createSafeAnalysisName(analysis_names{analysis_index});
             results.(loadCase_name).(analysis_name) = [];
             
@@ -34,15 +35,31 @@ function [results] = PP_saveGaugeWidening(dataFolder, analysis_fileNames, output
             %plotAndSave([GaugeNodes.X], [GaugeNodes.gaugeChange_L]*1000, sprintf('Z-deformation of left gauge nodes %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'X-coordinate [m]', 'Sideways movement [mm]', 0, LoadCases(loadCase_index), outputFolder)
             %plotAndSave([GaugeNodes.X], [GaugeNodes.gaugeChange_R]*1000, sprintf('Z-deformation of right gauge nodes %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'X-coordinate [m]', 'Sideways movement [mm]', 0, LoadCases(loadCase_index), outputFolder)
             calculatedGaugeWidening = [GaugeNodes.gaugeChange_L]-[GaugeNodes.gaugeChange_R];
-            plotAndSave([GaugeNodes.X], calculatedGaugeWidening*1000, sprintf('Gauge change between both rails %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'X-coordinate [m]', 'Gauge change [mm]', 0, LoadCases(loadCase_index), outputFolder)
+            plotAndSave([GaugeNodes.X], calculatedGaugeWidening*1000, sprintf('Gauge change between both rails %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'X-coordinate [m]', 'Gauge change [mm]', 0, LoadCases(loadCase_index), outputFolder, '')
             
             %% Foundation deformation at X = 0
             foundationNodes = getFoundationDisplacement(analysis_files_foundation{analysis_index}, 0);
             
-            plotAndSave([foundationNodes.Z], [foundationNodes.Uy]*1000, sprintf('vertical deformation of foundation %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'Z-coordinate [m]', 'deformation [mm]', 0, LoadCases(loadCase_index), outputFolder)
+            plotAndSave([foundationNodes.Z], [foundationNodes.Uy]*1000, sprintf('vertical deformation of foundation %s.', strrep(analysis_names{analysis_index}, '_', ' ')), 'Z-coordinate [m]', 'deformation [mm]', 0, LoadCases(loadCase_index), outputFolder, '')
+            
+            %Append to existing image:            
+            figure(foundationFigNr);
+            hold all;
+            plot([foundationNodes.Z], [foundationNodes.Uy]*1000, 'DisplayName', strrep(analysis_names{analysis_index}, '_', ' '));
+            legend
+            hold off
 
-            close all;
         end 
+        figure(foundationFigNr);
+        title(sprintf('vertical deformation of foundation %s.', loadCase_name));
+        xlabel('Z-coordinate [m]')
+        ylabel('deformation [mm]')
+        legend
+        filename = strrep(sprintf('%s%d - %s ', outputFolder, LoadCases(loadCase_index), sprintf('vertical deformation of foundation %s.', loadCase_name)), '.', ',');
+
+        saveas(gcf, filename, 'png');
+        saveas(gcf, filename ,'epsc');
+        saveas(gcf, filename ,'m');
         close all;
         
 

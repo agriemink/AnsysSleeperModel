@@ -1,0 +1,9 @@
+!Material Properties of KLP-PE 
+!
+!
+Kunststof_330 = ARG1
+
+
+MP,	DENS,	ARG1,	880				!Density			kg/m3
+MP,	EX,		ARG1,	330e6 			!Youngs' modulus	Pa = N/m2 !240 uit materiaaldocument 330 uit Arans mail.
+MP,	PRXY,	ARG1,	0.40 			!Poisson ratio from Aran

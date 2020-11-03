@@ -6,6 +6,8 @@ LoadCase = ARG1
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, '' !Selecteer middelste dwarsligger
 
 
+
+
 /VIEW,1,1,1,1 !Draai naar juiste standpunt.
 /ANG,1  
 /REP,FAST
@@ -13,6 +15,8 @@ PLNSOL, S, EQV, 0 !Equivalent stress
 /REPLOT
 
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
+*USE, '%MacroFolder(1)%save_results_to_csv.MAC', 'Kunststof'
+
 PLNSOL, S, Y, 0 !Y-stress (vertical)
 /REPLOT
 *USE, '%MacroFolder(1)%save_plot.MAC', 'KunYStresses_LC%LoadCase%'
@@ -115,8 +119,8 @@ PLNSOL, S, EQV, 0 !Von Mises Equivalent stress
 *CFOPEN, '%saveWithJobname(1)%_Stresses%LoadCase%', csv
 *VWRITE, 'Opmerking', ';', 'Locatie',';', 'Grootheid',';', 'Load case %LoadCase%;;'
 %C%C%C%C%C%C%C
-*VWRITE, '', ';', '',';', '',';', 'min;max;'
-%C%C%C%C%C%C%C
+*VWRITE, ';;;min;max;'
+%C
 
 ! *VWRITE, ';[Locatie];[Welke spanning];', [minimale waarde], ';' [maximale waarde] 
 *VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof, ';', MaxVonMises_kunststof

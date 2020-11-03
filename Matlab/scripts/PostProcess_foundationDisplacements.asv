@@ -1,4 +1,4 @@
-function [] = PostProcess_foundationDisplacements(analysisFolder, analysis_fileNames, output_directory, figureName, LoadCases, X_coord, Y_coord)
+function [] = PostProcess_foundationDisplacements(analysisFolder, analysis_fileNames, output_directory, LoadCases, X_coord, Y_coord)
 
 %
 %Result-array: 1 = minimale waarde (onder belasting)
@@ -8,8 +8,8 @@ for index = 1:length(LoadCases)
     loadCase = LoadCases(index)
    
     figure;
-    set(gcf,'Position',[100 100 700 500])
-    hold all; 
+    hold all;
+    legend('show') 
     %% 
     for analysis_nr = 1:length(analysis_fileNames)
         analysis_fileName = analysis_fileNames{analysis_nr}
@@ -30,7 +30,7 @@ for index = 1:length(LoadCases)
             else
                 plot([foundationNodes.Z], [foundationNodes.Uy]*1000 - [gravitiy_deformation(analysis_nr).YdefGravity], 'DisplayName', strrep(['' analysis_fileName], '_', ' '));
             end
-            
+            legend
         else
            disp 'Dir not found'
            specificAnalysisFolder
@@ -39,12 +39,13 @@ for index = 1:length(LoadCases)
     
     
     hold off
-    titleText = sprintf('Deformations %s at X=%g Y =%g ', figureName, X_coord, Y_coord);
+    legend()
+    titleText = sprintf('Deformations at X=%d Y =%d', X_coord, Y_coord);
     title(titleText);
     xlabel('Z-coordinate [m]')
     ylabel('displacement [mm]')
-    legend('Location', 'best')
-    filename = [output_directory strrep(sprintf('%s %i', titleText, loadCase),'.',',')];
+   
+    filename = [output_directory strrep(sprintf('%s %d', titleText, loadCase),'.',',')];
     saveas(gcf,filename,'png');
     saveas(gcf,filename,'eps');
     saveas(gcf,filename,'m');

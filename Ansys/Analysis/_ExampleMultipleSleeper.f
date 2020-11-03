@@ -18,8 +18,8 @@ MakeUseOfSymmetry = 'false' !Option to use only half of the models {Not well tes
 ! Tabel met data voor elke individuele ligger. 1) type-model [1 = KLP_Rechthoek, 2 = KLP_Rechthoek_Simple] 2) type-ligger, 3) divisions, 4) foundation, 
 ! optional: 5) foundation_center_size_percentage 6) foundation_multiplier
 
-! Sleepers(1,1) = [1 || 2], [201 || 202], [amount of reinforcement divisions, 2 or 3 works best], [k_d total sleeper stiffness], [percentage of the middle section [0 - 1], that is magnified by the next parameter ], [fundering_MultiplierOndersteund, multiplier that is added to the centre section >1 stiffer < 1 less stiff]
-Sleepers(1,1) = 2, 202, W_Divisions, K_foundation !Use K_foundation as it is an provided default.Other values can be set in index-file. 
+! Sleepers(1,1) = [1 (circular)|| 2 (octagonal)], [201 || 202], [amount of reinforcement divisions, 2 or 3 works best], [k_d total sleeper stiffness], [percentage of the middle section [0 - 1], that is magnified by the next parameter ], [fundering_MultiplierOndersteund, multiplier that is added to the centre section >1 stiffer < 1 less stiff]
+Sleepers(1,1) = 1, 202, W_Divisions, K_foundation !Use K_foundation as it is an provided default.Other values can be set in index-file. 
 Sleepers(1,2) = 2, 202, 1, K_foundation
 Sleepers(1,3) = 2, 202, 1, K_foundation
 

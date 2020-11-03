@@ -13,12 +13,15 @@ GeometryFolder(1) = '%GeometryFolderCommon(1)%\%SleeperModel(1)%'
 !Necessary for this file are loaded parameters 
 !Custom geometries can be added here as well.
 *IF, ARG1, EQ, 201, THEN
-	/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1
+	/INPUT, parameters_201, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 201 sleeper type variables
+	!/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1
 *ELSEIF, ARG1, EQ, 202
-	/INPUT, parameters_202, f, '%GeometryFolder(1)%' , 0, 1
+	/INPUT, parameters_202, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 202 sleeper type variables
+	!/INPUT, parameters_202, f, '%GeometryFolder(1)%' , 0, 1
 *ELSE
-	/INPUT, parameters_201, f, '%GeometryFolder(1)%' , 0, 1 !Default
+	/INPUT, parameters_custom, f, '%GeometryFolder(1)%' , 0, 1 !Defaults to 202 parameters
 *ENDIF
+/INPUT, parameters, f, '%GeometryFolder(1)%' , 0, 1
 
 *GET, CS_max , CDSY, 0, NUM, MAX
 CS_SleeperLocal = max(11,CS_max + 1)

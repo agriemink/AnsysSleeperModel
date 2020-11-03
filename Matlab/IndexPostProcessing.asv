@@ -6,7 +6,7 @@ basefolder = 'O:\AnsysSleeperModel\Results\';
 
 analysisfolder = '20201102_static_Validation_';
 LoadCases = [1;2;3;4];
-outputfolder = strrep([basefolder '/Results/' analysisfolder ' - ' date '/'], '.', ','); %Remove points as they don't work well.
+outputfolder = strrep([basefolder '/' analysisfolder ' - ' date '/'], '.', ','); %Remove points as they don't work well.
 
 %% Call Post processing script:
 

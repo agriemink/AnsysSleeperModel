@@ -203,7 +203,10 @@ esize, , (RH_Breedte/2)/ESIZE_BottomRail !Make the bottom elements as square as 
 VSEL, NONE
 VEXT, RailDoorsnede, , , RH_Breedte/2, 0, 0, , , 
 *IF, ARG1, NE, 'true', THEN
-	VEXT, RailDoorsnede, , , -RH_Breedte/2, 0, 0, , , 
+	ASEL, S, LOC, Y, 0, Rail_height
+	ASEL, R, LOC, X, 0
+	ASEL, R, LOC, Z, -RH_Lengte, RH_Lengte
+	VEXT, ALL, , , -RH_Breedte/2, 0, 0, , , 
 *ENDIF
 
 !ASLV, S, 1
@@ -328,6 +331,7 @@ CM, Rail_V_R, VOLU
 	CSYS, 0
 	
 !Constraint nodes:
+! TODO fix even less nodes as the current situation is too stiff regarding gauge widening.
 	!LEFT
 	CMSEL, S, Rail_V_L
 	CSYS, CS_Rail_L

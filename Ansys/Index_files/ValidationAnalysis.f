@@ -27,9 +27,9 @@ GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
 
 ! ----------------------------------------------------------
 ! ------------- General adjustable parameters: -------------
-G_index_file(1) = '[Filename]' !Optional Set to current filename to track back the parameters file to this index file.
+G_index_file(1) = 'ValidationAnalysis' !Optional Set to current filename to track back the parameters file to this index file.
 ![Custom name for directory]
-WorkingDirectoryName(1) = 'Results' !Directory name for results, can be any name
+WorkingDirectoryName(1) = 'Validation' !Directory name for results
 
 !Do or not solve each model, 'TRUE' skips the solve action and only generates the geometry.
 skipsolve_all = 'FALSE' 
@@ -49,8 +49,7 @@ analysisType_ = 'static'
 
 ! ----------------------------------------------------------
 ! ------------- Analysis specific parameters: --------------
-! Directory name addition to general folder, can be altered inbetween analysis to seperate them into different folders.
-WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' 
+WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
 
 ! ----------------------------------------------------------
 *DO, Boilerplate, 0, 1
@@ -62,28 +61,20 @@ WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysi
 
 ! ----------------------------------------------------------
 ! ---------------- Global parameter loading: ---------------
-/INPUT, _Bare_Loadfile3LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
-
-
+/INPUT, ValidationLoading15_30_60_vertical, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+!K_foundation = K_foundation*1000 !Default. Times 100
 
 ! ----------------------------------------------------------
 ! -------------------- Analysis loading: -------------------
 
-
-! analysis index-file should be a existing file in the analysis-folder. 
-! The 'simulatienaam' can be a custom name.
-!								 Type analyse, 	analyse index-file, 	simulatienaam,  		skipsolve: true || false
-*USE, %RunAnalysisMacroName(1)%, analysisType_, '_ExampleSingleSleeper', 'SingleSleeper', skipsolve_all
-
-
-! Example with changing foundation parameters:
-! This example creates 66 analysis
-fundering_Multiplier_size = 6
-fundering_Ondersteund_size = 11
+! ------- Bad foundation
+WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
+fundering_Multiplier_size = 3
+fundering_Ondersteund_size = 1
 *DIM, MultiplierOndersteundArr, ARRAY, fundering_Multiplier_size
 *DIM, OndersteundPercentageArr, ARRAY, fundering_Ondersteund_size
-MultiplierOndersteundArr(1) = 10, 7.5, 5, 4, 2, 0.1
-OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45, 0.4, 0.1
+MultiplierOndersteundArr(1) = 100, 1000, 10000 
+OndersteundPercentageArr(1) = 0.0769 !Gives a center portion of 200 mm
 
 
 *DO, i_index, 1, fundering_Multiplier_size, 1 !iterate over all the nodes.
@@ -92,7 +83,17 @@ OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45,
 		fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
 
 		*IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
-			!*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_2Div_fundering', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			!Bad foundation to mimic a 3 point bending test.
+			W_Divisions = 2
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'PE_201', 'PE_2D_f_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'HDPE_202', 'HDPE_2D_f_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			
+			K_foundation = K_foundation*10
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'PE_201', 'PE_2D_10K_f_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'HDPE_202', 'HDPE_2D_10K_f_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			!W_Divisions = 3
+			!*USE, %RunAnalysisMacroName(1)%, analysisType_, 'PE_201', 'PE_201_3D_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			!*USE, %RunAnalysisMacroName(1)%, analysisType_, 'HDPE_202', '202_HDPE_3D_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
 		*ENDIF
 	*ENDDO
 *ENDDO

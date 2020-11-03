@@ -29,7 +29,7 @@ GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
 ! ------------- General adjustable parameters: -------------
 G_index_file(1) = '[Filename]' !Optional Set to current filename to track back the parameters file to this index file.
 ![Custom name for directory]
-WorkingDirectoryName(1) = 'Results' !Directory name for results, can be any name
+WorkingDirectoryName(1) = 'Results' !Directory name for results
 
 !Do or not solve each model, 'TRUE' skips the solve action and only generates the geometry.
 skipsolve_all = 'FALSE' 
@@ -49,8 +49,7 @@ analysisType_ = 'static'
 
 ! ----------------------------------------------------------
 ! ------------- Analysis specific parameters: --------------
-! Directory name addition to general folder, can be altered inbetween analysis to seperate them into different folders.
-WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' 
+WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
 
 ! ----------------------------------------------------------
 *DO, Boilerplate, 0, 1
@@ -62,8 +61,8 @@ WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysi
 
 ! ----------------------------------------------------------
 ! ---------------- Global parameter loading: ---------------
-/INPUT, _Bare_Loadfile3LoadCases, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
-
+/INPUT, AnsysDemoLoadCase, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
+K_foundation = 50000
 
 
 ! ----------------------------------------------------------
@@ -73,17 +72,20 @@ WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysi
 ! analysis index-file should be a existing file in the analysis-folder. 
 ! The 'simulatienaam' can be a custom name.
 !								 Type analyse, 	analyse index-file, 	simulatienaam,  		skipsolve: true || false
-*USE, %RunAnalysisMacroName(1)%, analysisType_, '_ExampleSingleSleeper', 'SingleSleeper', skipsolve_all
 
+fundering_MultiplierOndersteund = 1 !Global, to be used in the analysis-file
+fundering_OndersteundPercentage = 1 !Global, to be used in the analysis-file
+
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'AnsysDemo201', 'SingleSleeper201', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'AnsysDemo202', 'SingleSleeper202', skipsolve_all
 
 ! Example with changing foundation parameters:
-! This example creates 66 analysis
-fundering_Multiplier_size = 6
-fundering_Ondersteund_size = 11
+fundering_Multiplier_size = 3
+fundering_Ondersteund_size = 2
 *DIM, MultiplierOndersteundArr, ARRAY, fundering_Multiplier_size
 *DIM, OndersteundPercentageArr, ARRAY, fundering_Ondersteund_size
-MultiplierOndersteundArr(1) = 10, 7.5, 5, 4, 2, 0.1
-OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45, 0.4, 0.1
+MultiplierOndersteundArr(1) = 0.01, 10, 100
+OndersteundPercentageArr(1) = 0.5, 0.333
 
 
 *DO, i_index, 1, fundering_Multiplier_size, 1 !iterate over all the nodes.
@@ -92,7 +94,8 @@ OndersteundPercentageArr(1) = 0.9, 0.7, 0.65, 0.6, 0.58, 0.576, 0.55, 0.5, 0.45,
 		fundering_OndersteundPercentage = OndersteundPercentageArr(j_index) !Global, to be used in the analysis-file
 
 		*IF, fundering_MultiplierOndersteund, GT, 0.0001, AND, fundering_OndersteundPercentage, GT, 0.0001, THEN
-			!*USE, %RunAnalysisMacroName(1)%, analysisType_, '202_HDPE_2Div_fundering', '202_HDPE_foundation_%fundering_OndersteundPercentage%_%fundering_MultiplierOndersteund%', skipsolve_all
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'AnsysDemo201', 'SingleSleeper201', skipsolve_all
+			*USE, %RunAnalysisMacroName(1)%, analysisType_, 'AnsysDemo202', 'SingleSleeper202', skipsolve_all
 		*ENDIF
 	*ENDDO
 *ENDDO
