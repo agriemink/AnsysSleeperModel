@@ -13,7 +13,10 @@ foundation_damping_Local = ARG5
 !Select the nodes that are outside of the blocks where the reinforcements are. As those nodes are closer together and thus create a stiffer area. 
 ASEL, S, LOC, Z, Z_location_Local
 NSLA, S, 1
-NSEL, R, LOC, X, X_Min_Local+OB_size_width, X_Max_Local-OB_size_width
+!NSEL, R, LOC, X, X_Min_Local+OB_size_width, X_Max_Local-OB_size_width ! Old version selected whole area
+!Select only the middle nodes of the sleeper so no moment-forces are possible.
+NSEL, R, LOC, X, X_Min_Local, X_Max_Local 
+NSEL, R, LOC, Y, -S_Halve_Hoogte
 CM, Shoulder_L_Contact, NODE
 
 !Create only one shoulder.
