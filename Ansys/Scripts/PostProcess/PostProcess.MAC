@@ -64,10 +64,14 @@ extension = 'png' !Set default extension
 *DEL, ResultFile, NOPR
 *DIM, ResultFile, STRING, 248
 /INQUIRE, ResultFile, RSTFILE
-!ResultFile(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%saveWithJobname(1)%'
-!/INQUIRE, ResultFileExists, EXIST, '%ResultFile(1)%', rst
 
-!*IF, ResultFileExists, EQ, 1, THEN
+*DEL, ResultFilePath, NOPR
+*DIM, ResultFilePath, STRING, 248
+!ResultFilePath(1) = '%Working_Directory(1)%\%saveWithJobname(1)%\%ResultFile(1)%'
+ResultFilePath(1) = '%ResultFile(1)%'
+/INQUIRE, ResultFileExists, EXIST, '%ResultFilePath(1)%', rst
+
+*IF, ResultFileExists, EQ, 1, THEN
 
 	INRES,ALL !Identifies the data to be retrieved from the results file. All = All solution items
 
@@ -141,7 +145,7 @@ extension = 'png' !Set default extension
 		*USE, '%MacroFolder(1)%save_eigenfrequencies.MAC'
 		
 	*ENDIF
-!*ENDIF
+*ENDIF
 /GOPR
 
 *DEL, ResultFileExists

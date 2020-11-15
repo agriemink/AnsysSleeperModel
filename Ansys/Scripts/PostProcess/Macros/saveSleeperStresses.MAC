@@ -79,6 +79,12 @@ PLNSOL, S, EQV, 0 !Von Mises Equivalent stress
 *GET, MaxVonMises_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinVonMises_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
+PLNSOL, EPTO, EQV, 0 !Von Mises Equivalent strain 
+/REPLOT
+*USE, '%MacroFolder(1)%save_plot.MAC', 'WapStrains_LC%LoadCase%'
+*GET, MaxStrain_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+*GET, MinStrain_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
 !Wapening shear stress
 PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 /REPLOT
@@ -86,32 +92,39 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 *GET, MaxShear_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinShear_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
+MinStrain_wapening, ';', MaxStrain_wapening
 
 !Foundation stresses:
-PLNSOL, S, Y, 0 !Equivalent stress
-!Select bottom elements
-NSEL, S, LOC, Y, -S_Hoogte
-NSEL, R, LOC, Z, -S_Lengte/2, S_Lengte/2
-ESLN, S, 0
+*GET, DoesCompExists, COMP, Bottomsleepernodes, TYPE
+*IF, DoesCompExists, GT, 0, THEN
+	CMSEL, S, Bottomsleepernodes !Select bottom elements
+
+
+	PLNSOL, S, Y, 0 !Y-stress (vertical)
+	/REPLOT
+	*USE, '%MacroFolder(1)%save_plot.MAC', 'FunYStresses_LC%LoadCase%'
+	*GET, MaxY_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+	*GET, MinY_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+	PLNSOL, S, 1, 0 !1st principal stress
+	/REPLOT
+	*USE, '%MacroFolder(1)%save_plot.MAC', 'Fun1stStresses_LC%LoadCase%'
+	*GET, Max1_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+	*GET, Min1_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
+	PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
+	/REPLOT
+	*USE, '%MacroFolder(1)%save_plot.MAC', 'FunVonMisesStresses_LC%LoadCase%'
+	*GET, MaxVonMises_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
+	*GET, MinVonMises_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+	*ENDIF	
+
+
 ESEL, U, TYPE, ,Element_COMBIN14
 
-PLNSOL, S, Y, 0 !Y-stress (vertical)
-/REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'FunYStresses_LC%LoadCase%'
-*GET, MaxY_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-*GET, MinY_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-PLNSOL, S, 1, 0 !1st principal stress
-/REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'Fun1stStresses_LC%LoadCase%'
-*GET, Max1_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-*GET, Min1_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-PLNSOL, S, EQV, 0 !Von Mises Equivalent stress 
-/REPLOT
-*USE, '%MacroFolder(1)%save_plot.MAC', 'FunVonMisesStresses_LC%LoadCase%'
-*GET, MaxVonMises_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
-*GET, MinVonMises_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
+
 
 !Opmerking	Locatie	Grootheid		Load case 5	Load case 7
 
@@ -129,12 +142,12 @@ PLNSOL, S, EQV, 0 !Von Mises Equivalent stress
 %C%G%C%G
 *VWRITE, ';Kunststof;Y stress;', MinY_kunststof, ';', MaxY_kunststof
 %C%G%C%G
-*VWRITE, ';Kunststof;Von Mises stress;', MinVonMises_kunststof_1cm, ';', MaxVonMises_kunststof_1cm
-%C%G%C%G
-*VWRITE, ';Kunststof;1st principle stress;', Min1_kunststof_1cm, ';', Max1_kunststof_1cm
-%C%G%C%G
-*VWRITE, ';Kunststof;Y stress;', MinY_kunststof_1cm, ';', MaxY_kunststof_1cm
-%C%G%C%G
+*VWRITE, 'Min 1st cm;', 'Kunststof;Von Mises stress;', MinVonMises_kunststof_1cm, ';', MaxVonMises_kunststof_1cm
+%C%C%G%C%G
+*VWRITE, 'Min 1st cm;', 'Kunststof;1st principle stress;', Min1_kunststof_1cm, ';', Max1_kunststof_1cm
+%C%C%G%C%G
+*VWRITE, 'Min 1st cm;', 'Kunststof;Y stress;', MinY_kunststof_1cm, ';', MaxY_kunststof_1cm
+%C%C%G%C%G
 *VWRITE, ';Wapening;Von Mises stress;', MinVonMises_wapening, ';', MaxVonMises_wapening
 %C%G%C%G
 *VWRITE, ';Wapening;1st principle stress;', Min1_wapening, ';', Max1_wapening
@@ -142,6 +155,8 @@ PLNSOL, S, EQV, 0 !Von Mises Equivalent stress
 *VWRITE, ';Wapening;Y stress;', MinY_wapening, ';', MaxY_wapening
 %C%G%C%G
 *VWRITE, ';Wapening;Shear stress;', MinShear_wapening, ';', MaxShear_wapening
+%C%G%C%G
+*VWRITE, ';Wapening;Strain;', MinStrain_wapening, ';', MaxStrain_wapening
 %C%G%C%G
 *VWRITE, ';Fundering;Von Mises stress;', MinVonMises_fundering, ';', MaxVonMises_fundering
 %C%G%C%G

@@ -25,16 +25,22 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 
 *GET, DoesCompExists, COMP, Wapening_V, TYPE
 *IF, DoesCompExists, GT, 0, THEN
-	CMSEL, S, Wapening_V_RO
+	CMSEL, S, Wapening_V
 	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	CSYS, CS_SleeperLocal
+	NSEL, R, LOC, Y, -S_Halve_Hoogte, 0
+
 	OutputFilename_(1) = '%saveWithJobname(1)%_WapeningOnder_%LoadCase_Local%'
 	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' ! _WapeningOnder_
 	
-	CMSEL, S, Wapening_V_RB
-	NSLV, S, 1 
+	CMSEL, S, Wapening_V
+	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	NSEL, R, LOC, Y, 0, S_Halve_Hoogte
+
 	OutputFilename_(1) = '%saveWithJobname(1)%_WapeningBoven_%LoadCase_Local%'
 	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' ! _WapeningBoven_
 
+	CSYS
 *ENDIF
 
 

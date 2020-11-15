@@ -7,7 +7,7 @@ T = 'save_results_to_csv'
 !*DIM, Header_,CHAR ,9
 *DEL, Mask_
 *DEL, ReducedValues_
-*DIM, ReducedValues_,array,MaxNode,12	!columns array
+*DIM, ReducedValues_,array,MaxNode,15	!columns array
 *DIM, Mask_,array,MaxNode
 *VGET, Mask_(1),node,1,NSEL	!Selected nodes
 
@@ -35,11 +35,18 @@ T = 'save_results_to_csv'
 *VGET,	ReducedValues_(1,9),node,1,S, 3 	!S3
 *vmask, Mask_(1)
 *VGET,	ReducedValues_(1,10),node,1,S, EQV 	!Equivalent stress
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,11),node,1,S, XY 	!XY
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,12),node,1,S, YZ 	!YZ
+*vmask, Mask_(1)
+*VGET,	ReducedValues_(1,13),node,1,S, XZ 	!XZ
+*vmask, Mask_(1)
 !Strains
 *vmask, Mask_(1)
-*VGET,	ReducedValues_(1,11),node,1,EPTO, EQV 	!Equivalent total strain
+*VGET,	ReducedValues_(1,14),node,1,EPTO, EQV 	!Equivalent total strain
 *vmask, Mask_(1)
-*VGET,	ReducedValues_(1,12),node,1,EPEL, EQV 	!Equivalent elastic strain
+*VGET,	ReducedValues_(1,15),node,1,EPEL, EQV 	!Equivalent elastic strain
 
 
 !Configure output
@@ -57,13 +64,13 @@ T = 'save_results_to_csv'
 
 !Configure output
 *CFOPEN, '%OutputFilename_(1)%_Stresses', csv
-*VWRITE, 'Node', ';', 'S1 [N/m2]',';', 'S2 [N/m2]',';', 'S3 [N/m2]',';', 'S EQV [N/m2]', ';', 'EQV total strain [-]', ';', 'EQV elastic strain [-]'
-%C%C%C%C%C%C%C%C%C%C%C%C%C
+*VWRITE, 'Node', ';', 'S1 [N/m2]',';', 'S2 [N/m2]',';', 'S3 [N/m2]',';', 'S EQV [N/m2]', ';', 'Shear XY [N/m2]', ';', 'Shear YZ [N/m2]', ';', 'Shear XZ [N/m2]', ';', 'EQV total strain [-]', ';', 'EQV elastic strain [-]'
+%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C
 
 
 *vmask, Mask_(1)
-*VWRITE , sequ, ';', ReducedValues_(1,7), ';', ReducedValues_(1,8), ';', ReducedValues_(1,9), ';', ReducedValues_(1,10), ';', ReducedValues_(1,11), ';', ReducedValues_(1,12)
-(F10.0,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2)
+*VWRITE , sequ, ';', ReducedValues_(1,7), ';', ReducedValues_(1,8), ';', ReducedValues_(1,9), ';', ReducedValues_(1,10), ';', ReducedValues_(1,11), ';', ReducedValues_(1,12),';', ReducedValues_(1,13), ';', ReducedValues_(1,14), ';', ReducedValues_(1,15)
+(F10.0,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2,A,EN15.4E2)
 !Dont use spaces in formatting!
 
 *CFCLOS
