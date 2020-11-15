@@ -33,7 +33,8 @@ function [] = PP_saveMaximumStressesPerSleeperType(dataFolder, analysis_fileName
               Names = analysis_fileNames_202;
             end
 
-             [Node,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~] = importStressesCSV(filename);      
+              % [Node,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~] = importStressesCSV(filename); 
+			[ Node,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~,~,~,~] = importStressesCSV(filename);      
 
              data = [(1:size(Node,1))', Node, S1Nm2, S2Nm2, S3Nm2, SEQVNm2];
 

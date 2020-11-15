@@ -1,4 +1,4 @@
-function [] = PostProcess_foundationDisplacements(analysisFolder, analysis_fileNames, output_directory, figureName, LoadCases, X_coord, Y_coord)
+function [] = PostProcess_SleeperDisplacements(analysisFolder, analysis_fileNames, output_directory, figureName, LoadCases, X_coord, Y_coord)
 
 %
 %Result-array: 1 = minimale waarde (onder belasting)
@@ -6,7 +6,7 @@ function [] = PostProcess_foundationDisplacements(analysisFolder, analysis_fileN
 
 % xlswrite
 
-Excel_filename = ['foundationDisplacements_' figureName '.xlsx'];
+Excel_filename = ['sleeperDisplacements_' figureName '.xlsx'];
 
 for index = 1:length(LoadCases)
     loadCase = LoadCases(index)
@@ -14,18 +14,18 @@ for index = 1:length(LoadCases)
     tab = strcat('Load case ', num2str(loadCase));
     
     figure;
-    set(gcf,'Position',[100 100 700 500])
+    set(gcf,'Position',[100 100 700 500]) %Adjust figure size
     hold all; 
     %% 
     for analysis_nr = 1:length(analysis_fileNames)
         analysis_fileName = analysis_fileNames{analysis_nr};
-        filename_fundering = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'Foundation')
-        Y_coord = -0.15;
-        foundationNodes = getDisplacements(filename_fundering, X_coord, Y_coord);
+        filename = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'DeformedSleeper');
+
+        foundationNodes = getDisplacements(filename, X_coord, Y_coord);
         % Part below does not work as the foundation file only
         % contains nodes at bottom level.
         % foundationNodes = foundationNodes(abs([foundationNodes.Y] - Y_coord) <= 0.0001, :)
-        
+        %Y_coord = -0.15;
 
         if loadCase == 1  
            gravitiy_deformation(analysis_nr) = struct('YdefGravity', [foundationNodes.Uy]*1000); 
@@ -47,7 +47,7 @@ for index = 1:length(LoadCases)
     xlswrite(Excel_filename,  [foundationNodes.Z]', tab, 'A2');
 
     hold off
-    titleText = sprintf('Deformations %s at X=%g Y =%g ', figureName, X_coord, Y_coord);
+    titleText = sprintf('Sleeper deformations %s at X=%g Y =%g ', figureName, X_coord, Y_coord);
     title(titleText);
     xlabel('Z-coordinate [m]')
     ylabel('displacement [mm]')

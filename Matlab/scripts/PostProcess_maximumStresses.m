@@ -35,7 +35,7 @@ for index = 1:size(LoadCases,1)
 
          filename = strcat(basefolder, commonFolder, name, '/', name, '_' ,outputName, '_', num2str(loadCase) ,'_Deformations.csv');
 
-         [Node,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~] = importStressesCSV(filename);      
+        [Node,S1Nm2,S2Nm2,S3Nm2,SEQVNm2, XYNm2,YZNm2, XZNm2, EQVtotalstrain, EQVelasticstrain ]  = importStressesCSV(filename);      
 
          data = [(1:size(Node,1))', Node, S1Nm2, S2Nm2, S3Nm2, SEQVNm2];
 
@@ -50,9 +50,18 @@ for index = 1:size(LoadCases,1)
          
          S3(sleeper, index_min) = min(S3Nm2);
          S3(sleeper, index_max) = max(S3Nm2);
-         
+		          
          SEQV(sleeper, index_min) = min(SEQVNm2);
          SEQV(sleeper, index_max) = max(SEQVNm2);
+		 
+		 XY(sleeper, index_min) = min(XYNm2);
+         XY(sleeper, index_max) = max(XYNm2);
+         
+         YZ(sleeper, index_min) = min(YZNm2);
+         YZ(sleeper, index_max) = max(YZNm2);
+         
+         XZ(sleeper, index_min) = min(XZNm2);
+         XZ(sleeper, index_max) = max(XZNm2);
          
          header{1,index_min} = Names{analysis_index};
          subheader{1,index_min} = 'Min';
@@ -85,6 +94,24 @@ for index = 1:size(LoadCases,1)
     xlswrite('Stresses',header, tab, 'T1');
     xlswrite('Stresses',subheader, tab, 'T2');
     xlswrite('Stresses',S3, tab, 'T3');
+	
+	 xlswrite('Stresses',{'XY'}, tab, 'Y1');
+    xlswrite('Stresses',SleeperTypes, tab, 'Y3');
+    xlswrite('Stresses',header, tab, 'Z1');
+    xlswrite('Stresses',subheader, tab, 'Z2');
+    xlswrite('Stresses',XY, tab, 'Z3');
+
+    xlswrite('Stresses',{'YZ'}, tab, 'AE1');
+    xlswrite('Stresses',SleeperTypes, tab, 'AE3');
+    xlswrite('Stresses',header, tab, 'AF1');
+    xlswrite('Stresses',subheader, tab, 'AF2');
+    xlswrite('Stresses',YZ, tab, 'AF3');
+
+    xlswrite('Stresses',{'XZ'}, tab, 'AK1');
+    xlswrite('Stresses',SleeperTypes, tab, 'AK3');
+    xlswrite('Stresses',header, tab, 'AL1');
+    xlswrite('Stresses',subheader, tab, 'AL2');
+    xlswrite('Stresses',XZ, tab, 'AL3');
 end
 
 

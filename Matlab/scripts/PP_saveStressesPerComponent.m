@@ -25,8 +25,9 @@ function [] = PP_saveStressesPerComponent(dataFolder, data_filenames, analysis_f
                 %Materials; e.g. rughellingplaat, kunststof, rail... 
                 filename = sprintf(dataFolder, analysis_fileNames{analysis_index}, analysis_fileNames{analysis_index}, data_filenames{material_index}, num2str(loadCaseNumber) )
                 
-                [~,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~] = importStressesCSV(filename); 
-
+               % [~,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~] = importStressesCSV(filename); 
+				[~,S1Nm2,S2Nm2,S3Nm2,SEQVNm2,~,~,~,~,~] = importStressesCSV(filename); 
+				
                 stress_names = {{'SEQV [N/m2]'}; {'S1 [N/m2]'}; {'S2 [N/m2]'}; {'S3 [N/m2]'}};
                 StressesPerAnalysis{material_index, :} = {{min(SEQVNm2), max(SEQVNm2)}, {min(S1Nm2), max(S1Nm2)}, {min(S2Nm2), max(S2Nm2)}, {min(S3Nm2), max(S3Nm2)}};
 
