@@ -29,7 +29,8 @@ Railpad_thickness = 4.5 / 1000 !4.5 mm, Railpro site
 
 !Foundation (whole sleeper):
 !K_foundation = 45000000 !N/m  !From paper from Dollevoet and Zilli = about eqaul to the results in the TU Munchen tests. Here it is 90e6 N/m3 for 5 cycles at 225 kN
-K_foundation = 43800000 !N/m or 43.8 kN/m  
+K_foundation = 90*1000000 !N/m !Equal to an foundation modulus C of 0.1385 !90 N/m
+!K_foundation = 43800000 !N/m or 43.8 kN/m  OLD was for half a sleeper
 Damping_foundation = 32000000 !Ns/m !From paper from Dollevoet and Zilli
 
 !Set for a 10kN/mm per shoulder
