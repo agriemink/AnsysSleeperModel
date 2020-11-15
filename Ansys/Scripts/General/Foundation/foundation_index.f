@@ -18,6 +18,11 @@ CM, Foundation_Fixed_Nodes, NODE
 CM, BottomSleeperNodes, NODE 
 
 
+*DIM,foundationscript,STRING,150
+*DIM,DefaultScript,STRING,150
+DefaultScript(1) = 'AddFoundationStiffness_WithSpringDamperElements'
+
+
 startX_coord = 0
 Y_location = -S_Hoogte
 Z_location = S_Halve_Lengte !lateral foundation postion / location, at the end of the sleeper.
@@ -40,18 +45,28 @@ Z_location = S_Halve_Lengte !lateral foundation postion / location, at the end o
 	!6) foundation_supported_area_mp 
 	foundation_damping = Damping_foundation
 	
+
+
+	*IF, foundation_supported_area_mp, EQ, -3, THEN
+		foundationscript(1) = 'AddFoundationStiffness_As3PointBending'
+	*ELSE
+		foundationscript(1) = '%DefaultScript(1)%'
+	*ENDIF
+
+	
+	
 	!Middle sleepe and every sleeper at x > 0
-	*USE, '%Scriptfolder(1)%/Foundation/AddFoundationStiffness_WithSpringDamperElements.MAC', X_Min, X_Max, Y_location, foundation_stiffness, foundation_damping, MakeUseOfSymmetry, foundation_supported_area_factor,foundation_supported_area_mp
+	*USE, '%Scriptfolder(1)%/Foundation/%foundationscript(1)%.MAC', X_Min, X_Max, Y_location, foundation_stiffness, foundation_damping, MakeUseOfSymmetry, foundation_supported_area_factor,foundation_supported_area_mp
 	
 	*IF, SleeperIndex, GT, 1, AND, MakeUseOfSymmetry, NE, 'true', THEN
 		!Every sleeper at x < 0
-		*USE, '%Scriptfolder(1)%/Foundation/AddFoundationStiffness_WithSpringDamperElements.MAC', -X_Max, -X_Min, Y_location, foundation_stiffness, foundation_damping, 'false', foundation_supported_area_factor, foundation_supported_area_mp	
+		*USE, '%Scriptfolder(1)%/Foundation/%foundationscript(1)%.MAC', -X_Max, -X_Min, Y_location, foundation_stiffness, foundation_damping, 'false', foundation_supported_area_factor, foundation_supported_area_mp	
 	*ENDIF
 	
 	
 	!Horizontal foundation:
 	lateral_foundation_stiffness = K_shoulder 			!Set in DefaultParameters or analysis file.
-	lateral_foundation_damping = Damping_shoulder 		!Set in DefaultParameters or analysis file.
+	lateral_foundation_damping = Damping_shoulder 		!Set in DefaultParameters or analysis file. 
 	!----------------------------------------------------------------------
 	!------ Add foundation in lateral direction (Z), ballast shoulder -----
 	!----------------------------------------------------------------------
@@ -76,3 +91,5 @@ Z_location = S_Halve_Lengte !lateral foundation postion / location, at the end o
 *DEL, Y_location
 *DEL, foundation_supported_area_factor
 *DEL, foundation_supported_area_mp
+*DEL, foundationscript
+*DEL, DefaultScript
