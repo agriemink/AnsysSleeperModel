@@ -4,6 +4,19 @@
 *GET,MaxNode,NODE,0, NUM, MAXD
 T = 'save_results_to_csv'
 
+*DIM, filename_local, STRING, 248
+
+
+*IF, STRLENG(ARG1), GT, 0, THEN
+	filename_local(1) = '%ARG1%'
+*ELSEIF, STRLENG(OutputFilename_), GT, 0
+	filename_local(1) = '%OutputFilename_(1)%'
+*ELSE
+	/INQUIRE, jobname_local, JOBNAME, !get the jobname as this is the first part of the plotname 
+	filename_local(1) = '%jobname_local%'
+*ENDIF
+
+
 !*DIM, Header_,CHAR ,9
 *DEL, Mask_
 *DEL, ReducedValues_
@@ -50,7 +63,7 @@ T = 'save_results_to_csv'
 
 
 !Configure output
-*CFOPEN, '%OutputFilename_(1)%_Deformations', csv
+*CFOPEN, '%filename_local(1)%_Deformations', csv
 *VWRITE, 'Node', ';', 'Loc X', ';', 'Loc Y', ';', 'Loc Z', ';', 'UX [m]', ';', 'UY [m]', ';', 'UZ [m]'
 %C%C%C%C%C%C%C%C%C%C%C%C%C
 
@@ -63,7 +76,7 @@ T = 'save_results_to_csv'
 *CFCLOS
 
 !Configure output
-*CFOPEN, '%OutputFilename_(1)%_Stresses', csv
+*CFOPEN, '%filename_local(1)%_Stresses', csv
 *VWRITE, 'Node', ';', 'S1 [N/m2]',';', 'S2 [N/m2]',';', 'S3 [N/m2]',';', 'S EQV [N/m2]', ';', 'Shear XY [N/m2]', ';', 'Shear YZ [N/m2]', ';', 'Shear XZ [N/m2]', ';', 'EQV total strain [-]', ';', 'EQV elastic strain [-]'
 %C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C%C
 
