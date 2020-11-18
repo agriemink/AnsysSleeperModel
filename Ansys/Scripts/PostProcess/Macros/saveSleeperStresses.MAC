@@ -92,8 +92,6 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 *GET, MaxShear_wapening ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 *GET, MinShear_wapening ,PLNSOL,0,MIN !Minimum value of item in last contour display 
 
-MinStrain_wapening, ';', MaxStrain_wapening
-
 !Foundation stresses:
 *GET, DoesCompExists, COMP, Bottomsleepernodes, TYPE
 *IF, DoesCompExists, GT, 0, THEN
@@ -117,7 +115,7 @@ MinStrain_wapening, ';', MaxStrain_wapening
 	*USE, '%MacroFolder(1)%save_plot.MAC', 'FunVonMisesStresses_LC%LoadCase%'
 	*GET, MaxVonMises_fundering ,PLNSOL,0,MAX !Maximum value of item in last contour display 
 	*GET, MinVonMises_fundering ,PLNSOL,0,MIN !Minimum value of item in last contour display 
-	*ENDIF	
+*ENDIF	
 
 
 ESEL, U, TYPE, ,Element_COMBIN14

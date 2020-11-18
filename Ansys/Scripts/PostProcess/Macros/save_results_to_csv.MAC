@@ -1,21 +1,30 @@
 !s_CommonResultsOfSelectedSet
-/NOPR
+!/NOPR
+/GO
 /UIS, MSGPOP, 3 !disable warning messages.
 *GET,MaxNode,NODE,0, NUM, MAXD
 T = 'save_results_to_csv'
 
+
+! *GET, Par, PARM, Name, Item1, IT1NUM, Item2, IT2NUM
+
+*GET, ARGisString, PARM, ARG1, TYPE ! 0 = scalar == not set 3 = string == set
+*GET, OutputFilenameIsSet, PARM, OutputFilename_, TYPE
+
+!Set default filename:
 *DIM, filename_local, STRING, 248
+/INQUIRE, jobname_local, JOBNAME, !get the jobname as this is the first part of the plotname 
+filename_local(1) = '%jobname_local(1)%'
 
-
-*IF, STRLENG(ARG1), GT, 0, THEN
+*IF, ARGisString, EQ, 3, THEN ! 3 = string
 	filename_local(1) = '%ARG1%'
-*ELSEIF, STRLENG(OutputFilename_), GT, 0
-	filename_local(1) = '%OutputFilename_(1)%'
-*ELSE
-	/INQUIRE, jobname_local, JOBNAME, !get the jobname as this is the first part of the plotname 
-	filename_local(1) = '%jobname_local%'
+*ELSEIF, ARGisString, EQ, 4, THEN !4 = character array Not sure if this happends
+	filename_local(1) = '%ARG1(1)%'
+*ELSEIF, ARGisString, EQ, 0, AND, OutputFilenameIsSet, GE, -1, THEN
+	*IF, OutputFilenameIsSet, GE, 3, AND, OutputFilename_(1) , NE, '', THEN
+		filename_local(1) = '%OutputFilename_(1)%'	
+	*ENDIF
 *ENDIF
-
 
 !*DIM, Header_,CHAR ,9
 *DEL, Mask_
