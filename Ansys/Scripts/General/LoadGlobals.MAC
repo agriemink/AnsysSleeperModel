@@ -8,7 +8,7 @@ RunAnalysisMacroName(1) = '%Scriptfolder(1)%/RunAnalysis.MAC'
 MaterialFolder(1) = '%BaseFolder(1)%\Materials'
 
 *DIM, GeometryFolderCommon, STRING, 100
-GeometryFolderCommon(1) = '%BaseFolder(1)%\Geometries\'
+GeometryFolderCommon(1) = '%BaseFolder(1)%\Geometries'
 
 *DIM, Analysisfolder, STRING, 200
 Analysisfolder(1) = '%BaseFolder(1)%\Analysis'
