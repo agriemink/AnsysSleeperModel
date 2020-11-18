@@ -91,3 +91,5 @@ T = 'save_results_to_csv'
 *DEL, ReducedValues_
 *DEL, Mask_
 *DEL, Header_
+*DEL, filename_local
+*DEL, jobname_local

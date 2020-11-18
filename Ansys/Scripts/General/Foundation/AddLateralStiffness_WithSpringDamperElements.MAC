@@ -110,3 +110,6 @@ CM, shoulder_elements, ELEM
 *DEL, i
 *DEL, foundation_stiffness_local
 *DEL, foundation_damping_local
+*DEL, Z_location_Local
+*DEL, X_Min_Local
+*DEL, X_Max_Local

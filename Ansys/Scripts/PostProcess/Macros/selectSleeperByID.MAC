@@ -22,3 +22,5 @@ ALLSEL, BELOW, VOLU
 
 
 !VSEL, R, LOC, Y, -S_Hoogte, -0.01 !Select only the sleeper volumes
+*DEL, SleeperID_
+*DEL, WapeningJaNee

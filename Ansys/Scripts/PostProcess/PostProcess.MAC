@@ -151,6 +151,8 @@ ResultFilePath(1) = '%ResultFile(1)%'
 *DEL, ResultFileExists
 *DEL, i
 *DEL, AantalLoadSteps
+*DEL, ResultFile
+*DEL, ResultFilePath
 
 T = 'Post Processing finished'
 

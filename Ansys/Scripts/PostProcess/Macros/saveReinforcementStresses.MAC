@@ -43,6 +43,6 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 	CSYS
 *ENDIF
 
-
-
+*DEL, SleeperID_
+*DEL, LoadCase_Local
 ALLSEL

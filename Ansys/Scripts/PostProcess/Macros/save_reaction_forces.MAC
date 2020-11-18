@@ -39,10 +39,10 @@ i = 0
 	
 *ENDDO
 
-analysisIndex = ARG1
+analysisIndex_L = ARG1
 
 !Configure output
-*CFOPEN, '%saveWithJobname_Local(1)%_ReactionForcesPerSleeper_%analysisIndex%', csv
+*CFOPEN, '%saveWithJobname_Local(1)%_ReactionForcesPerSleeper_%analysisIndex_L%', csv
 *VWRITE, 'Sleeper', ';', 'Loc X', ';', 'FX', ';', 'FY', ';', 'FZ'
 %C%C%C%C%C%C%C%C%C
 
@@ -54,7 +54,14 @@ analysisIndex = ARG1
 
 *CFCLOS
 
+*DEL, analysisIndex_L
+*DEL, saveWithJobname_Local
 *DEL, SleeperReactionForces, NOPR
 *DEL, i
-
+*DEL, ReactionForce_X
+*DEL, ReactionForce_Y
+*DEL, ReactionForce_Z
+*DEL, X_COORD
+*DEL, X_MIN
+*DEL, X_MAX
 /GO

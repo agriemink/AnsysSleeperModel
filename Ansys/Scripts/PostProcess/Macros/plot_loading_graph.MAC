@@ -30,3 +30,7 @@
 	!LoadTable(i,4) = Loadtable_Y_sym(i,1) + LoadTable_Y_right(i,1)
 
 *CFCLOS
+
+
+
+*DEL, saveWithJobname_Local

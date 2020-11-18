@@ -71,12 +71,12 @@ CM, Kunststof_V, VOLU
 !--------------------- Create main sleeper (Middle) -------------------
 !----------------------------------------------------------------------
 i = Sleepers(1,1)
-SleeperModel(1) 	= SleeperModelArray(1,i)
-SleeperType 		= Sleepers(2,1)
-W_divisions 		= Sleepers(3,1)
+SleeperModel(1) 		= SleeperModelArray(1,i)
+SleeperType 			= Sleepers(2,1)
+W_divisions_Local 		= Sleepers(3,1)
 !Sleeper_foundation 	= Sleepers(4,1)
 
-*USE, '%GeometryFolderCommon(1)%\%SleeperModel(1)%\createSleeper.MAC', SleeperType, 0, MakeUseOfSymmetry, W_divisions
+*USE, '%GeometryFolderCommon(1)%\%SleeperModel(1)%\createSleeper.MAC', SleeperType, 0, MakeUseOfSymmetry, W_divisions_Local
 *USE, '%GeometryFolderCommon(1)%\Rughellingplaat_met_hoek\createRughellingplaat.MAC', 0, MakeUseOfSymmetry
 
 !----------------------------------------------------------------------
@@ -86,18 +86,19 @@ W_divisions 		= Sleepers(3,1)
 	i = Sleepers(1,SleeperIndex)
 	SleeperModel(1) 	= SleeperModelArray(1,i)
 	SleeperType 		= Sleepers(2,SleeperIndex)
-	W_divisions 		= Sleepers(3,SleeperIndex)
+	W_divisions_Local 		= Sleepers(3,SleeperIndex)
 	!Sleeper_foundation 	= Sleepers(4,SleeperIndex)
 	
 	X_COORD = (SleeperIndex-1)*Sleeperdistance ![n = 1 -> x = 0, n = 2 -> x = 0.6 etc.]
-	*USE, '%GeometryFolderCommon(1)%\%SleeperModel(1)%\createSleeper.MAC', SleeperType, X_COORD, 'false', W_divisions !MakeUseOfSymmetry = always false as all other sleepers are full sleepers instead of half.
+	*USE, '%GeometryFolderCommon(1)%\%SleeperModel(1)%\createSleeper.MAC', SleeperType, X_COORD, 'false', W_divisions_Local !MakeUseOfSymmetry = always false as all other sleepers are full sleepers instead of half.
 	X_COORD = (SleeperIndex-1)*Sleeperdistance
 	*USE, '%GeometryFolderCommon(1)%\Rughellingplaat_met_hoek\createRughellingplaat.MAC', X_COORD, 'false'
 *ENDDO
 *DEL, i
 *DEL, SleeperModel, NOPR
 *DEL, SleeperType
-*DEL, W_divisions
+*DEL, W_divisions_Local
+*DEL, X_COORD
 
 *IF, MakeUseOfSymmetry, NE, 'true', THEN
 	!Kopier naar negative x-coordinaten
