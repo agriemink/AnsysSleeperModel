@@ -1,0 +1,14 @@
+!Material Properties of a custom KLP material. 
+!
+!
+
+Kunststof_E = ARG1
+
+! ExampleE: MP, EX, Kunststof_E, 1060e6		
+
+
+MP,	EX,		ARG1,	Custom_E	!Youngs' modulus	Pa = N/m2 !
+
+MP,	DENS,	ARG1,	870				!Density			kg/m3  !Density does not really change between both types 
+MP,	PRXY,	ARG1,	0.4 				!Poisson ratio from Aran
+MP,	MU,		ARG1,	0.1

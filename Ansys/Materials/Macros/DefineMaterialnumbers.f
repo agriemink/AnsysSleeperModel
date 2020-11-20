@@ -1,7 +1,7 @@
 /PREP7 !start preprocessor
 /NOPR
 
-AantalMaterialen = 13
+AantalMaterialen = 14
 !*DEL, MaterialDatabase
 !*DEL, Materials
 *DIM, MaterialDatabase, string, 50, AantalMaterialen
@@ -22,6 +22,7 @@ MaterialDatabase(1,10) = 'KLP_PE_max_400'
 MaterialDatabase(1,11) = 'KLP_HS_min_650'
 MaterialDatabase(1,12) = 'KLP_HS_900'
 MaterialDatabase(1,13) = 'KLP_HS_max_1250'
+MaterialDatabase(1,14) = 'KLP_CustomE'
 
 
 *USE, '%MaterialFolder(1)%/Macros/LoadMaterials.MAC'
