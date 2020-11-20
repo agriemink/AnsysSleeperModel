@@ -23,6 +23,7 @@ AnalysisCounter = AnalysisCounter + 1
 
 /INQUIRE, FileExists, EXIST, '%Analysisfolder(1)%\%AnalyisName(1)%', f
 *IF, FileExists, GT, 0, THEN
+	/NOPR
 	/PREP7 
 	/INPUT, '%AnalyisName(1)%', f, '%Analysisfolder(1)%' , 0, 1 !Load analysis variables 
 	
@@ -47,18 +48,22 @@ AnalysisCounter = AnalysisCounter + 1
 
 	!----------------------------
 	!----- Foundation: ----------\
+	/NOPR
 	*IF, GeometryHasFoundation, EQ, 1, THEN !See if the geometry needs a foundation (if it is not a free free model).
 		/INPUT, foundation_index, f, '%Scriptfolder(1)%/Foundation' , 0, 1
 	*ENDIF
 	*DEL, FoundationFileExists
 	!----------------------------
 	!----- Contact areas: -------
+	/NOPR
 	*IF, GeometryHasContact, EQ, 1, THEN !CustomParameters does exists. (if it is not a free free model).
 		/INPUT, contact_index, f, '%Scriptfolder(1)%/Contact' , 0, 1 !Create contact between->rail and rughellingplaat and rughellingplaat and sleeper 
 	*ENDIF
 	*DEL, ContactFileExists	
 	!----------------------------
 	!----- Constrain nodes: -----
+	ALLSEL
+	NUMCMP, ALL
 	/SOLU
 	/INPUT, Constraints, f, '%Scriptfolder(1)%' , 0, 1 !ConstrainNodes
 
@@ -75,7 +80,12 @@ AnalysisCounter = AnalysisCounter + 1
 	*ENDIF
 	
 	ALLSEL
-	SAVE, '%Filename(1)%', 'db'
+	!Save MPWRITE, Fname, Ext, --, LIB, MAT
+	MPWRITE, Materiaal_S , MP, , LIB, Materiaal_S
+	MPWRITE, Materiaal_W , MP, , LIB, Materiaal_W
+	MPWRITE, Materiaal_RH , MP, , LIB, Materiaal_RH
+	MPWRITE, Materiaal_Rail, MP , , LIB, Materiaal_Rail
+	!SAVE, '%Filename(1)%', 'db'
 	!----------------------------
 	!-------- Solve : ---------
 	*IF, SKIPSOLVE, NE, 'TRUE', THEN,
@@ -85,7 +95,7 @@ AnalysisCounter = AnalysisCounter + 1
 		/INPUT, 'AnalysisSettings_%AnalysisType%' , f, '%Scriptfolder(1)%/AnalysisSettings' , 0, 1 !Load AnalysisSettings
 		FINISH
 
-		/INPUT, Solve , f, '%Scriptfolder(1)%' , 0, 1 !Solve
+		!/INPUT, Solve , f, '%Scriptfolder(1)%' , 0, 1 !Solve
 
 			
 		ALLSEL
@@ -96,10 +106,10 @@ AnalysisCounter = AnalysisCounter + 1
 	PARSAV, ALL, 'CustomParameters %AnalyisName(1)%', 'f'
 	!----------------------------
 	!-------- Analysis : ---------
-	/INPUT, PostProcess, MAC, '%Basefolder(1)%/Scripts/PostProcess' , 0, 1 !PostProcess and save files
+	!/INPUT, PostProcess, MAC, '%Basefolder(1)%/Scripts/PostProcess' , 0, 1 !PostProcess and save files
 	EPLOT
 	ALLSEL
-	SAVE, %Filename(1)%, 'db'
+	!SAVE, %Filename(1)%, 'db'
 
 *ELSE
 	/COM, File %Filename(1)% not found.
@@ -111,6 +121,9 @@ AnalysisCounter = AnalysisCounter + 1
 *DEL, Filename
 *DEL, AnalyisName
 *DEL, analysisFilename
+
+*DEL, a
+
 
 FINISH
 

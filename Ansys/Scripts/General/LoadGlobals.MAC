@@ -1,3 +1,5 @@
+/UNITS, MKS !MKS system (m, kg, s, °C). 
+
 *DIM,GlobalWorkingDirectory,STRING,200
 GlobalWorkingDirectory(1) = '%GitBaseFolder(1)%\Results\'
 
