@@ -1,5 +1,6 @@
 function [ filename_deformation, filename_stresses ] = GetAnalysisdata(baseFolder, analysis_fileName, loadCase, elementName)
-
+    filename_deformation = '';
+    filename_stresses = '';
     specificAnalysisFolder = strcat(baseFolder, analysis_fileName);
 
     if exist(specificAnalysisFolder,'dir')
@@ -7,7 +8,8 @@ function [ filename_deformation, filename_stresses ] = GetAnalysisdata(baseFolde
      
         loadCase_str = num2str(loadCase);
         
-        files    = dir(['*' elementName '*' loadCase_str '*.csv']);
+        searchString = ['*' elementName '*' loadCase_str '*.csv'];
+        files    = dir(searchString);
         cd(old_folder)
         % Get a logical vector that tells which is a directory.
         % Extract only those that are directories.
@@ -31,16 +33,17 @@ function [ filename_deformation, filename_stresses ] = GetAnalysisdata(baseFolde
             end
         else
             disp 'not exactly 2 files found. Filenames:'
-            filenames
+            disp(filenames)
+            disp(searchString)
         end
     elseif exist(baseFolder,'dir')
         disp 'folder not found:'
-        specificAnalysisFolder
+        disp(specificAnalysisFolder)
         possbileFolders = dir(baseFolder)
     else
         disp 'basefolder not found:'
-        baseFolder
-        specificAnalysisFolder
+        disp(baseFolder)
+        disp(specificAnalysisFolder)
     end
 end
 

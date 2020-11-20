@@ -14,34 +14,20 @@ outputfolder = strrep([basefolder '/Results/' analysisfolder ' - ' date '/'], '.
         % Add that folder plus all subfolders to the path.
         addpath(genpath(pwd))
         mkdir(outputfolder)
-        
-        outputfolder_copiedFiles = strcat(outputfolder, 'Copied_files/');
-        mkdir(outputfolder_copiedFiles);
-        
+              
         resultsfolder = strcat(basefolder, analysisfolder, '/'); %Where to find results
-        
-        
-        folders = GetSubDirs(resultsfolder); %Get all the individual analysis folders by name
-        for n = 1:length(folders)
-            filenames_to_copy = { ...
-                %'*ReactionForcesPerSleeper*'; ...
-                %'*GaugeNodes*'; ...
-                %'*.png'; ...
-                %'*Foundationdeformations*'; ...
-                %'*MaxStresses*'; ...
-            }';
 
-            for m = 1:length(filenames_to_copy)    
-                file_to_copy = strcat(resultsfolder, folders(n).name, '/', filenames_to_copy(m));
-                
-                
-
-               [status,message,messageId] = copyfile(file_to_copy{1}, outputfolder_copiedFiles);        
-            end
-        end
-
-    
+        filenames_to_copy = { ...
+           '*.csv'; ...
+           '*.png'; ...
+           '*MaxStresses*'; ...
+           '*ReactionForcesPerSleeper*'; ...
+           '*GaugeNodes*'; ...
+           '*Foundationdeformations*'; ...
+        }';
         %% analysis names:
+        copyFiles(resultsfolder, outputfolder, filenames_to_copy)
+        
         
         % Defaults:
         analysis_names_general = {}; %All analysis

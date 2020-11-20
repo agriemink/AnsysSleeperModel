@@ -19,7 +19,7 @@ for index = 1:length(LoadCases)
     %% 
     for analysis_nr = 1:length(analysis_fileNames)
         analysis_fileName = analysis_fileNames{analysis_nr};
-        filename = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'DeformedSleeper');
+        filename = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'Kunststof_');
 
         foundationNodes = getDisplacements(filename, X_coord, Y_coord);
         % Part below does not work as the foundation file only
