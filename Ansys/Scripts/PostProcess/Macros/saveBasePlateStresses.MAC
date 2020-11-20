@@ -23,5 +23,5 @@ LoadCase_Local = ARG1
 	*USE, '%MacroFolder(1)%save_results_to_csv.MAC' !_Rughellingplaten_R_
 *ENDIF
 
-
+*DEL, LoadCase_local
 ALLSEL

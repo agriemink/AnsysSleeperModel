@@ -15,7 +15,7 @@ PLNSOL, S, EQV, 0 !Equivalent stress
 /REPLOT
 
 *USE, '%MacroFolder(1)%selectSleeperByID.MAC', 0, 'kunststof'
-*USE, '%MacroFolder(1)%save_results_to_csv.MAC', 'Kunststof'
+*USE, '%MacroFolder(1)%save_results_to_csv.MAC', 'Kunststof_%LoadCase%'
 
 PLNSOL, S, Y, 0 !Y-stress (vertical)
 /REPLOT
@@ -166,4 +166,44 @@ ESEL, U, TYPE, ,Element_COMBIN14
 *CFCLOS
 
 ALLSEL
+
 /NOPR
+
+*DEL, MinVonMises_kunststof
+*DEL, MaxVonMises_kunststof
+
+*DEL, Min1_kunststof
+*DEL, Max1_kunststof
+
+*DEL, MinY_kunststof
+*DEL, MaxY_kunststof
+
+*DEL, MinVonMises_kunststof_1cm
+*DEL, MaxVonMises_kunststof_1cm
+
+*DEL, Min1_kunststof_1cm
+*DEL, Max1_kunststof_1cm
+
+*DEL, MinVonMises_wapening
+*DEL, MaxVonMises_wapening
+
+*DEL, Min1_wapening
+*DEL, Max1_wapening
+
+*DEL, MinY_wapening
+*DEL, MaxY_wapening
+
+*DEL, MinShear_wapening
+*DEL, MaxShear_wapening
+
+*DEL, MinStrain_wapening
+*DEL, MaxStrain_wapening
+
+*DEL, MinVonMises_fundering
+*DEL, MaxVonMises_fundering
+
+*DEL, Min1_fundering
+*DEL, Max1_fundering
+
+*DEL, MinY_fundering
+*DEL, MaxY_fundering

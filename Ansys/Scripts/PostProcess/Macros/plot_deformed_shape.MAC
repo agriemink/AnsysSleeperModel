@@ -17,3 +17,7 @@ PLDISP,0 !Plot displacement
 /AUTO,1 
 /REPLOT
 *USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedSleeper_%LoadCase_local%'
+
+
+
+*DEL, LoadCase_local

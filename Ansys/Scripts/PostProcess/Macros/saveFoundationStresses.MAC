@@ -15,5 +15,5 @@ LoadCase_Local = ARG1
 *USE, '%MacroFolder(1)%plot_deformed_shape.MAC'
 *USE, '%MacroFolder(1)%save_plot.MAC', 'DeformedShape_%LoadCase_Local%'
 
-
+*DEL, LoadCase_local
 ALLSEL

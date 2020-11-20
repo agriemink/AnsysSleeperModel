@@ -17,9 +17,9 @@
 	*USE, '%MacroFolder(1)%save_plot_as_png.MAC'
 	*USE, '%MacroFolder(1)%rename_plot.MAC', 'png', jobname__(1),  OutputFilename_(1)
 
-	
-	*USE, '%MacroFolder(1)%save_plot_as_eps.MAC'
-	*USE, '%MacroFolder(1)%rename_plot.MAC', 'eps', jobname__(1),  OutputFilename_(1)
+	! Option to save the plot in eps format: 
+	!*USE, '%MacroFolder(1)%save_plot_as_eps.MAC'
+	!*USE, '%MacroFolder(1)%rename_plot.MAC', 'eps', jobname__(1),  OutputFilename_(1)
 	
 	*DEL, OutputFilename_plot
 	*DEL, jobname__

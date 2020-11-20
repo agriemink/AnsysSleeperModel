@@ -1,6 +1,6 @@
 !s_CommonResultsOfSelectedSet
-!/NOPR
-/GO
+/NOPR
+!/GO
 /UIS, MSGPOP, 3 !disable warning messages.
 *GET,MaxNode,NODE,0, NUM, MAXD
 T = 'save_results_to_csv'
