@@ -49,12 +49,16 @@ CSYS, 0 !Return to standard coordinate system
 !------- loading: -----------------------------------------------------
 !----------------------------------------------------------------------
 *IF, AantalNodes_LEFT, GT, 0, THEN
-*TOPER, LoadTable_z_L_scaled, LoadTable_z_L, ADD, LoadTable_z_L , 1/AantalNodes_LEFT, 0 , !Scale force to a force per node.
-*TOPER, LoadTable_y_L_scaled, LoadTable_y_L, ADD, LoadTable_y_L, 1/AantalNodes_LEFT, 0 ,  !Scale force to a force per node.
+	*DEL, LoadTable_z_L_scaled
+	*DEL, LoadTable_y_L_scaled
+	*TOPER, LoadTable_z_L_scaled, LoadTable_z_L, ADD, LoadTable_z_L, 1/AantalNodes_LEFT, 0 , !Scale force to a force per node.
+	*TOPER, LoadTable_y_L_scaled, LoadTable_y_L, ADD, LoadTable_y_L, 1/AantalNodes_LEFT, 0 , !Scale force to a force per node.
 *ENDIF
 *IF, AantalNodes_RIGHT, GT, 0, THEN
-*TOPER, LoadTable_z_R_scaled, LoadTable_z_R, ADD, LoadTable_z_R , 1/AantalNodes_RIGHT, 0 , !Scale force to a force per node.
-*TOPER, LoadTable_y_R_scaled, LoadTable_y_R, ADD, LoadTable_y_R, 1/AantalNodes_RIGHT, 0 ,  !Scale force to a force per node.
+	*DEL, LoadTable_z_R_scaled
+	*DEL, LoadTable_y_R_scaled
+	*TOPER, LoadTable_z_R_scaled, LoadTable_z_R, ADD, LoadTable_z_R, 1/AantalNodes_RIGHT, 0 , !Scale force to a force per node.
+	*TOPER, LoadTable_y_R_scaled, LoadTable_y_R, ADD, LoadTable_y_R, 1/AantalNodes_RIGHT, 0 , !Scale force to a force per node.
 *ENDIF
 
 !Create substeps
