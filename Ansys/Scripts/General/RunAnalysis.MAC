@@ -85,7 +85,7 @@ AnalysisCounter = AnalysisCounter + 1
 	MPWRITE, Materiaal_W , MP, , LIB, Materiaal_W
 	MPWRITE, Materiaal_RH , MP, , LIB, Materiaal_RH
 	MPWRITE, Materiaal_Rail, MP , , LIB, Materiaal_Rail
-	!SAVE, '%Filename(1)%', 'db'
+	SAVE, '%Filename(1)%', 'db'
 	!----------------------------
 	!-------- Solve : ---------
 	*IF, SKIPSOLVE, NE, 'TRUE', THEN,
@@ -95,7 +95,7 @@ AnalysisCounter = AnalysisCounter + 1
 		/INPUT, 'AnalysisSettings_%AnalysisType%' , f, '%Scriptfolder(1)%/AnalysisSettings' , 0, 1 !Load AnalysisSettings
 		FINISH
 
-		!/INPUT, Solve , f, '%Scriptfolder(1)%' , 0, 1 !Solve
+		/INPUT, Solve , f, '%Scriptfolder(1)%' , 0, 1 !Solve
 
 			
 		ALLSEL
@@ -106,10 +106,10 @@ AnalysisCounter = AnalysisCounter + 1
 	PARSAV, ALL, 'CustomParameters %AnalyisName(1)%', 'f'
 	!----------------------------
 	!-------- Analysis : ---------
-	!/INPUT, PostProcess, MAC, '%Basefolder(1)%/Scripts/PostProcess' , 0, 1 !PostProcess and save files
+	/INPUT, PostProcess, MAC, '%Basefolder(1)%/Scripts/PostProcess' , 0, 1 !PostProcess and save files
 	EPLOT
 	ALLSEL
-	!SAVE, %Filename(1)%, 'db'
+	SAVE, %Filename(1)%, 'db'
 
 *ELSE
 	/COM, File %Filename(1)% not found.
