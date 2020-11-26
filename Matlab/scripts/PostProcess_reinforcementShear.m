@@ -38,8 +38,8 @@ for index = 1:length(LoadCases)
             foundationNodesForThisZ_boven = foundationNodes_boven(abs([foundationNodes_boven.Z] - z_coordinate) < 0.0001, :); 
             foundationNodesForThisZ_onder = foundationNodes_onder(abs([foundationNodes_onder.Z] - z_coordinate) < 0.0001, :); 
             
-            shear_values_max(z_index) = max([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]]);
-            shear_values_min(z_index) = min([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]]);
+            shear_values_max(z_index) = max([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]])/1000000; %Divide by 1e6 to move from N/m2 to N/mm2
+            shear_values_min(z_index) = min([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]])/1000000; %Divide by 1e6 to move from N/m2 to N/mm2;
         end
 
        if loadCase == 1
