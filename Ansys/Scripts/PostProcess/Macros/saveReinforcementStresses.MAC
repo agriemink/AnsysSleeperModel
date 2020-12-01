@@ -27,6 +27,7 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 *IF, DoesCompExists, GT, 0, THEN
 	CMSEL, S, Wapening_V
 	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	NSEL, R, LOC, X, SleeperID*SleeperDistance - SleeperDistance/2, SleeperID*SleeperDistance + SleeperDistance/2 
 	CSYS, CS_SleeperLocal
 	NSEL, R, LOC, Y, -S_Halve_Hoogte, 0
 
@@ -35,6 +36,7 @@ PLNSOL, S, YZ, 0 !Shear stress Y-plane Z-direction
 	
 	CMSEL, S, Wapening_V
 	NSLV, S, 1 !Select nodes corresponding to the selected volumes
+	NSEL, R, LOC, X, SleeperID*SleeperDistance - SleeperDistance/2, SleeperID*SleeperDistance + SleeperDistance/2 
 	NSEL, R, LOC, Y, 0, S_Halve_Hoogte
 
 	OutputFilename_(1) = '%saveWithJobname(1)%_WapeningBoven_%LoadCase_Local%'
