@@ -7,10 +7,13 @@ FINISH
 MacroFolder(1) = '%Basefolder(1)%/Scripts/PostProcess/Macros/'
 
 /POST1
+
 !disable warning messages.
 ! /NOPR
 ! /UIS, MSGPOP, 3
+! /NERR, NMERR, NMABT, --, IFKEY, NUM
 ! /NERR,,,,,0
+/NERR, , 99999999
 
 !First start with the common output, then analyis specific data.
 
@@ -104,7 +107,7 @@ ResultFilePath(1) = '%ResultFile(1)%'
 			!ALLSEL
 			
 			!Save center sleeper max and minimal stresses.
-			! Essential as it also produces the results neede for Matlab post processing!
+			! Essential as it also produces the results needed for Matlab post processing!
 			!
 			*USE, '%MacroFolder(1)%saveSleeperStresses.MAC', LoadCase
 			
