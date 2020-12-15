@@ -18,7 +18,7 @@ ALLSEL, BELOW, VOLU
 	ESEL, U, MAT, , Staal
 *ENDIF
 
-
+ALLSEL, BELOW, ELEM
 
 
 !VSEL, R, LOC, Y, -S_Hoogte, -0.01 !Select only the sleeper volumes

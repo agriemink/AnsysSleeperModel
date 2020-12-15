@@ -27,7 +27,7 @@ GitBaseFolder(1) = '%Drive%:\AnsysSleeperModel' !Change to own path
 
 ! ----------------------------------------------------------
 ! ------------- General adjustable parameters: -------------
-G_index_file(1) = 'ValidationAnalysis' !Optional Set to current filename to track back the parameters file to this index file.
+G_index_file(1) = 'GeneralAnalysisSingleSleeper' !Optional Set to current filename to track back the parameters file to this index file.
 ![Custom name for directory]
 WorkingDirectoryName(1) = 'Validation' !Directory name for results
 
@@ -51,6 +51,10 @@ analysisType_ = 'static'
 ! ------------- Analysis specific parameters: --------------
 WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
 
+
+! ---------------------------------------------------------------
+! -------------------- 3 Point bending tests: -------------------
+WorkingDirectoryNameAddition(1) = '3PointBending'
 ! ----------------------------------------------------------
 *DO, Boilerplate, 0, 1
 	Working_Directory(1) = '%General_Working_Directory(1)%_%WorkingDirectoryNameAddition(1)%'
@@ -58,64 +62,127 @@ WorkingDirectoryNameAddition(1) = '' !'[extra text to differentiate each analysi
 	/CWD, '%Working_Directory(1)%' 	!Set working directory to default.
 	*EXIT
 *ENDDO
+!Serie analyses: verschillende E-moduli,
 
-! ----------------------------------------------------------
-! ---------------- Global parameter loading: ---------------
 /INPUT, ValidationLoading15_30_60_vertical, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
-!K_foundation = K_foundation*1000 !Default. Times 100
-W_Divisions = 2
 K_foundation = 90*1000000 !N/m !Equal to an foundation modulus C of 0.1385 !90 N/m
+K_foundation = K_foundation*1000 !Default. Times 100
+W_Divisions = 2
+
 fundering_OndersteundPercentage = 0.0769 ! = 0.200/S_Lengte !Set percentage to match the size of the loading pad.
 fundering_MultiplierOndersteund = -3 !3 point bending test
 
-
-
-! ----------------------------------------------------------
-! -------------------- Analysis loading: -------------------
-WorkingDirectoryNameAddition(1) = '3PointBending'
-
-!Serie analyses: verschillende E-moduli, verschillende, dekking
-!Dekking:
-
-! !PE_201 sleeper
-WorkingDirectoryNameAddition(1) = '3PointBending'
+! ! !PE_201 sleeper
 /INPUT, parameters_201, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 201 sleeper type variables
-Materiaal_S = Kunststof_250
+Materiaal_S = Kunststof_E ! Set to custom material.
+
+Custom_E = 250e6
 *USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_250', skipsolve_all
-Materiaal_S = Kunststof_400
+Custom_E = 300e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_300', skipsolve_all
+Custom_E = 400e6
 *USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_400', skipsolve_all
+Custom_E = 650e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_650', skipsolve_all
 
-! !PE_202 sleeper
+!PE_202 sleeper
 /INPUT, parameters_202, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 202 sleeper type variables
-Materiaal_S = Kunststof_650
+Materiaal_S = Kunststof_E ! Set to custom material.
+Custom_E = 450e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_450', skipsolve_all
+Custom_E = 650e6
 *USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_650', skipsolve_all
-Materiaal_S = Kunststof_1250
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_1250', skipsolve_all
-Materiaal_S = Kunststof_900
+Custom_E = 900e6
 *USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_900', skipsolve_all
+Custom_E = 1080e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_1080', skipsolve_all
+Custom_E = 1250e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_1250', skipsolve_all
 
+! ---------------------------------------------------------------
+! -------------------- Standard  tests: -------------------------
+WorkingDirectoryNameAddition(1) = 'General'
+!WorkingDirectoryNameAddition(1) = 'NormalFoundation'
+! ---------------------------------------------------------------
+*DO, Boilerplate, 0, 1
+	Working_Directory(1) = '%General_Working_Directory(1)%_%WorkingDirectoryNameAddition(1)%'
+	/MKDIR, %Working_Directory(1)%	!Make a folder for the different analysis
+	/CWD, '%Working_Directory(1)%' 	!Set working directory to default.
+	*EXIT
+*ENDDO
 
+W_Divisions = 2
+K_foundation = 90*1000000 !N/m !Equal to an foundation modulus C of 0.1385 !90 N/m
 
+fundering_OndersteundPercentage = 1 !Standard foundation
+fundering_MultiplierOndersteund = 1 !Standard foundation
+/INPUT, GeneralLoadingHighQ, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
 
+! !Serie analyses: verschillende E-moduli,
+! ! !PE_201 sleeper
+/INPUT, parameters_201, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 201 sleeper type variables
+Materiaal_S = Kunststof_E ! Set to custom material.
+
+Custom_E = 250e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_250', skipsolve_all
+Custom_E = 300e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_300', skipsolve_all
+Custom_E = 400e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_400', skipsolve_all
+Custom_E = 650e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '201_650', skipsolve_all
+
+!PE_202 sleeper
+/INPUT, parameters_202, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 202 sleeper type variables
+Materiaal_S = Kunststof_E ! Set to custom material.
+Custom_E = 450e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_450', skipsolve_all
+Custom_E = 650e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_650', skipsolve_all
+Custom_E = 900e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_900', skipsolve_all
+Custom_E = 1080e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_1080', skipsolve_all
+Custom_E = 1250e6
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_1250', skipsolve_all
+
+! -------------------------------------------------------------
+! -------- Normal tests different foundation stiffness: --------
 ! K-tests
 /INPUT, parameters_202, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 202 sleeper type variables
 Materiaal_S = Kunststof_900
-fundering_OndersteundPercentage = 1 !Standard foundation
-fundering_MultiplierOndersteund = 1 !Standard foundation
+
 
 K_foundation = 13*1000000 !N/m !Equal to an foundation modulus C of 0.02
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0,02', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0_02', skipsolve_all
 K_foundation = 32.5*1000000 !N/m !Equal to an foundation modulus C of 0.1
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0,05', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0_05', skipsolve_all
 K_foundation = 65*1000000 !N/m !Equal to an foundation modulus C of 0.1
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0,1', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0_1', skipsolve_all
 K_foundation = 90*1000000 !N/m !Equal to an foundation modulus C of 0.1385 !90 N/m
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0,1385', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0_1385', skipsolve_all
 K_foundation = 130*1000000 !N/m !Equal to an foundation modulus C of 0.2 upper limit
-*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0,2', skipsolve_all
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'customSleeperAnalysis', '202_C=0_2', skipsolve_all
+! -------------------------------------------------------------
+! --------------- General tests multiple sleepers: ------------
+! -------------------------------------------------------------
+WorkingDirectoryNameAddition(1) = 'Multiple'
+*DO, Boilerplate, 0, 1
+	Working_Directory(1) = '%General_Working_Directory(1)%_%WorkingDirectoryNameAddition(1)%'
+	/MKDIR, %Working_Directory(1)%	!Make a folder for the different analysis
+	/CWD, '%Working_Directory(1)%' 	!Set working directory to default.
+	*EXIT
+*ENDDO
 
+/INPUT, MultipleSleeperLoads, f, '%BaseFolder(1)%\Loads' , 0, 1 !Load custom load settings
 
+/INPUT, parameters_202, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 202 sleeper type variables
+Materiaal_S = Kunststof_900
+K_foundation = 90*1000000 !N/m !Equal to an foundation modulus C of 0.1385 !90 N/m
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'MultipleSleeper', '202_multiple', skipsolve_all
 
+/INPUT, parameters_201, f, '%BaseFolder(1)%\Parameters' , 0, 1 !Load 201 sleeper type variables
+*USE, %RunAnalysisMacroName(1)%, analysisType_, 'MultipleSleeper', '201_multiple', skipsolve_all
 
 !WorkingDirectoryNameAddition(1) = 'CoverTests' !'[extra text to differentiate each analysis]' !Directory name addition to general folder:
 !Different cover:

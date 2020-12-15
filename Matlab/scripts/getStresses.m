@@ -12,8 +12,9 @@ function [ nodalStresses ] = getStresses ( filename_deformations, filename_stres
         if ~isempty(x_coordinate) && ~isempty(y_coordinate)
             nodalStresses = data(abs([data.X] - x_coordinate) <= epsilon & abs([data.Y] - y_coordinate) <= epsilon, :); 
         elseif ~isempty(x_coordinate)
+            disp 'Alleen x-coordinaat gevuld';
             nodalStresses = data(abs([data.X] - x_coordinate) <= epsilon, :); 
-        elseif ~isempty(y_coordinate)    
+        elseif ~isempty(y_coordinate) 
             nodalStresses = data(abs([data.Y] - y_coordinate) <= epsilon, :); 
         else 
             nodalStresses = data;

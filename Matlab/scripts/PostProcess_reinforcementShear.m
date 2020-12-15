@@ -1,4 +1,4 @@
-function [] = PostProcess_reinforcementShear(analysisFolder, analysis_fileNames, output_directory, figureName, LoadCases)
+function [] = PostProcess_reinforcementShear(analysisFolder, analysis_fileNames, output_directory, figureName, LoadCases, X_coord)
 
 %
 %Result-array: 1 = minimale waarde (onder belasting)
@@ -23,7 +23,7 @@ for index = 1:length(LoadCases)
         analysis_fileName = analysis_fileNames{analysis_nr};
         [ filename_deformation_boven, filename_stresses_boven ] = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'WapeningBoven');
         [ filename_deformation_onder, filename_stresses_onder ] = GetAnalysisdata(analysisFolder, analysis_fileNames{analysis_nr}, loadCase, 'WapeningOnder');
-        X_coord = '';
+        %X_coord = '';
         Y_coord = '';
         
         foundationNodes_boven = getStresses(filename_deformation_boven, filename_stresses_boven, X_coord, Y_coord);
@@ -39,7 +39,7 @@ for index = 1:length(LoadCases)
             foundationNodesForThisZ_onder = foundationNodes_onder(abs([foundationNodes_onder.Z] - z_coordinate) < 0.0001, :); 
             
             shear_values_max(z_index) = max([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]])/1000000; %Divide by 1e6 to move from N/m2 to N/mm2
-            shear_values_min(z_index) = min([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]])/1000000; %Divide by 1e6 to move from N/m2 to N/mm2;
+            shear_values_min(z_index) = min([[foundationNodesForThisZ_boven.YZ] [foundationNodesForThisZ_onder.YZ]])/1000000; %Divide by 1e6 to move from N/m2 to N/mm2
         end
 
        if loadCase == 1
