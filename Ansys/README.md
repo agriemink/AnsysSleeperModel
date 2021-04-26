@@ -8,6 +8,8 @@ a. Change the drive letter and corresponding file paths.
    Variable names: Drive, BaseFolder
 b. Create appropiate folders for storing results.
 
+Unfortunately the easiest method would be to just start and iron out the errors.
+
 New analysis:
 Prepare the Index-file:
 
