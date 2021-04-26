@@ -45,6 +45,8 @@ The best option is to use a previous index file and adjust that file to match yo
 To add a new material model, create a new file in the `materials` folder. Set a name for the material by using the first argument. E.g.
 <pre><code>
 Wood_beach = ARG1
+
+MP,	DENS,	Wood_beach,	683  	!Density			kg/m2
 </code></pre>
 Set up the material model by setting values to this material and lastly add the material to the material database `/Ansys/Materials/Macros/DefineMaterialnumbers.f`
 
