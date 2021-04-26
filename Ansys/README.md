@@ -6,7 +6,7 @@ To run a simulation follow these steps:
 Initialising a new installation / checkout:
 a. Change the drive letter and corresponding file paths.
    Variable names: Drive, BaseFolder
-b. Create appropiate folders for storing results
+b. Create appropiate folders for storing results.
 
 New analysis:
 Prepare the Index-file:
@@ -38,3 +38,15 @@ Materiaal_W = Staal
 Materiaal_RH = Staal
 Materiaal_Rail = Staal
 </code></pre>
+
+The best option is to use a previous index file and adjust that file to match your needs. The same holds for other files, such as load files.
+
+#Adding new material model.
+To add a new material model, create a new file in the `materials` folder. Set a name for the material by using the first argument. E.g.
+<pre><code>
+Wood_beach = ARG1
+</code></pre>
+Set up the material model by setting values to this material and lastly add the material to the material database `/Ansys/Materials/Macros/DefineMaterialnumbers.f`
+
+
+
