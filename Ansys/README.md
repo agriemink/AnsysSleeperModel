@@ -41,7 +41,7 @@ Materiaal_Rail = Staal
 
 The best option is to use a previous index file and adjust that file to match your needs. The same holds for other files, such as load files.
 
-#Adding new material model.
+# Adding new material model.
 To add a new material model, create a new file in the `materials` folder. Set a name for the material by using the first argument. E.g.
 <pre><code>
 Wood_beach = ARG1
