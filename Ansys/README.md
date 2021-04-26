@@ -6,6 +6,7 @@ To run a simulation follow these steps:
 Initialising a new installation / checkout:
 a. Change the drive letter and corresponding file paths.
    Variable names: Drive, BaseFolder
+   
 b. Create appropiate folders for storing results.
 
 Unfortunately the easiest method would be to just start and iron out the errors.
